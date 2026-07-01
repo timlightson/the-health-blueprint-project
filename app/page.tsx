@@ -354,6 +354,15 @@ export default function HomePage() {
           <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
             Sources: CDC · NIH · peer-reviewed research
           </p>
+          <a
+            href="https://www.instagram.com/thehealthblueprintproject"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-medium hover:underline"
+            style={{ color: "var(--ink-soft)" }}
+          >
+            @thehealthblueprintproject
+          </a>
         </div>
       </footer>
     </div>
