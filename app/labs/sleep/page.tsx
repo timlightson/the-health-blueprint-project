@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
-import Link from "next/link";
-import { ArrowLeft, Moon, ChevronDown, ChevronRight, ChevronLeft, ArrowUp } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronLeft, ArrowUp } from "lucide-react";
 import GamesSection from "@/components/labs/games/GamesSection";
 import PhoneBeforeBed from "@/components/labs/PhoneBeforeBed";
 import LiquidGlass from "@/components/labs/LiquidGlass";
+import { LabHeader, HeaderBadge, NextLabCard, LabFooter } from "@/components/labs/LabChrome";
 import { playSound } from "@/lib/sleep-sound";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -1312,50 +1312,14 @@ export default function SleepLab() {
       <div className="lab-aurora" aria-hidden="true" />
       <Keyframes />
 
-      <header
-        className="flex items-center justify-between px-4 sm:px-6 flex-shrink-0 lg-bar sticky top-0"
-        style={{ height: "62px", zIndex: 40, position: "sticky" }}
-      >
-        <Link
-          href="/"
-          className="group flex items-center gap-1.5 lg-pill rounded-full pl-2.5 pr-4 py-2"
-          style={{ color: "var(--ink-soft)" }}
-        >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-          <span className="text-sm font-medium">Labs</span>
-        </Link>
-        <div className="flex items-center gap-2.5">
-          <span
-            className="inline-flex items-center justify-center"
-            style={{
-              width: 32, height: 32, borderRadius: 12,
-              background: "linear-gradient(160deg, rgba(45,212,191,0.32), rgba(255,255,255,0.5))",
-              border: "1px solid rgba(255,255,255,0.6)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9), 0 4px 10px -4px rgba(13,148,136,0.5)",
-            }}
-          >
-            <Moon className="w-[17px] h-[17px]" style={{ color: "#0D9488" }} />
-          </span>
-          <span className="font-semibold tracking-tight" style={{ color: "var(--ink)", fontSize: "15px" }}>
-            Sleep Lab
-          </span>
-        </div>
-        <div className="flex items-center justify-end" style={{ minWidth: "84px" }}>
-          <div
-            className="rounded-full text-xs font-semibold whitespace-nowrap tabular-nums"
-            style={{
-              padding: "6px 12px",
-              background: `linear-gradient(165deg, ${badgeColor}26, rgba(255,255,255,0.4))`,
-              color: badgeColor,
-              border: `1px solid ${badgeColor}40`,
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
-              transition: "color 0.5s ease, background 0.5s ease, border-color 0.5s ease",
-            }}
-          >
+      <LabHeader
+        lab="sleep"
+        badge={
+          <HeaderBadge color={badgeColor}>
             Avg {Number.isInteger(avgWeekdayH) ? avgWeekdayH : avgWeekdayH.toFixed(1)}h
-          </div>
-        </div>
-      </header>
+          </HeaderBadge>
+        }
+      />
 
       <div className="flex flex-1 min-h-0" style={{ position: "relative", zIndex: 10 }}>
         <main ref={mainRef} className="flex-1 overflow-y-auto">
@@ -1536,6 +1500,9 @@ export default function SleepLab() {
           <ZoneSection last>
             <ScienceSection />
           </ZoneSection>
+
+          <NextLabCard current="sleep" />
+          <LabFooter />
         </main>
 
         {/* Right panel — desktop · floating refracting glass sheet */}

@@ -3,54 +3,17 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import LiquidGlass from "@/components/labs/LiquidGlass";
+import { LABS, type LabId, type LabMeta } from "@/components/labs/labs-meta";
 
-const labs = [
-  {
-    id: "sleep",
-    index: "01",
-    title: "Sleep",
-    headline: "How sleep debt rewires your brain",
-    description:
-      "Build your real week and watch what stacks up by Friday. Reaction time, memory, mood, all of it.",
-    stat: "77%",
-    statLabel: "of US teens don't get enough sleep",
-    accent: "#0E8A7D",
-    tint: "rgba(14,138,125,0.10)",
-    glow: "rgba(14,138,125,0.30)",
-    delay: 0,
-    svg: SleepSVG,
-  },
-  {
-    id: "energy",
-    index: "02",
-    title: "Energy",
-    headline: "Why your energy spikes, crashes, and slumps",
-    description:
-      "Build your real day and watch the curve respond. Meet the 24-hour clock behind your afternoon slump, and the engines that fire when you sprint.",
-    stat: "20%",
-    statLabel: "of your energy is burned by your brain",
-    accent: "#C9760F",
-    tint: "rgba(201,118,15,0.10)",
-    glow: "rgba(201,118,15,0.28)",
-    delay: 110,
-    svg: EnergySVG,
-  },
-  {
-    id: "stress",
-    index: "03",
-    title: "Stress",
-    headline: "What being overwhelmed does to your brain",
-    description:
-      "Stack up a day's worth of pressure and watch it quietly take your focus, memory, and patience offline.",
-    stat: "−40%",
-    statLabel: "decision-making under heavy stress load",
-    accent: "#D8443B",
-    tint: "rgba(216,68,59,0.10)",
-    glow: "rgba(216,68,59,0.26)",
-    delay: 220,
-    svg: StressSVG,
-  },
-];
+// Lab identity (names, hooks, stats, accents) lives in labs-meta so the
+// homepage, lab headers, and next-lab cards never drift apart. Only the
+// illustrations are homepage-specific.
+const LAB_SVGS: Record<LabId, (p: { hovered: boolean; reduced: boolean }) => React.ReactNode> = {
+  sleep: SleepSVG,
+  energy: EnergySVG,
+  stress: StressSVG,
+};
 
 function makeSineWavePath(y: number, amp: number, period: number): string {
   const k = 4 / 3;
@@ -317,13 +280,9 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen flex flex-col overflow-hidden" style={{ backgroundColor: "var(--canvas)" }}>
-      {/* Ambient aurora field */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="hb-aurora" style={{ width: "44vw", height: "44vw", top: "-14vw", left: "-8vw", background: "radial-gradient(circle, rgba(14,138,125,0.20), transparent 70%)" }} />
-        <div className="hb-aurora" style={{ width: "40vw", height: "40vw", top: "-6vw", right: "-10vw", background: "radial-gradient(circle, rgba(201,118,15,0.16), transparent 70%)", animationDelay: "-6s" }} />
-        <div className="hb-aurora" style={{ width: "38vw", height: "38vw", bottom: "-16vw", left: "26vw", background: "radial-gradient(circle, rgba(37,99,235,0.12), transparent 70%)", animationDelay: "-11s" }} />
-      </div>
+    <div className="relative min-h-screen flex flex-col overflow-hidden">
+      {/* Ambient aurora field — same system the labs refract through */}
+      <div className="lab-aurora" aria-hidden="true" />
 
       {/* Top nav */}
       <header className="relative z-10">
@@ -379,8 +338,8 @@ export default function HomePage() {
 
           {/* Lab Cards */}
           <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-            {labs.map((lab) => (
-              <LabCard key={lab.id} lab={lab} mounted={mounted} reduced={reduced} />
+            {LABS.map((lab, i) => (
+              <LabCard key={lab.id} lab={lab} delay={i * 110} mounted={mounted} reduced={reduced} />
             ))}
           </div>
         </div>
@@ -421,15 +380,17 @@ function BlueprintMark() {
 
 function LabCard({
   lab,
+  delay,
   mounted,
   reduced,
 }: {
-  lab: (typeof labs)[0];
+  lab: LabMeta;
+  delay: number;
   mounted: boolean;
   reduced: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
-  const SVGComponent = lab.svg;
+  const SVGComponent = LAB_SVGS[lab.id];
 
   return (
     <Link
@@ -445,17 +406,17 @@ function LabCard({
             : "translateY(0)"
           : "translateY(24px)",
         transition: mounted
-          ? "transform 0.45s var(--ease-spring), box-shadow 0.45s var(--ease-spring), border-color 0.3s ease"
-          : `opacity 0.7s var(--ease-spring) ${lab.delay}ms, transform 0.7s var(--ease-spring) ${lab.delay}ms`,
-        backgroundColor: "var(--surface)",
-        border: "1px solid",
-        borderColor: hovered ? "var(--hairline-strong)" : "var(--hairline)",
-        borderRadius: "22px",
-        boxShadow: hovered
-          ? `0 2px 4px rgba(11,26,43,0.05), 0 30px 60px -22px ${lab.glow}`
-          : "var(--shadow-sm)",
-        overflow: "hidden",
+          ? "transform 0.45s var(--ease-spring)"
+          : `opacity 0.7s var(--ease-spring) ${delay}ms, transform 0.7s var(--ease-spring) ${delay}ms`,
       }}
+    >
+    <LiquidGlass
+      radius={24}
+      bezel={20}
+      scale={44}
+      tint={0.16}
+      className="flex-1 flex flex-col"
+      style={{ overflow: "hidden" }}
     >
       {/* Illustration viewport */}
       <div
@@ -492,7 +453,7 @@ function LabCard({
       <div className="flex-1 flex flex-col px-6 pb-6 pt-1">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold" style={{ color: "var(--ink)", letterSpacing: "-0.02em" }}>
-            {lab.title} Lab
+            {lab.title}
           </h2>
           <span
             className="inline-flex items-center justify-center rounded-full"
@@ -515,7 +476,7 @@ function LabCard({
         </p>
 
         {/* Stat footer */}
-        <div className="mt-5 pt-4 flex items-baseline gap-2" style={{ borderTop: "1px solid var(--hairline)" }}>
+        <div className="mt-5 pt-4 flex items-baseline gap-2" style={{ borderTop: "1px solid rgba(255,255,255,0.55)" }}>
           <span className="text-lg font-bold tabular-nums" style={{ color: lab.accent }}>
             {lab.stat}
           </span>
@@ -524,6 +485,7 @@ function LabCard({
           </span>
         </div>
       </div>
+    </LiquidGlass>
     </Link>
   );
 }

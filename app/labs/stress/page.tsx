@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import Link from "next/link";
-import { ArrowLeft, Brain, X, ChevronDown, ChevronRight, Plus } from "lucide-react";
+import { X, ChevronDown, ChevronRight, Plus } from "lucide-react";
+import { LabHeader, HeaderBadge, NextLabCard, LabFooter } from "@/components/labs/LabChrome";
 
 type StressEvent = {
   id: string;
@@ -295,41 +295,7 @@ export default function StressLab() {
       `}</style>
 
       {/* Header */}
-      <header
-        className="flex items-center justify-between px-4 sm:px-6 border-b flex-shrink-0 hb-glass sticky top-0 z-20"
-        style={{ borderColor: "var(--hairline)", height: "60px" }}
-      >
-        <Link
-          href="/"
-          className="group flex items-center gap-1.5 rounded-full pl-2 pr-3.5 py-2 transition-colors"
-          style={{ color: "var(--ink-soft)" }}
-        >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-          <span className="text-sm font-medium">Labs</span>
-        </Link>
-        <div className="flex items-center gap-2.5">
-          <span className="inline-flex items-center justify-center rounded-xl" style={{ width: 30, height: 30, backgroundColor: "rgba(216,68,59,0.12)" }}>
-            <Brain className="w-[17px] h-[17px]" style={{ color: ROSE }} />
-          </span>
-          <span className="font-semibold tracking-tight" style={{ color: "var(--ink)", fontSize: "15px" }}>
-            Stress Lab
-          </span>
-        </div>
-        <div className="flex items-center justify-end" style={{ minWidth: "76px" }}>
-          <div
-            className="rounded-full text-xs font-semibold whitespace-nowrap tabular-nums"
-            style={{
-              padding: "5px 11px",
-              backgroundColor: `${brainState.color}14`,
-              color: brainState.color,
-              border: `1px solid ${brainState.color}33`,
-              transition: "color 0.5s ease, background-color 0.5s ease, border-color 0.5s ease",
-            }}
-          >
-            {totalStress}%
-          </div>
-        </div>
-      </header>
+      <LabHeader lab="stress" badge={<HeaderBadge color={brainState.color}>{totalStress}%</HeaderBadge>} />
 
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-6 py-12 sm:py-16">
@@ -503,6 +469,9 @@ export default function StressLab() {
             <ScienceSection />
           </div>
         </div>
+
+        <NextLabCard current="stress" />
+        <LabFooter />
       </main>
     </div>
   );

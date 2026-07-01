@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import Link from "next/link";
-import { ArrowLeft, Zap, ChevronRight, ChevronDown, ArrowUp } from "lucide-react";
+import { ChevronRight, ChevronDown, ArrowUp } from "lucide-react";
 import BuildYourDay, {
   curveFor,
   START_H,
@@ -17,6 +16,7 @@ import BuildYourDay, {
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import BodyClock from "@/components/labs/BodyClock";
 import SportsGrid from "@/components/labs/SportsGrid";
+import { LabHeader, HeaderBadge, NextLabCard, LabFooter } from "@/components/labs/LabChrome";
 
 // ─── Hero curve helpers (activity model from Build Your Day) ─────────────────────
 
@@ -446,41 +446,7 @@ export default function EnergyLab() {
       <style>{`@keyframes enFade { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }`}</style>
 
       {/* Header */}
-      <header className="flex items-center justify-between px-4 sm:px-6 flex-shrink-0 lg-bar sticky top-0" style={{ height: "62px", zIndex: 40, position: "sticky" }}>
-        <Link href="/" className="group flex items-center gap-1.5 lg-pill rounded-full pl-2.5 pr-4 py-2" style={{ color: "var(--ink-soft)" }}>
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-          <span className="text-sm font-medium">Labs</span>
-        </Link>
-        <div className="flex items-center gap-2.5">
-          <span
-            className="inline-flex items-center justify-center"
-            style={{
-              width: 32, height: 32, borderRadius: 12,
-              background: "linear-gradient(160deg, rgba(245,158,11,0.34), rgba(255,255,255,0.5))",
-              border: "1px solid rgba(255,255,255,0.6)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9), 0 4px 10px -4px rgba(201,118,15,0.5)",
-            }}
-          >
-            <Zap className="w-[17px] h-[17px]" style={{ color: "#C9760F" }} />
-          </span>
-          <span className="font-semibold tracking-tight" style={{ color: "var(--ink)", fontSize: "15px" }}>Energy Lab</span>
-        </div>
-        <div className="flex items-center justify-end" style={{ minWidth: "84px" }}>
-          <div
-            className="rounded-full text-xs font-semibold whitespace-nowrap tabular-nums"
-            style={{
-              padding: "6px 12px",
-              background: `linear-gradient(165deg, ${avgCol}26, rgba(255,255,255,0.4))`,
-              color: avgCol,
-              border: `1px solid ${avgCol}40`,
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
-              transition: "color 0.5s ease, background 0.5s ease, border-color 0.5s ease",
-            }}
-          >
-            Avg {avgPct}%
-          </div>
-        </div>
-      </header>
+      <LabHeader lab="energy" badge={<HeaderBadge color={avgCol}>Avg {avgPct}%</HeaderBadge>} />
 
       <div className="flex flex-1 min-h-0" style={{ position: "relative", zIndex: 10 }}>
         <main ref={mainRef} className="flex-1 overflow-y-auto">
@@ -553,6 +519,9 @@ export default function EnergyLab() {
           <ZoneSection last>
             <ScienceSection />
           </ZoneSection>
+
+          <NextLabCard current="energy" />
+          <LabFooter />
         </main>
       </div>
     </div>
