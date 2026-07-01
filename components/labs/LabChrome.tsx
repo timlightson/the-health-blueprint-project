@@ -109,8 +109,8 @@ export function NextLabCard({ current }: { current: LabId }) {
                 Next lab
               </p>
               <h3
-                className="font-bold mt-2 truncate"
-                style={{ color: "var(--ink)", fontSize: "1.35rem", letterSpacing: "-0.02em" }}
+                className="font-bold mt-2"
+                style={{ color: "var(--ink)", fontSize: "clamp(1.15rem, 4vw, 1.35rem)", letterSpacing: "-0.02em", lineHeight: 1.15 }}
               >
                 {next.headline}
               </h3>
