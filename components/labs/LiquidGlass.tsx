@@ -134,10 +134,10 @@ export default function LiquidGlass({
   bezel = 18,
   scale = 46,
   blur = 1.5,
-  brightness = 1.1,
-  saturate = 1.7,
+  brightness = 1.05,
+  saturate = 1.5,
   aberration = 2.8,
-  tint = 0.1,
+  tint = 0.18,
   as = "div",
 }: Props) {
   const rawId = useId().replace(/[:]/g, "");

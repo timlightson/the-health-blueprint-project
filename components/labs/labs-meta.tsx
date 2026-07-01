@@ -79,8 +79,3 @@ export const LABS: LabMeta[] = [
 ];
 
 export const labMeta = (id: LabId): LabMeta => LABS.find((l) => l.id === id)!;
-
-export const nextLab = (id: LabId): LabMeta => {
-  const i = LABS.findIndex((l) => l.id === id);
-  return LABS[(i + 1) % LABS.length];
-};

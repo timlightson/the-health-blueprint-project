@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { X, ChevronDown, ChevronRight, Plus } from "lucide-react";
-import { LabHeader, HeaderBadge, NextLabCard, LabFooter } from "@/components/labs/LabChrome";
+import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import YerkesDodson from "@/components/labs/YerkesDodson";
 
@@ -477,7 +477,6 @@ export default function StressLab() {
           </div>
         </div>
 
-        <NextLabCard current="stress" />
         <LabFooter />
       </main>
     </div>

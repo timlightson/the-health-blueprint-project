@@ -16,7 +16,7 @@ import BuildYourDay, {
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import BodyClock from "@/components/labs/BodyClock";
 import SportsGrid from "@/components/labs/SportsGrid";
-import { LabHeader, HeaderBadge, NextLabCard, LabFooter } from "@/components/labs/LabChrome";
+import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
 
 // ─── Hero curve helpers (activity model from Build Your Day) ─────────────────────
 
@@ -520,7 +520,6 @@ export default function EnergyLab() {
             <ScienceSection />
           </ZoneSection>
 
-          <NextLabCard current="energy" />
           <LabFooter />
         </main>
       </div>

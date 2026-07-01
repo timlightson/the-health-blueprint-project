@@ -5,7 +5,7 @@ import { ChevronDown, ChevronRight, ChevronLeft, ArrowUp } from "lucide-react";
 import GamesSection from "@/components/labs/games/GamesSection";
 import PhoneBeforeBed from "@/components/labs/PhoneBeforeBed";
 import LiquidGlass from "@/components/labs/LiquidGlass";
-import { LabHeader, HeaderBadge, NextLabCard, LabFooter } from "@/components/labs/LabChrome";
+import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
 import { playSound } from "@/lib/sleep-sound";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -1501,7 +1501,6 @@ export default function SleepLab() {
             <ScienceSection />
           </ZoneSection>
 
-          <NextLabCard current="sleep" />
           <LabFooter />
         </main>
 
