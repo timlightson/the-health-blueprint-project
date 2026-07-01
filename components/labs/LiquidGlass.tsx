@@ -2,27 +2,38 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 /**
- * LiquidGlass — Apple visionOS / iOS 26 style refracting glass.
+ * LiquidGlass — Apple visionOS / iOS 26 style glass. Single source of truth.
  *
- * Unlike a plain `backdrop-filter: blur()`, this physically bends the
- * background at the panel's bezel using an SVG <feDisplacementMap>. A
- * displacement map (a normal-map of a rounded-rectangle bezel) is generated on
- * a canvas at the element's EXACT measured pixel size, so the refraction lines
- * up perfectly with the corners no matter how the panel is sized. The element,
- * its <filter> region and the <feImage> map all share identical dimensions —
- * that is what "exact dimensions" buys you.
+ * Two tiers:
  *
- * The technique (Chromium): backdrop-filter: url(#filter) blur() brightness()
- * saturate(). Where SVG-filter backdrops aren't supported, it degrades to a
- * translucent frosted card (still readable, just without live refraction).
+ * "lens"  — physically refracts the backdrop at the panel's bezel using an SVG
+ *           <feDisplacementMap>, with per-channel chromatic aberration so the
+ *           rim splits into a faint rainbow fringe, plus a cursor-tracked
+ *           specular highlight. For hero panels and exhibit frames. GPU-heavy;
+ *           budget ~10 mounted per page.
+ *
+ * "frost" — no displacement. Real glass optics without the lens: bright
+ *           specular top edge, sheen gradient, saturation boost, hairline
+ *           border, faint inner bottom shade. Cheap; use freely for pills,
+ *           chips, bars, small cards.
+ *
+ * The displacement map (a normal-map of a rounded-rect bezel) is generated on
+ * a canvas at the element's exact measured size, so refraction lines up with
+ * the corners at any panel size. Where SVG-filter backdrops aren't supported
+ * (Safari/Firefox), lens degrades automatically to the frost look.
  */
+
+type Tier = "lens" | "frost";
 
 type Props = {
   children?: ReactNode;
   className?: string;
   style?: CSSProperties;
+  /** glass tier — "lens" refracts, "frost" is the cheap premium fallback */
+  tier?: Tier;
   /** corner radius in px (kept in sync with the generated map) */
   radius?: number;
   /** width of the refracting bezel band in px */
@@ -106,10 +117,19 @@ function buildDisplacementMap(
   return cv.toDataURL();
 }
 
+// Shared frost optics — also the lens fallback on non-Chromium browsers.
+const FROST_SHADOW =
+  "0 12px 32px -14px rgba(20,30,60,0.32), 0 3px 10px -6px rgba(20,30,60,0.16), inset 0 1.5px 1px -0.5px rgba(255,255,255,0.95), inset 1px 0 1px -0.5px rgba(255,255,255,0.55), inset 0 -10px 22px -14px rgba(20,30,60,0.14), inset 0 -1.5px 2px 0 rgba(255,255,255,0.5)";
+const LENS_SHADOW =
+  "0 14px 38px -14px rgba(20,30,60,0.38), 0 3px 10px -6px rgba(20,30,60,0.18), inset 0 1.5px 1px -0.5px rgba(255,255,255,0.95), inset 1px 0 1px -0.5px rgba(255,255,255,0.6), inset 0 -12px 26px -14px rgba(20,30,60,0.16), inset 0 -1.5px 2px 0 rgba(255,255,255,0.5)";
+const SHEEN =
+  "linear-gradient(180deg, rgba(255,255,255,0.30), rgba(255,255,255,0.07) 26%, rgba(255,255,255,0.01) 52%, rgba(255,255,255,0.10) 100%)";
+
 export default function LiquidGlass({
   children,
   className,
   style,
+  tier = "lens",
   radius = 24,
   bezel = 18,
   scale = 46,
@@ -126,20 +146,24 @@ export default function LiquidGlass({
   const [size, setSize] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
   const [map, setMap] = useState<string>("");
   const [supported, setSupported] = useState(false);
+  const reduced = useReducedMotion();
+  const isLens = tier === "lens";
 
   // Detect Chromium-style SVG-backdrop support once.
   useEffect(() => {
+    if (!isLens) return;
     const ok =
       typeof CSS !== "undefined" &&
       typeof CSS.supports === "function" &&
       (CSS.supports("backdrop-filter", "url(#x)") ||
         CSS.supports("-webkit-backdrop-filter", "url(#x)"));
     setSupported(!!ok);
-  }, []);
+  }, [isLens]);
 
   // Track exact pixel size. Debounced so width/height animations don't thrash
   // the (relatively expensive) map rebuild — it settles to the final size.
   useEffect(() => {
+    if (!isLens) return;
     const el = ref.current;
     if (!el) return;
     let t: ReturnType<typeof setTimeout> | null = null;
@@ -160,20 +184,39 @@ export default function LiquidGlass({
       if (t) clearTimeout(t);
       ro.disconnect();
     };
-  }, []);
+  }, [isLens]);
 
   // Rebuild the displacement map whenever the exact size or shape changes.
   useEffect(() => {
-    if (!supported || size.w < 4 || size.h < 4) return;
+    if (!isLens || !supported || size.w < 4 || size.h < 4) return;
     const effRadius = Math.min(radius, Math.min(size.w, size.h) / 2);
     const effBezel = Math.min(bezel, Math.min(size.w, size.h) / 2);
     setMap(buildDisplacementMap(size.w, size.h, effRadius, effBezel));
-  }, [supported, size.w, size.h, radius, bezel]);
+  }, [isLens, supported, size.w, size.h, radius, bezel]);
 
-  const active = supported && !!map && size.w > 4 && size.h > 4;
+  // Cursor-tracked specular highlight (lens only, skipped for reduced motion).
+  const onPointerMove =
+    isLens && !reduced
+      ? (e: React.PointerEvent) => {
+          const el = ref.current;
+          if (!el) return;
+          const r = el.getBoundingClientRect();
+          el.style.setProperty("--lg-mx", `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
+          el.style.setProperty("--lg-my", `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
+          el.style.setProperty("--lg-spec", "1");
+        }
+      : undefined;
+  const onPointerLeave =
+    isLens && !reduced
+      ? () => {
+          ref.current?.style.setProperty("--lg-spec", "0");
+        }
+      : undefined;
+
+  const active = isLens && supported && !!map && size.w > 4 && size.h > 4;
   const backdrop = active
     ? `url(#${filterId}) blur(${blur}px) brightness(${brightness}) saturate(${saturate})`
-    : `blur(20px) saturate(1.6)`;
+    : `blur(20px) saturate(1.8)`;
 
   const Tag = as;
 
@@ -181,14 +224,15 @@ export default function LiquidGlass({
     <Tag
       ref={ref as React.Ref<HTMLDivElement>}
       className={className}
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
       style={{
         position: "relative",
         borderRadius: `${radius}px`,
-        background: `rgba(255,255,255,${tint})`,
+        background: `${SHEEN}, rgba(255,255,255,${isLens ? tint : Math.max(tint, 0.3)})`,
         backdropFilter: backdrop,
         WebkitBackdropFilter: backdrop as string,
-        boxShadow:
-          "0 14px 38px -14px rgba(20,30,60,0.38), 0 3px 10px -6px rgba(20,30,60,0.18), inset 0 1.5px 1px -0.5px rgba(255,255,255,0.95), inset 1px 0 1px -0.5px rgba(255,255,255,0.6), inset 0 -12px 26px -14px rgba(20,30,60,0.16), inset 0 -1.5px 2px 0 rgba(255,255,255,0.5)",
+        boxShadow: active ? LENS_SHADOW : FROST_SHADOW,
         border: "1px solid rgba(255,255,255,0.5)",
         ...style,
       }}
@@ -234,6 +278,23 @@ export default function LiquidGlass({
             </filter>
           </defs>
         </svg>
+      )}
+      {/* Cursor specular — a soft moving glint on the glass surface */}
+      {isLens && !reduced && (
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            borderRadius: "inherit",
+            pointerEvents: "none",
+            zIndex: 1,
+            opacity: "var(--lg-spec, 0)" as unknown as number,
+            transition: "opacity 0.45s ease",
+            background:
+              "radial-gradient(240px circle at var(--lg-mx, 50%) var(--lg-my, 0%), rgba(255,255,255,0.22), rgba(255,255,255,0.0) 62%)",
+          }}
+        />
       )}
       {children}
     </Tag>
