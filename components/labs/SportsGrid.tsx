@@ -1,9 +1,47 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { SPORTS, PROFILE_COLOR, type Profile } from "@/lib/sports-energy";
 import { SPORT_ART } from "@/components/labs/sports-illustrations";
+
+/**
+ * Tile background: a real action photo from /public/sports/{id}.jpg when one
+ * exists, duotoned into the sport's theme color so all 16 tiles stay cohesive.
+ * Until a photo lands (or if it 404s), the SVG illustration underneath shows —
+ * the photo simply layers over it once it loads, so nothing ever flashes.
+ */
+function SportPhoto({ id, theme }: { id: string; theme: string }) {
+  const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  if (failed) return null;
+  return (
+    <div className="absolute inset-0" style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease" }}>
+      <Image
+        src={`/sports/${id}.jpg`}
+        alt=""
+        fill
+        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+        style={{ objectFit: "cover", filter: "grayscale(1) contrast(1.08)" }}
+        onError={() => setFailed(true)}
+        onLoad={() => setLoaded(true)}
+      />
+      {/* duotone: theme color multiplied over the grayscale shot, stronger at the bottom */}
+      <div
+        className="absolute inset-0"
+        style={{ background: `linear-gradient(180deg, ${theme}8C 0%, ${theme}B8 100%)`, mixBlendMode: "multiply" }}
+      />
+      {/* soft lift so highlights keep the theme hue */}
+      <div className="absolute inset-0" style={{ background: `${theme}33` }} />
+      {/* bottom scrim so the glass pill stays legible over any photo */}
+      <div
+        className="absolute inset-x-0 bottom-0"
+        style={{ height: "55%", background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.42) 100%)" }}
+      />
+    </div>
+  );
+}
 
 // The grid reads as a map of the energy spectrum: each tile's tag is colored by
 // its dominant system. Mixed sports get a gradient tag.
@@ -40,6 +78,7 @@ export default function SportsGrid() {
             >
               <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.06]">
                 {Art ? <Art theme={sport.theme} /> : <div style={{ width: "100%", height: "100%", background: sport.theme }} />}
+                <SportPhoto id={sport.id} theme={sport.theme} />
               </div>
 
               {/* luminous inner ring */}
