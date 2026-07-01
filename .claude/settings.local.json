@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm dev *)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(pnpm approve-builds *)",
+      "Bash(npx next *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(curl -s http://localhost:3001/labs/sleep -o /dev/null -w \"%{http_code}\")",
+      "Bash(curl -s http://localhost:3001/labs/energy -o /dev/null -w \" %{http_code}\")",
+      "Bash(curl -s http://localhost:3001/labs/stress -o /dev/null -w \" %{http_code}\")",
+      "Bash(curl -s http://localhost:3001 -o /dev/null -w \"%{http_code}\")",
+      "Bash(curl *)",
+      "Bash(open *)",
+      "Bash(pnpm build *)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"started, pid $!\")",
+      "Bash(node *)",
+      "Bash(pnpm exec *)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(awk 'NR>=513 && NR<=678 {next} {print}' /Users/tim/Downloads/health-blueprint-dashboard/app/labs/sleep/page.tsx)",
+      "Bash(python3 -)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(lsof -ti:3000)",
+      "Bash(xargs kill -9)"
+    ]
+  }
+}
