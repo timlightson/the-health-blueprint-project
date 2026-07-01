@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { X, ChevronDown, ChevronRight, Plus } from "lucide-react";
 import { LabHeader, HeaderBadge, NextLabCard, LabFooter } from "@/components/labs/LabChrome";
+import LiquidGlass from "@/components/labs/LiquidGlass";
+import YerkesDodson from "@/components/labs/YerkesDodson";
 
 type StressEvent = {
   id: string;
@@ -101,8 +103,8 @@ function StressMeter({ totalStress }: { totalStress: number }) {
   return (
     <div className="w-full max-w-sm mx-auto">
       <div
-        className="relative overflow-hidden"
-        style={{ height: "14px", borderRadius: "999px", backgroundColor: "#ECE7DD" }}
+        className="relative overflow-hidden lg-well"
+        style={{ height: "14px", borderRadius: "999px" }}
       >
         {/* gradient track revealed by width */}
         <div
@@ -128,12 +130,12 @@ function StressMeter({ totalStress }: { totalStress: number }) {
 
 function MetricBar({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="p-4" style={{ backgroundColor: "var(--surface)", border: "1px solid var(--hairline)", borderRadius: "16px", boxShadow: "var(--shadow-sm)" }}>
+    <div className="p-4 lg" style={{ borderRadius: "16px" }}>
       <div className="flex justify-between items-baseline mb-2.5">
         <span className="text-sm" style={{ color: "var(--ink-soft)" }}>{label}</span>
         <span className="text-lg font-bold tabular-nums" style={{ color }}>{Math.round(value)}%</span>
       </div>
-      <div style={{ height: "7px", borderRadius: "999px", backgroundColor: "#ECE7DD", overflow: "hidden" }}>
+      <div className="lg-well" style={{ height: "7px", borderRadius: "999px", overflow: "hidden" }}>
         <div
           style={{
             height: "100%", width: `${value}%`, backgroundColor: color, borderRadius: "999px",
@@ -164,7 +166,7 @@ function ScienceSection() {
       </button>
 
       <div style={{ maxHeight: open ? "2400px" : "0px", opacity: open ? 1 : 0, overflow: "hidden", transition: "max-height 0.5s ease, opacity 0.4s ease" }}>
-        <div className="flex gap-1 mb-5 p-1 rounded-xl" style={{ backgroundColor: "var(--muted)" }}>
+        <div className="flex gap-1 mb-5 p-1 rounded-xl lg-segment">
           {TABS.map((t, i) => (
             <button
               key={t}
@@ -217,7 +219,7 @@ function ScienceSection() {
               { stat: "Reversible", detail: "prefrontal function recovers once stress chemicals clear, and brief breaks measurably restore focus", source: "Arnsten, Nat Rev Neurosci (2009)" },
               { stat: "~31%", detail: "of teens report feeling overwhelmed by stress on a regular basis", source: "American Psychological Association, Stress in America (2014)" },
             ].map(({ stat, detail, source }, i) => (
-              <div key={i} className="flex items-start gap-4 p-4" style={{ backgroundColor: "var(--canvas)", border: "1px solid var(--hairline)", borderRadius: "14px" }}>
+              <div key={i} className="flex items-start gap-4 p-4" style={{ background: "var(--glass-sheen), rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.62)", borderRadius: "14px" }}>
                 <div className="flex-shrink-0 font-bold text-sm" style={{ color: "var(--ink)", minWidth: "84px" }}>{stat}</div>
                 <div>
                   <p className="text-sm" style={{ color: "var(--ink)" }}>{detail}</p>
@@ -237,7 +239,7 @@ function ScienceSection() {
               { tip: "Move your body", why: "Exercise burns off stress hormones and triggers a calmer baseline afterward. Even a short walk between tasks resets your system more than scrolling does." },
               { tip: "Sleep is the reset button", why: "Most of your emotional recovery happens overnight. Short sleep leaves you starting the day already loaded, so the same pressure hits harder." },
             ].map(({ tip, why }, i) => (
-              <div key={i} className="p-4" style={{ backgroundColor: "var(--canvas)", border: "1px solid var(--hairline)", borderRadius: "14px" }}>
+              <div key={i} className="p-4" style={{ background: "var(--glass-sheen), rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.62)", borderRadius: "14px" }}>
                 <p className="font-medium mb-1" style={{ color: "var(--ink)" }}>{tip}</p>
                 <p className="text-xs" style={{ color: "var(--ink-soft)", lineHeight: 1.65 }}>{why}</p>
               </div>
@@ -288,7 +290,8 @@ export default function StressLab() {
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "var(--canvas)" }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "transparent", position: "relative" }}>
+      <div className="lab-aurora" aria-hidden="true" />
       <style>{`
         @keyframes stressNodeIn { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
         @keyframes stressChipIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -297,7 +300,7 @@ export default function StressLab() {
       {/* Header */}
       <LabHeader lab="stress" badge={<HeaderBadge color={brainState.color}>{totalStress}%</HeaderBadge>} />
 
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto" style={{ position: "relative", zIndex: 10 }}>
         <div className="max-w-3xl mx-auto px-6 py-12 sm:py-16">
 
           {/* Hero */}
@@ -316,9 +319,11 @@ export default function StressLab() {
           </div>
 
           {/* Main interactive card */}
-          <div
+          <LiquidGlass
+            radius={26}
+            bezel={26}
+            scale={52}
             className="overflow-hidden"
-            style={{ backgroundColor: "var(--surface)", border: "1px solid var(--hairline)", borderRadius: "24px", boxShadow: "var(--shadow-md)" }}
           >
             {/* Visualization zone */}
             <div
@@ -360,13 +365,11 @@ export default function StressLab() {
                       key={event.type}
                       onClick={() => addEvent(event.type, event.label, event.severity)}
                       disabled={disabled}
-                      className="group flex items-center gap-2.5 text-left transition-all"
+                      className="group flex items-center gap-2.5 text-left transition-all lg-pill"
                       style={{
                         padding: "12px 14px",
                         minHeight: "56px",
                         borderRadius: "14px",
-                        backgroundColor: "var(--canvas)",
-                        border: "1px solid var(--hairline)",
                         opacity: disabled ? 0.4 : 1,
                         cursor: disabled ? "not-allowed" : "pointer",
                       }}
@@ -409,9 +412,9 @@ export default function StressLab() {
                         className="inline-flex items-center gap-1.5 pl-3 pr-1.5 py-1.5"
                         style={{
                           borderRadius: "999px",
-                          backgroundColor: "#fff",
-                          border: "1px solid var(--hairline)",
-                          boxShadow: "var(--shadow-xs)",
+                          background: "var(--glass-sheen), rgba(255,255,255,0.55)",
+                          border: "1px solid rgba(255,255,255,0.65)",
+                          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.85), 0 3px 8px -4px rgba(20,30,60,0.16)",
                           animation: "stressChipIn 0.3s var(--ease-spring) both",
                         }}
                       >
@@ -434,7 +437,7 @@ export default function StressLab() {
                 </p>
               )}
             </div>
-          </div>
+          </LiquidGlass>
 
           {/* Metrics */}
           <p className="hb-kicker mt-12 mb-4" style={{ color: "var(--ink-soft)" }}>Mental performance</p>
@@ -454,7 +457,7 @@ export default function StressLab() {
               transition: "max-height 0.5s ease, opacity 0.4s ease, margin-top 0.4s ease",
             }}
           >
-            <div className="p-4" style={{ backgroundColor: "#D8443B0D", border: "1px solid #D8443B33", borderRadius: "16px" }}>
+            <div className="p-4" style={{ background: "linear-gradient(165deg, #D8443B1A, rgba(255,255,255,0.5))", border: "1px solid #D8443B33", borderRadius: "16px", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)" }}>
               <p className="text-sm leading-relaxed" style={{ color: "var(--ink)" }}>
                 At this load your prefrontal cortex is running on fumes. Planning, focus, and
                 self-control all get measurably worse. This is the moment you blank on things
@@ -463,6 +466,10 @@ export default function StressLab() {
               <p className="text-xs mt-2 font-medium" style={{ color: ROSE }}>Arnsten, <em>Nature Reviews Neuroscience</em> (2009)</p>
             </div>
           </div>
+
+          {/* The sweet spot — Yerkes-Dodson curve */}
+          <p className="hb-kicker mt-12 mb-4" style={{ color: "var(--ink-soft)" }}>The sweet spot</p>
+          <YerkesDodson />
 
           {/* Explanation */}
           <div className="mt-12">
