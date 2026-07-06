@@ -190,3 +190,19 @@ export const LABS: LabMeta[] = [
 ];
 
 export const labMeta = (id: LabId): LabMeta => LABS.find((l) => l.id === id)!;
+
+/** Catalog category per lab — shown as a small tag on homepage cards. */
+export const LAB_TAGS: Record<LabId, string> = {
+  sleep: "Recovery",
+  energy: "Fuel",
+  stress: "Mind",
+  hydration: "Fuel",
+  sound: "Senses",
+  focus: "Mind",
+  breath: "Reset",
+  caffeine: "Fuel",
+  vision: "Senses",
+};
+
+/** The three deep, multi-exhibit labs shown large on the homepage. */
+export const FLAGSHIP_IDS: LabId[] = ["sleep", "energy", "stress"];

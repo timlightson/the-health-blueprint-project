@@ -232,6 +232,15 @@
   font-weight: 600;
 }
 
+/* Blueprint measurement rule — a row of drafting ticks that fades at the ends */
+.hb-tick-rule {
+  height: 9px;
+  background:
+    repeating-linear-gradient(90deg, rgba(11,26,43,0.28) 0 1px, transparent 1px 11px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+}
+
 /* Gradient ink text */
 .hb-ink-gradient {
   background: linear-gradient(135deg, #0B1A2B 0%, #16384a 60%, #0E8A7D 130%);
@@ -297,9 +306,14 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  /* Professional light field, PhET-adjacent: a clean near-white canvas with
-     faint cool tints. Enough gradient for glass edges to catch, never loud. */
+  /* Professional light field with a whisper of drafting paper: a fine
+     blueprint grid over faint cool tints. Enough for glass edges to catch
+     and for the brand to read as "blueprint", never loud. */
   background:
+    repeating-linear-gradient(0deg, rgba(37, 99, 235, 0.035) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, rgba(37, 99, 235, 0.035) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(0deg, rgba(37, 99, 235, 0.045) 0 1px, transparent 1px 140px),
+    repeating-linear-gradient(90deg, rgba(37, 99, 235, 0.045) 0 1px, transparent 1px 140px),
     radial-gradient(1100px 800px at 12% -8%, rgba(14, 138, 125, 0.10), transparent 60%),
     radial-gradient(1000px 780px at 94% 4%, rgba(99, 102, 241, 0.09), transparent 60%),
     radial-gradient(1200px 900px at 50% 112%, rgba(37, 99, 235, 0.08), transparent 58%),

@@ -42,6 +42,7 @@ export function LabHero({ kicker, title, subtitle, accent }: { kicker: string; t
       <p className="mt-4 mx-auto" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "34rem" }}>
         {subtitle}
       </p>
+      <div className="hb-tick-rule mt-7 mx-auto" style={{ maxWidth: "220px" }} aria-hidden="true" />
     </div>
   );
 }
