@@ -13,6 +13,12 @@ const LAB_SVGS: Record<LabId, (p: { hovered: boolean; reduced: boolean }) => Rea
   sleep: SleepSVG,
   energy: EnergySVG,
   stress: StressSVG,
+  hydration: HydrationSVG,
+  sound: SoundSVG,
+  focus: FocusSVG,
+  breath: BreathSVG,
+  caffeine: CaffeineSVG,
+  vision: VisionSVG,
 };
 
 function makeSineWavePath(y: number, amp: number, period: number): string {
@@ -271,6 +277,113 @@ function StressSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean })
   );
 }
 
+function HydrationSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean }) {
+  const drops = [
+    { x: 80, delay: "0s", dur: "2.4s" },
+    { x: 120, delay: "-0.8s", dur: "2.8s" },
+    { x: 160, delay: "-1.6s", dur: "2.2s" },
+  ];
+  return (
+    <svg viewBox="0 0 240 160" fill="none" className="w-full h-full">
+      <defs>
+        <clipPath id="hyd-c"><rect x="8" y="98" width="224" height="54" rx="10" /></clipPath>
+      </defs>
+      <g clipPath="url(#hyd-c)">
+        <rect x="8" y="98" width="224" height="54" fill="rgba(37,99,235,0.10)" />
+        <path d="M8 118 Q 40 108 80 118 T 160 118 T 240 118 V152 H8 Z" fill="rgba(37,99,235,0.35)">
+          {!reduced && <animateTransform attributeName="transform" type="translate" from="0 0" to="-80 0" dur="4s" repeatCount="indefinite" />}
+        </path>
+      </g>
+      {drops.map((d, i) => (
+        <g key={i}>
+          <path d={`M${d.x} 34 q -6 10 0 16 q 6 -6 0 -16`} fill="#2563EB" fillOpacity={hovered ? 0.9 : 0.7}>
+            {!reduced && <animateTransform attributeName="transform" type="translate" from="0 0" to="0 66" dur={d.dur} begin={d.delay} repeatCount="indefinite" />}
+            {!reduced && <animate attributeName="opacity" values="0;1;1;0" dur={d.dur} begin={d.delay} repeatCount="indefinite" />}
+          </path>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function SoundSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean }) {
+  const bars = [40, 62, 30, 78, 50, 88, 44, 66, 34, 72, 48];
+  return (
+    <svg viewBox="0 0 240 160" fill="none" className="w-full h-full">
+      {bars.map((h, i) => {
+        const x = 26 + i * 18;
+        return (
+          <rect key={i} x={x} y={90 - h / 2} width="9" height={h} rx="4.5" fill="#7C3AED" fillOpacity={hovered ? 0.85 : 0.62}>
+            {!reduced && <animate attributeName="height" values={`${h};${Math.max(14, h * 0.45)};${h}`} dur={`${1 + (i % 4) * 0.28}s`} repeatCount="indefinite" />}
+            {!reduced && <animate attributeName="y" values={`${90 - h / 2};${90 - Math.max(14, h * 0.45) / 2};${90 - h / 2}`} dur={`${1 + (i % 4) * 0.28}s`} repeatCount="indefinite" />}
+          </rect>
+        );
+      })}
+    </svg>
+  );
+}
+
+function FocusSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean }) {
+  return (
+    <svg viewBox="0 0 240 160" fill="none" className="w-full h-full">
+      {[52, 38, 24].map((r, i) => (
+        <circle key={i} cx="120" cy="80" r={r} fill="none" stroke="#DB2777" strokeWidth="2" strokeOpacity={hovered ? 0.7 - i * 0.12 : 0.5 - i * 0.12} />
+      ))}
+      <circle cx="120" cy="80" r="7" fill="#DB2777">
+        {!reduced && <animate attributeName="r" values="7;9;7" dur="1.6s" repeatCount="indefinite" />}
+      </circle>
+      {[0, 90, 180, 270].map((a) => {
+        const rad = (a * Math.PI) / 180;
+        return <line key={a} x1={120 + Math.cos(rad) * 58} y1={80 + Math.sin(rad) * 58} x2={120 + Math.cos(rad) * 46} y2={80 + Math.sin(rad) * 46} stroke="#DB2777" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.6" />;
+      })}
+    </svg>
+  );
+}
+
+function BreathSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean }) {
+  return (
+    <svg viewBox="0 0 240 160" fill="none" className="w-full h-full">
+      <circle cx="120" cy="80" r="46" fill="rgba(8,145,178,0.14)" stroke="#0891B2" strokeWidth="2" strokeOpacity={hovered ? 0.85 : 0.6}>
+        {!reduced && <animate attributeName="r" values="30;50;30" dur="6s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.4;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1" />}
+        {!reduced && <animate attributeName="fill-opacity" values="0.28;0.1;0.28" dur="6s" repeatCount="indefinite" />}
+      </circle>
+      <circle cx="120" cy="80" r="6" fill="#0891B2" />
+    </svg>
+  );
+}
+
+function CaffeineSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean }) {
+  const path = "M 20 60 C 60 60 70 132 120 132 C 170 132 180 96 220 96";
+  return (
+    <svg viewBox="0 0 240 160" fill="none" className="w-full h-full">
+      <line x1="20" y1="132" x2="220" y2="132" stroke="#94A3B8" strokeWidth="1" strokeOpacity="0.4" />
+      <path d={`${path} L 220 132 L 20 132 Z`} fill="#B45309" fillOpacity="0.10" />
+      <path d={path} stroke="#B45309" strokeWidth="2.6" strokeLinecap="round" strokeOpacity={hovered ? 0.95 : 0.75} />
+      <circle r="5" fill="#fff" stroke="#B45309" strokeWidth="2">
+        {!reduced && <animateMotion dur={hovered ? "3s" : "5s"} repeatCount="indefinite" path={path} />}
+      </circle>
+      <text x="26" y="52" fontSize="15" style={{ userSelect: "none" }}>☕</text>
+    </svg>
+  );
+}
+
+function VisionSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean }) {
+  return (
+    <svg viewBox="0 0 240 160" fill="none" className="w-full h-full">
+      <path d="M40 80 Q120 26 200 80 Q120 134 40 80 Z" fill="rgba(5,150,105,0.10)" stroke="#059669" strokeWidth="2" strokeOpacity={hovered ? 0.8 : 0.6} />
+      <circle cx="120" cy="80" r="22" fill="none" stroke="#059669" strokeWidth="2" strokeOpacity="0.6" />
+      <circle cx="120" cy="80" r="10" fill="#059669" fillOpacity="0.85">
+        {!reduced && <animate attributeName="r" values="10;11.5;10" dur="3s" repeatCount="indefinite" />}
+      </circle>
+      {!reduced && (
+        <path d="M40 80 Q120 26 200 80 Q120 134 40 80 Z" fill="#F7F9FC">
+          <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.92;0.96;0.99;1" dur="5s" repeatCount="indefinite" />
+        </path>
+      )}
+    </svg>
+  );
+}
+
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const reduced = useReducedMotion();
@@ -302,7 +415,7 @@ export default function HomePage() {
       </header>
 
       {/* Main */}
-      <main className="relative z-10 flex-1 flex flex-col justify-center px-6 sm:px-8 py-12 sm:py-16">
+      <main className="relative z-10 flex-1 flex flex-col justify-start px-6 sm:px-8 py-10 sm:py-14">
         <div className="w-full max-w-6xl mx-auto">
           {/* Hero */}
           <div className="max-w-3xl">
