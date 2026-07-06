@@ -5,6 +5,7 @@ import { Volume2, VolumeX, Headphones, Play } from "lucide-react";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabShell, LabHero, StatTile, SciencePanel } from "@/components/labs/kit";
 import { playTone, beep, fmtHz, type Tone } from "@/components/labs/audio";
+import PitchMatch from "@/components/labs/PitchMatch";
 
 const ACCENT = "#7C3AED";
 
@@ -72,13 +73,16 @@ export default function SoundLab() {
     <LabShell lab="sound" badge={limit ? { color: ACCENT, text: `${fmtHz(limit)} ceiling` } : undefined}>
       <LabHero
         kicker="Sound Lab · Simulation 05"
-        title="Test the ears you've got"
-        subtitle="Real tones through your speakers. Find the highest pitch you can still hear, check both channels, then see how fast loud gets dangerous."
+        title="How good is your ear?"
+        subtitle="Hear a tone, hold it in your head, rebuild it by touch. Then find the top of your hearing range, check both channels, and see how fast loud gets dangerous."
         accent={ACCENT}
       />
 
-      {/* Hearing test */}
-      <LiquidGlass radius={26} bezel={26} scale={52} style={{ padding: "24px" }}>
+      {/* Pitch Match — the centerpiece game */}
+      <PitchMatch />
+
+      {/* Hearing ceiling — bonus challenge */}
+      <LiquidGlass radius={26} bezel={26} scale={52} className="mt-4" style={{ padding: "24px" }}>
         <div className="flex items-center gap-2 mb-1">
           <Headphones className="w-4 h-4" style={{ color: ACCENT }} />
           <p className="text-sm font-semibold" style={{ color: "var(--ink)" }}>How high can you hear?</p>
