@@ -184,6 +184,10 @@
   50%  { transform: translate3d(4%, 3%, 0) scale(1.08); }
   100% { transform: translate3d(-4%, -2%, 0) scale(1); }
 }
+@keyframes sndPing { 0% { transform: scale(0.7); opacity: 0.6; } 100% { transform: scale(1.25); opacity: 0; } }
+@keyframes strTime { from { width: 100%; } to { width: 0%; } }
+@keyframes labPop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
+@keyframes labFloatUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 

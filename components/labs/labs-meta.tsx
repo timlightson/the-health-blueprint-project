@@ -203,6 +203,3 @@ export const LAB_TAGS: Record<LabId, string> = {
   caffeine: "Fuel",
   vision: "Senses",
 };
-
-/** The three deep, multi-exhibit labs shown large on the homepage. */
-export const FLAGSHIP_IDS: LabId[] = ["sleep", "energy", "stress"];

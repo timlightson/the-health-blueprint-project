@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import LiquidGlass from "@/components/labs/LiquidGlass";
-import { LABS, LAB_TAGS, FLAGSHIP_IDS, type LabId, type LabMeta } from "@/components/labs/labs-meta";
+import { LABS, LAB_TAGS, type LabId, type LabMeta } from "@/components/labs/labs-meta";
 
 // Lab identity (names, hooks, stats, accents) lives in labs-meta so the
 // homepage, lab headers, and next-lab cards never drift apart. Only the
@@ -388,9 +388,6 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const reduced = useReducedMotion();
 
-  const flagships = LABS.filter((l) => FLAGSHIP_IDS.includes(l.id));
-  const quickLabs = LABS.filter((l) => !FLAGSHIP_IDS.includes(l.id));
-
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -453,39 +450,10 @@ export default function HomePage() {
             <div className="hb-tick-rule mt-8 max-w-xs hb-reveal-fade" style={{ animationDelay: "320ms" }} aria-hidden="true" />
           </div>
 
-          {/* ── The flagship labs ─────────────────────────────────────── */}
-          <div className="mt-14 flex items-baseline justify-between gap-4">
-            <div>
-              <p className="hb-kicker" style={{ color: "var(--teal-deep)" }}>Start here</p>
-              <h2 className="text-2xl font-bold mt-1.5" style={{ color: "var(--ink)", letterSpacing: "-0.025em" }}>
-                The flagship labs
-              </h2>
-            </div>
-            <p className="text-sm hidden sm:block text-right" style={{ color: "var(--ink-faint)" }}>
-              Full simulations, games, a lot to poke at
-            </p>
-          </div>
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-            {flagships.map((lab, i) => (
-              <LabCard key={lab.id} lab={lab} delay={i * 110} mounted={mounted} reduced={reduced} />
-            ))}
-          </div>
-
-          {/* ── Quick labs ────────────────────────────────────────────── */}
-          <div className="mt-16 flex items-baseline justify-between gap-4">
-            <div>
-              <p className="hb-kicker" style={{ color: "var(--teal-deep)" }}>Keep going</p>
-              <h2 className="text-2xl font-bold mt-1.5" style={{ color: "var(--ink)", letterSpacing: "-0.025em" }}>
-                Quick labs
-              </h2>
-            </div>
-            <p className="text-sm hidden sm:block text-right" style={{ color: "var(--ink-faint)" }}>
-              One sharp idea each, five minutes, real research
-            </p>
-          </div>
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {quickLabs.map((lab, i) => (
-              <QuickLabCard key={lab.id} lab={lab} delay={330 + i * 80} mounted={mounted} reduced={reduced} />
+          {/* ── The labs — all equal, pick anything ───────────────────── */}
+          <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            {LABS.map((lab, i) => (
+              <LabCard key={lab.id} lab={lab} delay={i * 70} mounted={mounted} reduced={reduced} />
             ))}
           </div>
         </div>
@@ -656,82 +624,6 @@ function LabCard({
         </div>
       </div>
     </LiquidGlass>
-    </Link>
-  );
-}
-
-/** Compact catalog row for the quick labs: small live illustration, hook, stat. */
-function QuickLabCard({
-  lab,
-  delay,
-  mounted,
-  reduced,
-}: {
-  lab: LabMeta;
-  delay: number;
-  mounted: boolean;
-  reduced: boolean;
-}) {
-  const [hovered, setHovered] = useState(false);
-  const SVGComponent = LAB_SVGS[lab.id];
-
-  return (
-    <Link
-      href={`/labs/${lab.id}`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="group block lg lg-hover"
-      style={{
-        borderRadius: 20,
-        overflow: "hidden",
-        opacity: mounted ? 1 : 0,
-        transform: mounted ? "translateY(0)" : "translateY(18px)",
-        transition: `opacity 0.6s var(--ease-spring) ${delay}ms, transform 0.6s var(--ease-spring) ${delay}ms`,
-      }}
-    >
-      <div className="flex items-stretch">
-        {/* Mini illustration viewport */}
-        <div
-          className="relative flex-shrink-0 flex items-center justify-center"
-          style={{
-            width: 116,
-            background: `linear-gradient(160deg, ${lab.tint}, rgba(255,255,255,0.06))`,
-          }}
-        >
-          <span
-            className="absolute top-2 left-2.5 text-[10px] font-mono font-semibold"
-            style={{ color: lab.accent, opacity: 0.7, letterSpacing: "0.05em" }}
-          >
-            {lab.index}
-          </span>
-          <div style={{ width: 92, height: 66, transform: hovered ? "scale(1.06)" : "scale(1)", transition: "transform 0.5s var(--ease-spring)" }}>
-            <SVGComponent hovered={hovered} reduced={reduced} />
-          </div>
-        </div>
-
-        {/* Text */}
-        <div className="flex-1 min-w-0 px-4 py-3.5 flex flex-col">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] font-semibold uppercase" style={{ color: lab.accent, letterSpacing: "0.1em" }}>
-              {LAB_TAGS[lab.id]}
-            </span>
-            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"
-              style={{ color: lab.accent, opacity: hovered ? 1 : 0.45, transform: hovered ? "translateX(2px)" : "none", transition: "all 0.3s var(--ease-spring)" }}>
-              <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <h3 className="text-[15px] font-bold mt-0.5" style={{ color: "var(--ink)", letterSpacing: "-0.015em" }}>
-            {lab.title}
-          </h3>
-          <p className="text-xs mt-1 leading-snug" style={{ color: "var(--ink-soft)" }}>
-            {lab.headline}
-          </p>
-          <div className="mt-auto pt-2 flex items-baseline gap-1.5">
-            <span className="text-sm font-bold tabular-nums" style={{ color: lab.accent }}>{lab.stat}</span>
-            <span className="text-[11px] leading-snug truncate" style={{ color: "var(--ink-faint)" }}>{lab.statLabel}</span>
-          </div>
-        </div>
-      </div>
     </Link>
   );
 }

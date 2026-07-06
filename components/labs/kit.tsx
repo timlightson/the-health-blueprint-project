@@ -47,50 +47,6 @@ export function LabHero({ kicker, title, subtitle, accent }: { kicker: string; t
   );
 }
 
-/** Labeled native range slider with a live value readout. Keyboard-ready. */
-export function GlassSlider({
-  label,
-  value,
-  min,
-  max,
-  step = 1,
-  accent,
-  display,
-  valueText,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step?: number;
-  accent: string;
-  display: string;
-  valueText?: string;
-  onChange: (v: number) => void;
-}) {
-  return (
-    <div>
-      <div className="flex items-baseline justify-between mb-1.5">
-        <label className="text-sm font-medium" style={{ color: "var(--ink-soft)" }}>{label}</label>
-        <span className="text-sm font-bold tabular-nums" style={{ color: accent }}>{display}</span>
-      </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        aria-label={label}
-        aria-valuetext={valueText ?? display}
-        className="w-full"
-        style={{ accentColor: accent, height: "30px", cursor: "pointer" }}
-      />
-    </div>
-  );
-}
-
 /** Glass segmented control for small option sets. */
 export function Segmented<T extends string>({
   options,
