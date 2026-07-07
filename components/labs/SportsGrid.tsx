@@ -4,7 +4,37 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { SPORTS, PROFILE_COLOR, type Profile } from "@/lib/sports-energy";
-import { SPORT_ART } from "@/components/labs/sports-illustrations";
+
+// Rich fallback art until real photos land in /public/sports: a deep duotone
+// gradient field, light streaks, and a big crisp emoji. Apple emoji are
+// high-res raster art, so at this size they read as illustration, not text.
+const SPORT_EMOJI: Record<string, string> = {
+  track: "🏃", swimming: "🏊", rowing: "🚣", "cross-country": "🌲",
+  cycling: "🚴", weightlifting: "🏋️", gymnastics: "🤸", soccer: "⚽",
+  basketball: "🏀", football: "🏈", hockey: "🏒", lacrosse: "🥍",
+  tennis: "🎾", volleyball: "🏐", baseball: "⚾", wrestling: "🤼",
+};
+
+function SportArt({ id, theme }: { id: string; theme: string }) {
+  return (
+    <div className="w-full h-full relative overflow-hidden" aria-hidden="true"
+      style={{ background: `linear-gradient(150deg, ${theme} 0%, ${theme}CC 45%, #0B1A2B 145%)` }}>
+      {/* top-left light bloom */}
+      <div className="absolute inset-0" style={{ background: "radial-gradient(90% 70% at 18% 8%, rgba(255,255,255,0.34), transparent 55%)" }} />
+      {/* motion streaks */}
+      <div className="absolute" style={{ width: "150%", height: 22, top: "30%", left: "-20%", transform: "rotate(-18deg)", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent)", filter: "blur(5px)" }} />
+      <div className="absolute" style={{ width: "150%", height: 14, top: "58%", left: "-20%", transform: "rotate(-18deg)", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent)", filter: "blur(4px)" }} />
+      {/* emoji subject */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span style={{ fontSize: 58, lineHeight: 1, transform: "rotate(-6deg) translateY(-8%)", filter: "drop-shadow(0 10px 16px rgba(0,0,0,0.38)) saturate(1.05)" }}>
+          {SPORT_EMOJI[id] ?? "🏅"}
+        </span>
+      </div>
+      {/* bottom depth for the pill */}
+      <div className="absolute inset-x-0 bottom-0" style={{ height: "52%", background: "linear-gradient(180deg, transparent, rgba(0,0,0,0.34))" }} />
+    </div>
+  );
+}
 
 /**
  * Tile background: a real action photo from /public/sports/{id}.jpg when one
@@ -68,7 +98,6 @@ export default function SportsGrid() {
     <div id="sports" style={{ scrollMarginTop: "12px" }}>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         {SPORTS.map((sport) => {
-          const Art = SPORT_ART[sport.illustration];
           return (
             <Link
               key={sport.id}
@@ -77,7 +106,7 @@ export default function SportsGrid() {
               style={{ aspectRatio: "4 / 3", borderRadius: "20px", border: "1px solid rgba(255,255,255,0.55)", boxShadow: "var(--glass-shadow)" }}
             >
               <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.06]">
-                {Art ? <Art theme={sport.theme} /> : <div style={{ width: "100%", height: "100%", background: sport.theme }} />}
+                <SportArt id={sport.id} theme={sport.theme} />
                 <SportPhoto id={sport.id} theme={sport.theme} />
               </div>
 

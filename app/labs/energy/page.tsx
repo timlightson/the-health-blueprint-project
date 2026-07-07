@@ -16,6 +16,7 @@ import BuildYourDay, {
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import BodyClock from "@/components/labs/BodyClock";
 import SportsGrid from "@/components/labs/SportsGrid";
+import EnergyGlowChart from "@/components/labs/EnergyGlowChart";
 import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
 
 // ─── Hero curve helpers (activity model from Build Your Day) ─────────────────────
@@ -131,60 +132,16 @@ const hx = (t: number) => HPADL + ((t - START_H) / (END_H - START_H)) * HPLOTW;
 const hy = (e: number) => HPADT + (1 - clamp(e, 0, E_MAX) / E_MAX) * HPLOTH;
 
 function HeroEnergyChart({ curve, peakT, minT }: { curve: number[]; peakT: number; minT: number }) {
-  const pts = curve.map((e, i) => ({ x: hx(START_H + i * STEP), y: hy(e) }));
-  const line = smoothPath(pts);
-  const area = `${line} L ${hx(END_H).toFixed(1)},${HPADT + HPLOTH} L ${hx(START_H).toFixed(1)},${HPADT + HPLOTH} Z`;
-  const HOURS = [6, 9, 12, 15, 18, 21, 24];
-  const idxFor = (t: number) => Math.round((t - START_H) / STEP);
-  const peakE = curve[clamp(idxFor(peakT), 0, curve.length - 1)];
-  const lowE = curve[clamp(idxFor(minT), 0, curve.length - 1)];
-
   return (
-    <svg viewBox={`0 0 ${HW} ${HH}`} width="100%" style={{ display: "block", minWidth: "320px" }}>
-      <defs>
-        <linearGradient id="heroCurve" gradientUnits="userSpaceOnUse" x1="0" y1={HPADT} x2="0" y2={HPADT + HPLOTH}>
-          <stop offset="0" stopColor="#0D9488" />
-          <stop offset="0.42" stopColor="#0D9488" />
-          <stop offset="0.6" stopColor="#D97706" />
-          <stop offset="0.82" stopColor="#DC2626" />
-          <stop offset="1" stopColor="#DC2626" />
-        </linearGradient>
-      </defs>
-
-      {/* circadian dip shading */}
-      <rect x={hx(13.5)} y={HPADT} width={hx(15.5) - hx(13.5)} height={HPLOTH} fill="rgba(11,26,43,0.04)" />
-
-      {/* y labels */}
-      <text x="10" y={HPADT + 10} fontSize="11" fill="#0D9488" fontWeight="600">Fresh</text>
-      <text x="10" y={HPADT + HPLOTH - 3} fontSize="11" fill="#DC2626" fontWeight="600">Tired</text>
-
-      {/* hour gridlines */}
-      {HOURS.map((h) => (
-        <line key={h} x1={hx(h)} y1={HPADT} x2={hx(h)} y2={HPADT + HPLOTH} stroke="rgba(11,26,43,0.07)" strokeWidth="1" />
-      ))}
-      <line x1={HPADL} y1={HPADT + HPLOTH} x2={HPADL + HPLOTW} y2={HPADT + HPLOTH} stroke="rgba(11,26,43,0.14)" strokeWidth="1" />
-
-      {/* curve */}
-      <path d={area} fill="url(#heroCurve)" fillOpacity="0.16" />
-      <path d={line} fill="none" stroke="url(#heroCurve)" strokeWidth="3.5" strokeLinejoin="round" strokeLinecap="round" />
-
-      {/* peak + low markers */}
-      <g>
-        <circle cx={hx(peakT)} cy={hy(peakE)} r="5.5" fill="#fff" stroke="#0D9488" strokeWidth="2.5" />
-        <text x={hx(peakT)} y={hy(peakE) - 12} textAnchor="middle" fontSize="11" fontWeight="700" fill="#0D9488">peak</text>
-      </g>
-      <g>
-        <circle cx={hx(minT)} cy={hy(lowE)} r="5.5" fill="#fff" stroke="#DC2626" strokeWidth="2.5" />
-        <text x={hx(minT)} y={hy(lowE) + 20} textAnchor="middle" fontSize="11" fontWeight="700" fill="#DC2626">low</text>
-      </g>
-
-      {/* hour labels */}
-      {HOURS.map((h) => (
-        <text key={h} x={hx(h)} y={HH - 12} textAnchor="middle" fontSize="11" fill="var(--ink-faint)">
-          {h === 24 ? "12a" : h === 12 ? "12p" : h > 12 ? `${h - 12}p` : `${h}a`}
-        </text>
-      ))}
-    </svg>
+    <EnergyGlowChart
+      curve={curve}
+      peakT={peakT}
+      minT={minT}
+      startH={START_H}
+      endH={END_H}
+      step={STEP}
+      eMax={E_MAX}
+    />
   );
 }
 

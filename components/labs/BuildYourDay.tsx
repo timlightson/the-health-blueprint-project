@@ -916,24 +916,24 @@ export default function BuildYourDay({
                 }}
                 title={a.tip}
                 style={{
-                  width: "70px",
-                  height: "90px",
+                  width: "78px",
+                  height: "100px",
                   flexShrink: 0,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "4px",
-                  borderRadius: "14px",
+                  gap: "5px",
+                  borderRadius: "16px",
                   background: isArmed
                     ? "linear-gradient(165deg, rgba(13,148,136,0.22), rgba(255,255,255,0.5))"
-                    : "rgba(255,255,255,0.5)",
+                    : "linear-gradient(170deg, rgba(255,255,255,0.72), rgba(255,255,255,0.42))",
                   backdropFilter: "blur(8px)",
                   WebkitBackdropFilter: "blur(8px)",
-                  border: `1px solid ${isArmed ? "rgba(13,148,136,0.55)" : "rgba(255,255,255,0.6)"}`,
+                  border: `1px solid ${isArmed ? "rgba(13,148,136,0.55)" : "rgba(255,255,255,0.7)"}`,
                   boxShadow: isArmed
                     ? "0 0 0 3px rgba(13,148,136,0.18), inset 0 1px 0 rgba(255,255,255,0.85)"
-                    : "inset 0 1px 0 rgba(255,255,255,0.8), 0 3px 8px -4px rgba(20,30,60,0.18)",
+                    : "inset 0 1.5px 1px -0.5px rgba(255,255,255,0.95), 0 5px 12px -5px rgba(20,30,60,0.22)",
                   cursor: "grab",
                   touchAction: "none",
                   userSelect: "none",
@@ -941,7 +941,7 @@ export default function BuildYourDay({
                   transition: "transform 0.2s var(--spring), box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease",
                 }}
               >
-                <span style={{ fontSize: "26px", lineHeight: 1 }}>{a.emoji}</span>
+                <span style={{ fontSize: "34px", lineHeight: 1, filter: "drop-shadow(0 3px 5px rgba(20,30,60,0.22))" }}>{a.emoji}</span>
                 <span
                   className="text-center"
                   style={{ fontSize: "10px", color: "var(--ink-soft)", lineHeight: 1.15, padding: "0 2px" }}
