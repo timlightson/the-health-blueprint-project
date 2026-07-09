@@ -72,7 +72,7 @@ export default function SoundLab() {
   return (
     <LabShell lab="sound" badge={limit ? { color: ACCENT, text: `${fmtHz(limit)} ceiling` } : undefined}>
       <LabHero
-        kicker="Sound Lab · Simulation 05"
+        kicker="Sound Blueprint · 05"
         title="How good is your ear?"
         subtitle="Hear a tone, hold it in your head, rebuild it by touch. Then find the top of your hearing range, check both channels, and see how fast loud gets dangerous."
         accent={ACCENT}

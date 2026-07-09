@@ -282,7 +282,7 @@ export default function HydrationLab() {
   return (
     <LabShell lab="hydration">
       <LabHero
-        kicker="Hydration Lab · Simulation 04"
+        kicker="Hydration Blueprint · 04"
         title="A little dry, a lot slower"
         subtitle="Play a full school day on your water and try to stay ahead of thirst. Then grab the tank yourself and see what each percent costs."
         accent={ACCENT}

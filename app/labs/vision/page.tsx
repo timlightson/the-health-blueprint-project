@@ -52,7 +52,7 @@ export default function VisionLab() {
   return (
     <LabShell lab="vision" badge={{ color: zone.color, text: `${risk}% risk` }}>
       <LabHero
-        kicker="Vision Lab · Simulation 09"
+        kicker="Vision Blueprint · 09"
         title="Your eyes grow into your day"
         subtitle="Nearsightedness isn't just genetic. Close focus with little daylight slowly stretches the eyeball. Slide your day between screens and sunlight and watch the board go blurry."
         accent={ACCENT}

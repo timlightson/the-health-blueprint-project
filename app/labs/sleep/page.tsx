@@ -1331,7 +1331,7 @@ export default function SleepLab() {
 
             {/* Page title */}
             <div className="mb-10 text-center max-w-2xl mx-auto hb-reveal">
-              <p className="hb-kicker" style={{ color: "#0D9488" }}>Sleep Lab · Simulation 01</p>
+              <p className="hb-kicker" style={{ color: "#0D9488" }}>Sleep Blueprint · 01</p>
               <h1
                 className="font-bold mt-4"
                 style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.25rem)", color: "var(--ink)", lineHeight: 1.02, letterSpacing: "-0.035em" }}

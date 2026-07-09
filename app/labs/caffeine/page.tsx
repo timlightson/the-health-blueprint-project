@@ -79,7 +79,7 @@ export default function CaffeineLab() {
   return (
     <LabShell lab="caffeine" badge={{ color: zone.color, text: `${atBed} mg @ bed` }}>
       <LabHero
-        kicker="Caffeine Lab · Simulation 08"
+        kicker="Caffeine Blueprint · 08"
         title="It stays longer than the buzz"
         subtitle="Caffeine fades in slow steps, not all at once. Tap a drink, drop it on your day, then drag your bedtime and see how much is still working while you sleep."
         accent={ACCENT}

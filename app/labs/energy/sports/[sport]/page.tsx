@@ -19,7 +19,7 @@ export default function SportPage() {
       <header className="flex items-center px-4 sm:px-6 flex-shrink-0 lg-bar sticky top-0" style={{ height: "62px", zIndex: 40 }}>
         <Link href="/labs/energy#sports" className="group flex items-center gap-1.5 text-sm font-medium lg-pill rounded-full pl-2.5 pr-4 py-2" style={{ color: "var(--ink-soft)" }}>
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-          Back to Energy Lab
+          Back to the Energy Blueprint
         </Link>
         <div className="flex items-center gap-2.5 ml-auto">
           <span className="inline-flex items-center justify-center" style={{ width: 32, height: 32, borderRadius: 12, background: "linear-gradient(160deg, rgba(245,158,11,0.34), rgba(255,255,255,0.5))", border: "1px solid rgba(255,255,255,0.6)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9), 0 4px 10px -4px rgba(201,118,15,0.5)" }}>
@@ -55,7 +55,7 @@ export default function SportPage() {
           ) : (
             <div className="text-center py-20">
               <h1 className="font-bold" style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)", color: "var(--ink)" }}>That sport is not here yet</h1>
-              <p className="mt-3" style={{ color: "var(--ink-soft)" }}>Pick one from the grid back in the Energy Lab.</p>
+              <p className="mt-3" style={{ color: "var(--ink-soft)" }}>Pick one from the grid back in the Energy Blueprint.</p>
               <Link href="/labs/energy#sports" className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold lg-pill rounded-full px-4 py-2.5" style={{ color: "var(--ink-soft)" }}>
                 <ArrowLeft className="w-4 h-4" />
                 Back to the sports

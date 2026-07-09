@@ -413,7 +413,7 @@ export default function EnergyLab() {
           {/* ZONE 1 — DIAGNOSTIC HERO */}
           <ZoneSection first sectionRef={heroRef} padBottom={56}>
             <div className="mb-10 text-center max-w-2xl mx-auto hb-reveal">
-              <p className="hb-kicker" style={{ color: "#C9760F" }}>Energy Lab · Simulation 02</p>
+              <p className="hb-kicker" style={{ color: "#C9760F" }}>Energy Blueprint · 02</p>
               <h1 className="font-bold mt-4" style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.25rem)", color: "var(--ink)", lineHeight: 1.02, letterSpacing: "-0.035em" }}>
                 Your energy across the day
               </h1>

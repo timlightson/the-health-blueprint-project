@@ -81,7 +81,7 @@ export default function FocusLab() {
   return (
     <LabShell lab="focus" badge={r1 ? { color: ACCENT, text: `${r1} ms clear` } : undefined}>
       <LabHero
-        kicker="Focus Lab · Simulation 06"
+        kicker="Focus Blueprint · 06"
         title="Feel the switch cost"
         subtitle="Two rounds of the same simple game: tap the dot the instant it appears. First in a clean room, then buried in notifications. Your own reaction times tell the story."
         accent={ACCENT}

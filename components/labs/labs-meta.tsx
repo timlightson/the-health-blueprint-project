@@ -38,7 +38,7 @@ export const LABS: LabMeta[] = [
     id: "sleep",
     index: "01",
     name: "Sleep",
-    title: "Sleep Lab",
+    title: "Sleep Blueprint",
     headline: "How sleep debt rewires your brain",
     description:
       "Build your real week and watch what stacks up by Friday. Reaction time, memory, mood, all of it.",
@@ -55,7 +55,7 @@ export const LABS: LabMeta[] = [
     id: "energy",
     index: "02",
     name: "Energy",
-    title: "Energy Lab",
+    title: "Energy Blueprint",
     headline: "Why your energy spikes, crashes, and slumps",
     description:
       "Build your real day and watch the curve respond. Meet the 24-hour clock behind your afternoon slump, and the engines that fire when you sprint.",
@@ -72,7 +72,7 @@ export const LABS: LabMeta[] = [
     id: "stress",
     index: "03",
     name: "Stress",
-    title: "Stress Lab",
+    title: "Stress Blueprint",
     headline: "What being overwhelmed does to your brain",
     description:
       "Stack up a day's worth of pressure and watch it quietly take your focus, memory, and patience offline.",
@@ -89,7 +89,7 @@ export const LABS: LabMeta[] = [
     id: "hydration",
     index: "04",
     name: "Hydration",
-    title: "Hydration Lab",
+    title: "Hydration Blueprint",
     headline: "What a little dehydration does to your brain",
     description:
       "Drop your fluid level and watch focus, mood, and effort slide. Small losses hit harder than you'd think.",
@@ -106,7 +106,7 @@ export const LABS: LabMeta[] = [
     id: "sound",
     index: "05",
     name: "Sound",
-    title: "Sound Lab",
+    title: "Sound Blueprint",
     headline: "How loud is too loud, and for how long",
     description:
       "Set the volume and the hours, and see how fast your ears cross the line. Earbuds get there quicker than concerts.",
@@ -123,7 +123,7 @@ export const LABS: LabMeta[] = [
     id: "focus",
     index: "06",
     name: "Focus",
-    title: "Focus Lab",
+    title: "Focus Blueprint",
     headline: "The real cost of switching tasks",
     description:
       "Stack up interruptions and watch the minutes leak out. Multitasking is a story your brain tells you.",
@@ -140,7 +140,7 @@ export const LABS: LabMeta[] = [
     id: "breath",
     index: "07",
     name: "Breath",
-    title: "Breath Lab",
+    title: "Breath Blueprint",
     headline: "How your breath dials your nervous system",
     description:
       "Slow your breathing down and watch your nervous system follow. The exhale is the lever.",
@@ -157,7 +157,7 @@ export const LABS: LabMeta[] = [
     id: "caffeine",
     index: "08",
     name: "Caffeine",
-    title: "Caffeine Lab",
+    title: "Caffeine Blueprint",
     headline: "Where your caffeine actually goes",
     description:
       "Set when and how much, then watch how much is still in you at bedtime. Caffeine lingers way past the buzz.",
@@ -174,7 +174,7 @@ export const LABS: LabMeta[] = [
     id: "vision",
     index: "09",
     name: "Vision",
-    title: "Vision Lab",
+    title: "Vision Blueprint",
     headline: "Why screens and sunlight shape your eyes",
     description:
       "Trade screen time for sunlight and watch your eyes' risk shift. Where you look all day shapes how they grow.",
