@@ -281,73 +281,35 @@ function StressSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean })
 }
 
 function HydrationSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean }) {
-  // Two surface waves at a 60px period so the -60 translate loops seamlessly.
-  const wave = (y: number) =>
-    `M60 ${y} q15 -5 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 V152 H60 Z`;
+  // The surface wave scrolls left by exactly one period (80px), so the path has
+  // to start a full period before the tank and end a full period after it.
+  // Otherwise it slides off its own right edge and the tank goes flat there.
+  const WAVE =
+    "M-80 118 q20 -9 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 V152 H-80 Z";
   const drops = [
-    { x: 105, dur: "2.6s", begin: "0s" },
-    { x: 120, dur: "2.2s", begin: "-1.1s" },
-    { x: 135, dur: "2.9s", begin: "-1.8s" },
+    { x: 80, delay: "0s", dur: "2.4s" },
+    { x: 120, delay: "-0.8s", dur: "2.8s" },
+    { x: 160, delay: "-1.6s", dur: "2.2s" },
   ];
-  const bubbles = [
-    { x: 108, r: 2.2, dur: "3.1s", begin: "0s" },
-    { x: 122, r: 1.5, dur: "2.5s", begin: "-1.2s" },
-    { x: 133, r: 2.6, dur: "3.6s", begin: "-2.1s" },
-  ];
-
   return (
     <svg viewBox="0 0 240 160" fill="none" className="w-full h-full">
       <defs>
-        <clipPath id="hyd-bottle">
-          <rect x="94" y="34" width="52" height="114" rx="22" />
-        </clipPath>
-        <linearGradient id="hyd-water" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#60A5FA" stopOpacity="0.85" />
-          <stop offset="100%" stopColor="#2563EB" stopOpacity="0.95" />
-        </linearGradient>
+        <clipPath id="hyd-c"><rect x="8" y="98" width="224" height="54" rx="10" /></clipPath>
       </defs>
-
-      {/* falling droplets */}
-      {drops.map((d, i) => (
-        <path key={i} d={`M${d.x} 6 q -4.5 8 0 12 q 4.5 -4 0 -12`} fill="#2563EB" fillOpacity={hovered ? 0.95 : 0.75}>
-          {!reduced && <animateTransform attributeName="transform" type="translate" from="0 0" to="0 24" dur={d.dur} begin={d.begin} repeatCount="indefinite" />}
-          {!reduced && <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.75;1" dur={d.dur} begin={d.begin} repeatCount="indefinite" />}
+      <g clipPath="url(#hyd-c)">
+        <rect x="8" y="98" width="224" height="54" fill="rgba(37,99,235,0.10)" />
+        <path d={WAVE} fill="rgba(37,99,235,0.35)">
+          {!reduced && <animateTransform attributeName="transform" type="translate" from="0 0" to="-80 0" dur="4s" repeatCount="indefinite" />}
         </path>
-      ))}
-
-      {/* cap + neck */}
-      <rect x="110" y="22" width="20" height="11" rx="3" fill="#94A3B8" fillOpacity="0.55" />
-
-      {/* bottle interior */}
-      <g clipPath="url(#hyd-bottle)">
-        <rect x="94" y="34" width="52" height="114" fill="rgba(37,99,235,0.07)" />
-
-        {/* water body with a rolling surface */}
-        <g>
-          {!reduced && <animateTransform attributeName="transform" type="translate" from="0 0" to="-60 0" dur="5s" repeatCount="indefinite" />}
-          <path d={wave(84)} fill="url(#hyd-water)" />
-        </g>
-
-        {/* rising bubbles */}
-        {!reduced && bubbles.map((b, i) => (
-          <circle key={i} cx={b.x} cy="146" r={b.r} fill="#fff" fillOpacity="0.5">
-            <animateTransform attributeName="transform" type="translate" from="0 0" to="0 -56" dur={b.dur} begin={b.begin} repeatCount="indefinite" />
-            <animate attributeName="fill-opacity" values="0;0.55;0" dur={b.dur} begin={b.begin} repeatCount="indefinite" />
-          </circle>
-        ))}
-
-        {/* glass highlight */}
-        <rect x="100" y="42" width="9" height="96" rx="4.5" fill="#fff" fillOpacity="0.28" />
       </g>
-
-      {/* bottle outline */}
-      <rect
-        x="94" y="34" width="52" height="114" rx="22"
-        fill="none" stroke="#2563EB"
-        strokeOpacity={hovered ? 0.45 : 0.28}
-        strokeWidth="2"
-        style={{ transition: "stroke-opacity 0.4s ease" }}
-      />
+      {drops.map((d, i) => (
+        <g key={i}>
+          <path d={`M${d.x} 34 q -6 10 0 16 q 6 -6 0 -16`} fill="#2563EB" fillOpacity={hovered ? 0.9 : 0.7}>
+            {!reduced && <animateTransform attributeName="transform" type="translate" from="0 0" to="0 66" dur={d.dur} begin={d.delay} repeatCount="indefinite" />}
+            {!reduced && <animate attributeName="opacity" values="0;1;1;0" dur={d.dur} begin={d.delay} repeatCount="indefinite" />}
+          </path>
+        </g>
+      ))}
     </svg>
   );
 }
