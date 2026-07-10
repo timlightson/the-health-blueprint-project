@@ -1,14 +1,15 @@
 import { ImageResponse } from 'next/og'
+import { BRAND_NAVY } from '@/components/site/BrandMark'
 
 export const alt = 'The Health Blueprint — see what\'s actually happening inside your body'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
-// Brand mark: the blueprint wave, drawn as an inline SVG data URI.
+// Brand mark: navy circle + white cross, matching components/site/BrandMark.
 const mark =
   'data:image/svg+xml,' +
   encodeURIComponent(
-    '<svg width="44" height="44" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="16" rx="4.5" fill="#0B1A2B"/><path d="M2 9 L5 9 L6.5 4 L9.5 12 L11 9 L14 9" stroke="#2DD4BF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+    `<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="32" fill="${BRAND_NAVY}"/><rect x="25" y="15" width="14" height="34" rx="1" fill="#fff"/><rect x="15" y="25" width="34" height="14" rx="1" fill="#fff"/></svg>`,
   )
 
 const labs = [
@@ -37,7 +38,7 @@ export default function OpengraphImage() {
         {/* Wordmark */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={mark} width={44} height={44} alt="" />
+          <img src={mark} width={52} height={52} alt="" />
           <div style={{ fontSize: 28, fontWeight: 600, color: '#0B1A2B', letterSpacing: '-0.01em' }}>
             The Health Blueprint
           </div>
