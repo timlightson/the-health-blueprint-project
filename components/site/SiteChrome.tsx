@@ -55,6 +55,9 @@ export function SiteFooter() {
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
           <span className="text-xs" style={{ color: "var(--ink-faint)" }}>For educational purposes only · not medical advice</span>
+          <Link href="/about" className="text-xs font-medium hover:underline" style={{ color: "var(--ink-soft)" }}>
+            About
+          </Link>
           <a href="https://www.instagram.com/thehealthblueprintproject" target="_blank" rel="noopener noreferrer" className="text-xs font-medium hover:underline" style={{ color: "var(--ink-soft)" }}>
             @thehealthblueprintproject
           </a>
