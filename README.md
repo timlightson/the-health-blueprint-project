@@ -27,7 +27,8 @@ Built with Next.js, Tailwind CSS, and Radix UI, on a custom Liquid Glass design 
 - `/labs/{id}` — the nine Blueprints
 - `/labs/sleep/games/[game]` — sleep mini-games
 - `/about` — mission, the Learn/Explore/Apply ladder, and the evidence rules
-- `/start` — mobile-first link-in-bio and QR landing page
+- `/project` — self-contained landing page for QR codes on resumes, applications, and posters
+- `/links` — mobile-first link-in-bio page (the Instagram bio URL, replaces Linktree)
 
 ## Getting started
 

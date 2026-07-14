@@ -1,20 +1,18 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, ArrowUpRight, BookOpen, Compass, FlaskConical, Instagram, Moon } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BookOpen, Compass, Github, Globe, Instagram, Moon } from "lucide-react";
 import { BrandMark } from "@/components/site/BrandMark";
-import { labMeta } from "@/components/labs/labs-meta";
+import { TAGLINE, INSTAGRAM_HANDLE, INSTAGRAM_URL, GITHUB_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Start here · The Health Blueprint",
+  title: "Links · The Health Blueprint",
   description:
     "Health lessons school never taught you. Interactive Blueprints, short cited reads, and one place to start: sleep.",
 };
 
-// ─── /start — the link-in-bio and QR landing page ─────────────────────────────
-// One mobile-first column of large cards. This is the URL that goes on
-// Instagram, QR codes, and anywhere else people arrive from off-site.
-
-const INSTAGRAM_URL = "https://www.instagram.com/thehealthblueprintproject";
+// ─── /links — the link-in-bio page ────────────────────────────────────────────
+// One mobile-first column of large cards. This is the URL in the Instagram bio
+// (it replaces Linktree). The QR / resume landing page is /project.
 
 interface StartCard {
   href: string;
@@ -36,26 +34,34 @@ const CARDS: StartCard[] = [
     featured: true,
   },
   {
-    href: "/#blueprints",
-    title: "Explore every Blueprint",
-    sub: "Nine interactive labs. Move the controls, watch real data respond.",
-    icon: FlaskConical,
+    href: "/",
+    title: "Visit the website",
+    sub: "Nine interactive Blueprints. Move the controls, watch real data respond.",
+    icon: Globe,
     tone: "#2563EB",
-  },
-  {
-    href: "/learn",
-    title: "Read the articles",
-    sub: "Short, cited answers to the health stuff school skips.",
-    icon: BookOpen,
-    tone: "#C9760F",
   },
   {
     href: INSTAGRAM_URL,
     external: true,
     title: "Follow on Instagram",
-    sub: "@thehealthblueprintproject",
+    sub: INSTAGRAM_HANDLE,
     icon: Instagram,
     tone: "#D8443B",
+  },
+  {
+    href: GITHUB_URL,
+    external: true,
+    title: "See the code",
+    sub: "The whole platform is open on GitHub.",
+    icon: Github,
+    tone: "#0B1A2B",
+  },
+  {
+    href: "/learn",
+    title: "Research & articles",
+    sub: "Short reads that answer one real question, every source cited.",
+    icon: BookOpen,
+    tone: "#C9760F",
   },
   {
     href: "/about",
@@ -66,7 +72,7 @@ const CARDS: StartCard[] = [
   },
 ];
 
-export default function StartPage() {
+export default function LinksPage() {
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
       <div className="lab-aurora" aria-hidden="true" />
@@ -82,7 +88,7 @@ export default function StartPage() {
             The Health Blueprint
           </h1>
           <p className="mt-2 text-center text-sm hb-reveal" style={{ color: "var(--ink-soft)", animationDelay: "80ms" }}>
-            Health lessons school never taught you.
+            {TAGLINE}
           </p>
           <div className="hb-tick-rule mt-6 w-40" aria-hidden="true" />
 

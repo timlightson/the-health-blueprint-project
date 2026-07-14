@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/site/BrandMark";
+import { TAGLINE, DISCLAIMER, INSTAGRAM_HANDLE, INSTAGRAM_URL, GITHUB_URL } from "@/lib/site";
 
 // ─── Shared platform chrome ───────────────────────────────────────────────────
 // One nav + footer for the platform-level pages (home, Learn). The Blueprints
@@ -50,16 +51,19 @@ export function SiteFooter() {
         <div className="flex items-center gap-2.5">
           <BrandMark size={26} />
           <span className="text-xs" style={{ color: "var(--ink-faint)" }}>
-            Health lessons school never taught you.
+            {TAGLINE}
           </span>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-          <span className="text-xs" style={{ color: "var(--ink-faint)" }}>For educational purposes only · not medical advice</span>
+          <span className="text-xs" style={{ color: "var(--ink-faint)" }}>{DISCLAIMER}</span>
           <Link href="/about" className="text-xs font-medium hover:underline" style={{ color: "var(--ink-soft)" }}>
             About
           </Link>
-          <a href="https://www.instagram.com/thehealthblueprintproject" target="_blank" rel="noopener noreferrer" className="text-xs font-medium hover:underline" style={{ color: "var(--ink-soft)" }}>
-            @thehealthblueprintproject
+          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="text-xs font-medium hover:underline" style={{ color: "var(--ink-soft)" }}>
+            GitHub
+          </a>
+          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="text-xs font-medium hover:underline" style={{ color: "var(--ink-soft)" }}>
+            {INSTAGRAM_HANDLE}
           </a>
         </div>
       </div>
