@@ -191,6 +191,16 @@ export const LABS: LabMeta[] = [
 
 export const labMeta = (id: LabId): LabMeta => LABS.find((l) => l.id === id)!;
 
+/** Page metadata for a lab route. Each lab's layout.tsx exports this so the
+ *  client page still gets a real title/description for search and sharing. */
+export const labPageMetadata = (id: LabId) => {
+  const m = labMeta(id);
+  return {
+    title: `${m.title} · The Health Blueprint`,
+    description: `${m.headline}. ${m.description}`,
+  };
+};
+
 /** Catalog category per lab — shown as a small tag on homepage cards. */
 export const LAB_TAGS: Record<LabId, string> = {
   sleep: "Recovery",

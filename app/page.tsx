@@ -281,6 +281,11 @@ function StressSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean })
 }
 
 function HydrationSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean }) {
+  // The surface wave scrolls left by exactly one period (80px), so the path has
+  // to start a full period before the tank and end a full period after it.
+  // Otherwise it slides off its own right edge and the tank goes flat there.
+  const WAVE =
+    "M-80 118 q20 -9 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 V152 H-80 Z";
   const drops = [
     { x: 80, delay: "0s", dur: "2.4s" },
     { x: 120, delay: "-0.8s", dur: "2.8s" },
@@ -293,7 +298,7 @@ function HydrationSVG({ hovered, reduced }: { hovered: boolean; reduced: boolean
       </defs>
       <g clipPath="url(#hyd-c)">
         <rect x="8" y="98" width="224" height="54" fill="rgba(37,99,235,0.10)" />
-        <path d="M8 118 Q 40 108 80 118 T 160 118 T 240 118 V152 H8 Z" fill="rgba(37,99,235,0.35)">
+        <path d={WAVE} fill="rgba(37,99,235,0.35)">
           {!reduced && <animateTransform attributeName="transform" type="translate" from="0 0" to="-80 0" dur="4s" repeatCount="indefinite" />}
         </path>
       </g>

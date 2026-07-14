@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { ReactNode } from "react";
 import { labMeta, type LabId } from "@/components/labs/labs-meta";
+import { DISCLAIMER, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/site";
 
 // ─── Shared lab chrome ────────────────────────────────────────────────────────
 // One sticky glass header and one footer, used by every lab. Labs stand alone,
@@ -84,19 +85,19 @@ export function LabFooter() {
         style={{ borderTop: "1px solid rgba(11,26,43,0.10)" }}
       >
         <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
-          For educational purposes only · not medical advice
+          {DISCLAIMER}
         </p>
         <p className="text-xs" style={{ color: "var(--ink-faint)" }}>
           Sources: CDC · NIH · peer-reviewed research
         </p>
         <a
-          href="https://www.instagram.com/thehealthblueprintproject"
+          href={INSTAGRAM_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs font-medium hover:underline"
           style={{ color: "var(--ink-soft)" }}
         >
-          @thehealthblueprintproject
+          {INSTAGRAM_HANDLE}
         </a>
       </div>
     </footer>
