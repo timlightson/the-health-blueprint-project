@@ -24,7 +24,7 @@ const PROOF = [
 
 const LADDER = [
   { icon: Instagram, tone: "#D8443B", step: "Instagram", line: "One question per post. Something you didn't know." },
-  { icon: FlaskConical, tone: "#2563EB", step: "Website", line: "The full explanation, as a simulation you can play with." },
+  { icon: FlaskConical, tone: "#2563EB", step: "Platform", line: "The full explanation, as a simulation you can play with." },
   { icon: Smartphone, tone: "#C9760F", step: "App", line: "Your habits, your data, your plan. Coming later." },
 ];
 
@@ -44,7 +44,7 @@ export default function ProjectPage() {
           </span>
         </div>
         <Link href="/" className="text-sm font-medium inline-flex items-center gap-1.5 lg-pill rounded-full px-4 py-2" style={{ color: "var(--ink-soft)" }}>
-          Visit the website <ArrowRight className="w-3.5 h-3.5" />
+          Explore the platform <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </header>
 
@@ -86,7 +86,7 @@ export default function ProjectPage() {
                 Try the Sleep Blueprint <ArrowRight className="w-4 h-4" />
               </Link>
               <Link href="/" className="inline-flex items-center gap-2 rounded-full font-semibold text-sm px-6 lg-pill" style={{ minHeight: 50, color: "var(--ink-soft)" }}>
-                Explore the website
+                See every Blueprint
               </Link>
             </div>
           </section>
@@ -181,10 +181,10 @@ export default function ProjectPage() {
           <section className="mt-20 sm:mt-24 max-w-2xl mx-auto text-center pb-4">
             <p className="hb-kicker" style={{ color: "var(--teal-deep)" }}>About the project</p>
             <p className="mt-4" style={{ color: "var(--ink-soft)", lineHeight: 1.7 }}>
-              The Health Blueprint is an independent student project: one person who noticed
-              the gap in health education and started building the tools to fill it. The
-              whole platform is open source, and every Instagram post grows into a cited
-              article and an interactive Blueprint here.
+              The Health Blueprint is an independent public health education project, built
+              and maintained by one person who saw the gap in health education and started
+              closing it. The whole platform is open source, and every Instagram post grows
+              into a cited article and an interactive Blueprint here.
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
               {[
