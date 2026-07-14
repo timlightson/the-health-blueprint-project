@@ -11,6 +11,23 @@ Claude Code has complete creative freedom over colors, typography, spacing, card
 ## Lab Layout
 Labs should feel like interactive experiences, not dashboards. The simulations are the main event. Controls should be intuitive and tactile. Data should respond instantly to input. Each lab should be organized into clear visual zones that give the page rhythm and hierarchy. Mobile should feel just as good as desktop.
 
+## Writing Philosophy
+This is the highest priority. Do not write like an AI assistant, a marketing agency, a health blog, or a textbook. Write like an exceptional science communicator. Every sentence should feel like it was written by someone who deeply understands the topic and knows how to explain it simply. The tone to aim for: The New York Times science desk, Quanta Magazine, Works in Progress, Vox and Kurzgesagt explainers, kept concise enough for a modern digital product. Above all, the writing should sound unmistakably human.
+
+- Assume the reader is intelligent but unfamiliar with the science.
+- Prefer clarity over cleverness. Prefer precision over enthusiasm. Never exaggerate. Never use motivational, corporate, or filler language. No cliches.
+- Explain, don't teach. Open with the question the reader already has ("Why do you remember some moments forever, but forget yesterday's homework?"), then give the mechanism. Teaching starts with "The hippocampus consolidates episodic memory." Explaining earns the right to mention the hippocampus.
+- Every paragraph answers ONE question. Every sentence moves the explanation forward.
+- Never more than three sentences before giving the reader visual breathing room, especially on phones.
+- Articles are explainers, not blogs. Structure them like Vox or NYT Graphics: each section is one question, headed by a short declarative sentence ("Your brain isn't shutting down."), not a topic label ("Why Sleep Matters") followed by four paragraphs.
+- The reader should finish each section thinking "I finally understand why that happens," not "I learned another health tip."
+- Banned phrases: "unlock your potential," "optimize your health," "evidence-based strategies," "empower," "journey," "life-changing," "game-changing," "transform your life," "superpower."
+
+Calibration examples:
+- "Sleep is the foundation of optimal cognitive performance and emotional well-being" becomes "Sleep changes how your brain learns, reacts, and remembers."
+- "Hydration is critical for maximizing physical and mental performance" becomes "Even mild dehydration changes the way your brain works."
+- "Stress affects nearly every aspect of human physiology" becomes "Stress changes more than your mood. It changes the way your brain makes decisions."
+
 ## Writing Voice
 Our readers are American teenagers, and they're smart. Write like a sharp older friend explaining something they actually find interesting, not a lab manual and not a corporate wellness app. Warm, direct, and a little bit cool. Premium and clean like the design, just human. This is the standing rule for all copy, not a one-time pass.
 
