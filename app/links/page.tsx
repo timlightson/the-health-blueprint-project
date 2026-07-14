@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, ArrowUpRight, BookOpen, Compass, Github, Globe, Instagram, Moon } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BookOpen, Compass, FlaskConical, Github, Instagram, Moon } from "lucide-react";
 import { BrandMark } from "@/components/site/BrandMark";
 import { TAGLINE, INSTAGRAM_HANDLE, INSTAGRAM_URL, GITHUB_URL } from "@/lib/site";
 
@@ -35,9 +35,9 @@ const CARDS: StartCard[] = [
   },
   {
     href: "/",
-    title: "Visit the website",
+    title: "Explore All Blueprints",
     sub: "Nine interactive Blueprints. Move the controls, watch real data respond.",
-    icon: Globe,
+    icon: FlaskConical,
     tone: "#2563EB",
   },
   {
@@ -51,21 +51,21 @@ const CARDS: StartCard[] = [
   {
     href: GITHUB_URL,
     external: true,
-    title: "See the code",
-    sub: "The whole platform is open on GitHub.",
+    title: "See the Code",
+    sub: "The whole platform is open source on GitHub.",
     icon: Github,
     tone: "#0B1A2B",
   },
   {
     href: "/learn",
-    title: "Research & articles",
-    sub: "Short reads that answer one real question, every source cited.",
+    title: "Learn",
+    sub: "Short, cited reads behind every Blueprint.",
     icon: BookOpen,
     tone: "#C9760F",
   },
   {
     href: "/about",
-    title: "About the project",
+    title: "About the Project",
     sub: "Why this exists and the rules every page follows.",
     icon: Compass,
     tone: "#5A6675",

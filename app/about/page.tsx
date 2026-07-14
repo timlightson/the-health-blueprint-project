@@ -80,8 +80,8 @@ export default function AboutPage() {
               Most health problems are easier to understand before they start. But the way this stuff usually
               gets taught, as warnings and worksheets, doesn&apos;t stick. What sticks is seeing it happen.
               So instead of another article telling you sleep matters, you get a simulation where you set your
-              real schedule and watch your reaction time slide. The Health Blueprint is an independent student
-              project built on one belief: if you can play with a system, you understand it.
+              real schedule and watch your reaction time slide. The Health Blueprint is an independent health
+              education project built on one belief: if you can play with a system, you understand it.
             </p>
           </section>
 
