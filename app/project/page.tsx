@@ -8,7 +8,7 @@ import { TAGLINE, INSTAGRAM_HANDLE, INSTAGRAM_URL, GITHUB_URL, DISCLAIMER } from
 export const metadata: Metadata = {
   title: "The Health Blueprint · An interactive public health platform",
   description:
-    "Health lessons school never taught you. Nine interactive Blueprints where teens play with real, cited data and watch their habits change the outcome.",
+    "Nine evidence-led interactive Blueprints covering everyday health topics for students and young adults.",
 };
 
 // ─── /project — the QR landing page ───────────────────────────────────────────
@@ -18,14 +18,14 @@ export const metadata: Metadata = {
 
 const PROOF = [
   { value: "9", label: "interactive Blueprints, live now" },
-  { value: "100%", label: "of the numbers cited to real research" },
+  { value: "Sources", label: "named alongside health claims" },
   { value: "$0", label: "free and open, no sign-up" },
 ];
 
 const LADDER = [
-  { icon: Instagram, tone: "#D8443B", step: "Instagram", line: "One question per post. Something you didn't know." },
-  { icon: FlaskConical, tone: "#2563EB", step: "Platform", line: "The full explanation, as a simulation you can play with." },
-  { icon: Smartphone, tone: "#C9760F", step: "App", line: "Your habits, your data, your plan. Coming later." },
+  { icon: Instagram, tone: "#D8443B", step: "Instagram", line: "One focused question and a concise, sourced answer." },
+  { icon: FlaskConical, tone: "#2563EB", step: "Platform", line: "The fuller explanation, paired with an interactive model." },
+  { icon: Smartphone, tone: "#C9760F", step: "App", line: "A planned personal layer for relating concepts to habits." },
 ];
 
 const FUTURE = ["Nutrition", "Exercise", "Screen Time", "Preventive Medicine"];
@@ -48,7 +48,7 @@ export default function ProjectPage() {
         </Link>
       </header>
 
-      <main className="relative z-10 flex-1">
+      <main id="main-content" tabIndex={-1} className="relative z-10 flex-1">
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
 
           {/* ── HERO ─────────────────────────────────────────────────── */}
@@ -60,17 +60,16 @@ export default function ProjectPage() {
               className="mt-5 font-bold hb-reveal"
               style={{ fontSize: "clamp(2.4rem, 6.5vw, 4.2rem)", lineHeight: 1.0, letterSpacing: "-0.035em", color: "var(--ink)", animationDelay: "100ms" }}
             >
-              Health lessons school
+              Evidence you can
               <br />
-              <span className="hb-ink-gradient">never taught you</span>.
+              <span className="hb-ink-gradient">inspect and explore</span>.
             </h1>
             <p
               className="mt-6 text-lg sm:text-xl mx-auto hb-reveal"
               style={{ color: "var(--ink-soft)", lineHeight: 1.55, maxWidth: "36rem", animationDelay: "200ms" }}
             >
-              Teens don&apos;t need another lecture about sleep. They need to set their real
-              schedule and watch their reaction time slide. The Health Blueprint turns
-              preventive health into simulations you can play with.
+              The Health Blueprint pairs concise health explainers with interactive models.
+              Readers can change the inputs, see the assumptions, and follow the cited research.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3 hb-reveal" style={{ animationDelay: "300ms" }}>
               <Link
@@ -109,10 +108,9 @@ export default function ProjectPage() {
               Most health problems are easier to understand before they start.
             </h2>
             <p className="mt-4" style={{ color: "var(--ink-soft)", lineHeight: 1.7 }}>
-              School covers the food pyramid and moves on. Nobody explains why you can&apos;t
-              fall asleep after scrolling, or why everything feels personal on five hours of
-              sleep. This project fills that gap with one rule: every number comes from real
-              research, and the citation sits right next to the claim.
+              Health guidance is more useful when readers can see both the evidence and the limits
+              of the model. This project keeps citations close to claims and labels simulations as
+              educational estimates rather than medical assessments.
             </p>
           </section>
 

@@ -14,16 +14,13 @@ import BuildYourDay, {
   type Placed,
 } from "@/components/labs/BuildYourDay";
 import LiquidGlass from "@/components/labs/LiquidGlass";
+import LabHeroSignal from "@/components/labs/LabHeroSignal";
 import BodyClock from "@/components/labs/BodyClock";
 import SportsGrid from "@/components/labs/SportsGrid";
 import EnergyGlowChart from "@/components/labs/EnergyGlowChart";
 import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
 
 // ─── Hero curve helpers (activity model from Build Your Day) ─────────────────────
-
-function clamp(v: number, lo: number, hi: number) {
-  return Math.max(lo, Math.min(hi, v));
-}
 
 // Energy 0–E_MAX mapped to a friendly 0–100 percentage.
 const pct = (e: number) => Math.max(0, Math.min(100, Math.round((e / E_MAX) * 100)));
@@ -105,31 +102,7 @@ function energyReadouts(curve: number[]): Readouts {
   return { peakT: tAt(maxI), peakLo: tAt(lo), peakHi: tAt(hi), peakVal, minT: tAt(minI), lowVal: curve[minI], crashes, avg };
 }
 
-function smoothPath(pts: { x: number; y: number }[]): string {
-  if (pts.length < 2) return "";
-  let d = `M ${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
-  for (let i = 1; i < pts.length; i++) {
-    const xc = (pts[i - 1].x + pts[i].x) / 2;
-    const yc = (pts[i - 1].y + pts[i].y) / 2;
-    d += ` Q ${pts[i - 1].x.toFixed(1)},${pts[i - 1].y.toFixed(1)} ${xc.toFixed(1)},${yc.toFixed(1)}`;
-  }
-  const last = pts[pts.length - 1];
-  d += ` L ${last.x.toFixed(1)},${last.y.toFixed(1)}`;
-  return d;
-}
-
 // ─── Hero energy chart ───────────────────────────────────────────────────────────
-
-const HW = 720;
-const HH = 250;
-const HPADL = 40;
-const HPADR = 16;
-const HPADT = 22;
-const HPADB = 40;
-const HPLOTW = HW - HPADL - HPADR;
-const HPLOTH = HH - HPADT - HPADB;
-const hx = (t: number) => HPADL + ((t - START_H) / (END_H - START_H)) * HPLOTW;
-const hy = (e: number) => HPADT + (1 - clamp(e, 0, E_MAX) / E_MAX) * HPLOTH;
 
 function HeroEnergyChart({ curve, peakT, minT }: { curve: number[]; peakT: number; minT: number }) {
   return (
@@ -406,7 +379,7 @@ export default function EnergyLab() {
       <LabHeader lab="energy" badge={<HeaderBadge color={avgCol}>Avg {avgPct}%</HeaderBadge>} />
 
       <div className="flex flex-1 min-h-0" style={{ position: "relative", zIndex: 10 }}>
-        <main ref={mainRef} className="flex-1 overflow-y-auto">
+        <main id="main-content" tabIndex={-1} ref={mainRef} className="flex-1 overflow-y-auto">
 
           <StickyBar visible={scrolled} avgPct={avgPct} crashes={readouts.crashes} onBackToTop={handleBackToTop} />
 
@@ -420,6 +393,7 @@ export default function EnergyLab() {
               <p className="mt-4 mx-auto" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "32rem" }}>
                 Build your real day below and watch the curve respond. You will see where you peak, where you crash, and the moment your tank runs lowest.
               </p>
+              <LabHeroSignal lab="energy" accent="#C9760F" />
             </div>
 
             {/* Headline readouts */}

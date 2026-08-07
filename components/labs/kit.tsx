@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
-import { labMeta, type LabId } from "@/components/labs/labs-meta";
+import LabHeroSignal from "@/components/labs/LabHeroSignal";
+import type { LabId } from "@/components/labs/labs-meta";
 
 // ─── Shared lab kit ───────────────────────────────────────────────────────────
 // Primitives every lab is built from, so a new lab is a short, consistent file.
@@ -23,7 +24,7 @@ export function LabShell({
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: "transparent", position: "relative" }}>
       <div className="lab-aurora" aria-hidden="true" />
       <LabHeader lab={lab} badge={badge ? <HeaderBadge color={badge.color}>{badge.text}</HeaderBadge> : undefined} />
-      <main className="flex-1 overflow-y-auto" style={{ position: "relative", zIndex: 10 }}>
+      <main id="main-content" tabIndex={-1} className="flex-1 overflow-y-auto" style={{ position: "relative", zIndex: 10 }}>
         <div className="max-w-3xl mx-auto px-6 py-12 sm:py-16">{children}</div>
       </main>
       <LabFooter />
@@ -32,7 +33,7 @@ export function LabShell({
 }
 
 /** Centered kicker / title / subtitle block used at the top of every lab. */
-export function LabHero({ kicker, title, subtitle, accent }: { kicker: string; title: string; subtitle: string; accent: string }) {
+export function LabHero({ lab, kicker, title, subtitle, accent }: { lab?: LabId; kicker: string; title: string; subtitle: string; accent: string }) {
   return (
     <div className="text-center max-w-2xl mx-auto hb-reveal mb-11">
       <p className="hb-kicker" style={{ color: accent }}>{kicker}</p>
@@ -42,7 +43,7 @@ export function LabHero({ kicker, title, subtitle, accent }: { kicker: string; t
       <p className="mt-4 mx-auto" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "34rem" }}>
         {subtitle}
       </p>
-      <div className="hb-tick-rule mt-7 mx-auto" style={{ maxWidth: "220px" }} aria-hidden="true" />
+      {lab ? <LabHeroSignal lab={lab} accent={accent} /> : <div className="hb-tick-rule mt-7 mx-auto" style={{ maxWidth: "220px" }} aria-hidden="true" />}
     </div>
   );
 }
@@ -122,7 +123,8 @@ export function Chips<T extends string>({
 /** Small glass stat tile. */
 export function StatTile({ value, label, accent }: { value: string; label: string; accent: string }) {
   return (
-    <div className="lg p-4 text-center" style={{ borderRadius: "16px" }}>
+    <div className="lab-stat-tile lg p-4 text-center" style={{ borderRadius: "16px", "--lab-stat-accent": accent } as CSSProperties}>
+      <i aria-hidden="true" />
       <div className="text-2xl font-bold tabular-nums leading-none" style={{ color: accent, letterSpacing: "-0.02em" }}>{value}</div>
       <div className="text-xs mt-1.5" style={{ color: "var(--ink-soft)", lineHeight: 1.35 }}>{label}</div>
     </div>

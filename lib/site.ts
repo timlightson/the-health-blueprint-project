@@ -3,7 +3,7 @@
 // from here so the brand can never drift between pages.
 
 export const SITE_NAME = "The Health Blueprint";
-export const TAGLINE = "Health lessons school never taught you.";
+export const TAGLINE = "Interactive health education, grounded in evidence.";
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://healthblueprint.app";
 export const SITE_DOMAIN_LABEL = "thehealthblueprintproject.com";
 

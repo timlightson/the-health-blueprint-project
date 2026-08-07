@@ -23,7 +23,7 @@ export function SiteNav({ active }: { active?: "explore" | "learn" }) {
       <div className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5" aria-label="The Health Blueprint home">
           <BrandMark size={30} />
-          <span className="text-sm font-semibold tracking-tight" style={{ color: "var(--ink)" }}>
+          <span className="text-sm font-semibold tracking-tight hidden sm:inline" style={{ color: "var(--ink)" }}>
             The Health Blueprint
           </span>
         </Link>

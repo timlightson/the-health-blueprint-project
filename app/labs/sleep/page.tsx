@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { ChevronDown, ChevronRight, ChevronLeft, ArrowUp } from "lucide-react";
 import GamesSection from "@/components/labs/games/GamesSection";
 import PhoneBeforeBed from "@/components/labs/PhoneBeforeBed";
+import WeekdaySleepStatus from "@/components/labs/WeekdaySleepStatus";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
 import { playSound } from "@/lib/sleep-sound";
@@ -194,56 +195,12 @@ function useCountUp(target: number) {
     };
     rafRef.current = requestAnimationFrame(run);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [target]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [target]);
 
   return val;
 }
 
 // ─── Display primitives ───────────────────────────────────────────────────────
-
-function PersonFigure({ fatigue, index = 0, scale = 1 }: { fatigue: number; index?: number; scale?: number }) {
-  const lean = fatigue * 14;
-  const droop = fatigue * 22;
-  const armDrop = fatigue * 7;
-  const col = fatigue > 0.65 ? "#DC2626" : fatigue > 0.35 ? "#F59E0B" : "#001A33";
-  const op = Math.max(0.45, 1 - fatigue * 0.4);
-  const tr = "all 0.5s ease-in-out";
-
-  // Idle micro-animations — rested figures breathe, tired ones sway and blink.
-  const tier = fatigue > 0.65 ? "weary" : fatigue > 0.35 ? "tired" : "rested";
-  const delay = `${(index % 5) * 0.45}s`;
-  const idleAnim =
-    tier === "weary"
-      ? `slpFigSway 3.4s ease-in-out ${delay} infinite`
-      : tier === "tired"
-      ? `slpFigSway 5.4s ease-in-out ${delay} infinite`
-      : `slpBreathe 4.2s ease-in-out ${delay} infinite`;
-  const blinkDur = tier === "weary" ? "2.8s" : "5.6s";
-
-  return (
-    <svg width={56 * scale} height={94 * scale} viewBox="0 0 56 94" style={{ overflow: "visible" }} aria-hidden="true">
-      <g style={{ animation: idleAnim, transformOrigin: "28px 90px" }}>
-        <g style={{ transform: `rotate(${lean}deg)`, transformOrigin: "28px 90px", transition: "transform 0.5s ease-in-out" }}>
-          <g style={{ transform: `rotate(${droop}deg)`, transformOrigin: "28px 24px", transition: "transform 0.5s ease-in-out" }}>
-            <circle cx="28" cy="13" r="10" fill={col} opacity={op} style={{ transition: tr }} />
-            {tier !== "rested" && (
-              <g style={{ animation: `slpBlink ${blinkDur} ease-in-out ${delay} infinite`, transformOrigin: "28px 12px" }}>
-                <line x1="23" y1="12" x2="25.5" y2="12" stroke="#fff" strokeWidth="1.5" opacity={0.7} />
-                <line x1="30.5" y1="12" x2="33" y2="12" stroke="#fff" strokeWidth="1.5" opacity={0.7} />
-              </g>
-            )}
-          </g>
-          <rect x="25" y="23" width="6" height="7" rx="2" fill={col} opacity={op} style={{ transition: tr }} />
-          <rect x="15" y="30" width="26" height="28" rx="4" fill={col} opacity={op} style={{ transition: tr }} />
-          <rect x="7"  y={32 + armDrop} width="7" height="22" rx="3" fill={col} opacity={op} style={{ transition: tr }} />
-          <rect x="42" y={32 + armDrop} width="7" height="22" rx="3" fill={col} opacity={op} style={{ transition: tr }} />
-          <rect x="16" y="58" width="10" height="28" rx="4" fill={col} opacity={op} style={{ transition: tr }} />
-          <rect x="30" y="58" width="10" height="28" rx="4" fill={col} opacity={op} style={{ transition: tr }} />
-        </g>
-      </g>
-    </svg>
-  );
-}
 
 // ─── Ambient particle field ───────────────────────────────────────────────────
 
@@ -324,22 +281,6 @@ function ParticleField() {
       aria-hidden="true"
       style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }}
     />
-  );
-}
-
-function EnergyBar({ energy }: { energy: number }) {
-  const col = energy > 0.6 ? "#0D9488" : energy > 0.3 ? "#D97706" : "#DC2626";
-  const fillPct = Math.max(4, energy * 100);
-  return (
-    <div className="overflow-hidden lg-well" style={{ width: "18px", height: "64px", borderRadius: "9px" }}>
-      <div style={{
-        width: "100%", height: `${fillPct}%`,
-        background: `linear-gradient(180deg, ${col}, ${col}bb)`,
-        marginTop: `${100 - fillPct}%`, borderRadius: "9px",
-        boxShadow: `0 0 8px ${col}77, inset 0 1px 0 rgba(255,255,255,0.5)`,
-        transition: "height 0.6s var(--spring), margin-top 0.6s var(--spring), background 0.5s ease",
-      }} />
-    </div>
   );
 }
 
@@ -908,104 +849,57 @@ function WeekendSection({
   };
 
   return (
-    <LiquidGlass radius={24} bezel={24} scale={50} style={{ padding: "32px", flexGrow: 1, width: "100%", display: "flex", flexDirection: "column" }}>
-        <p className="text-xs font-semibold uppercase tracking-wider mb-4" style={{ color: "var(--ink-soft)" }}>
-          The weekend catch-up
-        </p>
-
-        {/* Controls */}
-        <div className="flex flex-wrap items-end gap-4 mb-5">
-          <WkSlider label="Saturday sleep" value={satH} onChange={setSatH} />
-          <WkSlider label="Sunday sleep" value={sunH} onChange={setSunH} />
-          <button
-            onClick={handleReset}
-            className="text-xs font-semibold rounded"
-            style={{ padding: "8px 14px", minHeight: "36px", background: "rgba(255,255,255,0.5)", color: "var(--ink-soft)", border: "1px solid rgba(255,255,255,0.6)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8)" }}
-          >
-            Reset
-          </button>
+    <LiquidGlass radius={24} bezel={24} scale={50} style={{ padding: "24px", flexGrow: 1, width: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div className="weekend-card-head">
+        <div>
+          <p>Recovery window</p>
+          <h2>The weekend catch-up</h2>
+          <p>Adjust both nights and follow what remains by Monday.</p>
         </div>
+        <button onClick={handleReset} className="weekend-reset">Reset</button>
+      </div>
 
-        {/* Chart */}
-        <div style={{ overflowX: "auto", minHeight: "220px" }}>
-          <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ minWidth: "460px", minHeight: "200px", display: "block" }}>
-            <text x="16" y={padT + plotH / 2} fontSize="10" fill="#4A5568" textAnchor="middle"
-              transform={`rotate(-90, 16, ${padT + plotH / 2})`}>
-              Sleep Debt (hours)
-            </text>
+      <div className="weekend-controls">
+        <WkSlider label="Saturday sleep" value={satH} onChange={setSatH} />
+        <WkSlider label="Sunday sleep" value={sunH} onChange={setSunH} />
+      </div>
 
+      <div className="weekend-trail">
+        <div className="weekend-trail-scroll">
+          <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ minWidth: "400px", minHeight: "220px", display: "block" }} role="img" aria-label={`Sleep debt rises to ${fmtHrs(fridayDebt)} hours Friday and ends at ${fmtHrs(mondayDebt)} hours after the weekend`}>
+            <defs>
+              <linearGradient id="weekend-debt-fill" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#F06363" stopOpacity=".4" /><stop offset="1" stopColor="#F06363" stopOpacity=".04" /></linearGradient>
+              <linearGradient id="weekend-recovery-fill" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#2DD4BF" stopOpacity=".42" /><stop offset="1" stopColor="#2DD4BF" stopOpacity=".04" /></linearGradient>
+              <filter id="weekend-glow"><feGaussianBlur stdDeviation="3" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+            </defs>
+            <rect x={xFor(4.5)} y="0" width={W - xFor(4.5)} height={H} fill="#0D9488" fillOpacity=".08" />
+            <text x={xFor(5.25)} y="15" fontSize="8" fill="#63D5CA" textAnchor="middle" fontWeight="700" letterSpacing="1.1">WEEKEND RECOVERY</text>
+            {[ [93,18], [171,12], [452,28], [535,18], [572,46] ].map(([x,y], i) => <circle key={i} cx={x} cy={y} r={i % 2 ? 1 : 1.6} fill="#D8EDFF" fillOpacity={.35 + i * .1} />)}
+            <text x="17" y={padT + plotH / 2} fontSize="9" fill="#8FAAC0" textAnchor="middle" transform={`rotate(-90, 17, ${padT + plotH / 2})`}>DEBT · HOURS</text>
             {ticks.map((tk) => {
               const y = yFor(tk);
-              return (
-                <g key={tk}>
-                  <line x1={padL} y1={y} x2={padL + plotW} y2={y}
-                    stroke={tk === 0 ? "#E5E0D8" : "#F0EDE6"} strokeWidth="1" />
-                  <text x={padL - 8} y={y + 3} fontSize="9" fill="#9CA3AF" textAnchor="end">{tk}</text>
-                </g>
-              );
+              return <g key={tk}><line x1={padL} y1={y} x2={padL + plotW} y2={y} stroke="#C6DCEC" strokeOpacity={tk === 0 ? ".24" : ".1"} /><text x={padL - 9} y={y + 3} fontSize="9" fill="#7995AA" textAnchor="end">{tk}</text></g>;
             })}
-            <text x={padL + plotW} y={y0 - 5} fontSize="9" fill="#9CA3AF" textAnchor="end">no debt</text>
-
-            <line x1={xFor(4.5)} y1={padT} x2={xFor(4.5)} y2={y0}
-              stroke="#E5E0D8" strokeWidth="1" strokeDasharray="3 3" />
-
-            {[0, 1, 2, 3, 4, 5].map((i) => (
-              <polygon key={i}
-                points={`${xFor(i)},${yFor(eased[i])} ${xFor(i + 1)},${yFor(eased[i + 1])} ${xFor(i + 1)},${y0} ${xFor(i)},${y0}`}
-                fill={segColor(i)} fillOpacity="0.12" />
-            ))}
-
-            {[0, 1, 2, 3, 4, 5].map((i) => (
-              <line key={i}
-                x1={xFor(i)} y1={yFor(eased[i])} x2={xFor(i + 1)} y2={yFor(eased[i + 1])}
-                stroke={segColor(i)} strokeWidth="2.6" strokeLinecap="round" />
-            ))}
-
+            <text x={padL + plotW} y={y0 - 6} fontSize="8" fill="#8FAAC0" textAnchor="end">NO DEBT</text>
+            <line x1={xFor(4.5)} y1={padT} x2={xFor(4.5)} y2={y0} stroke="#70DACE" strokeOpacity=".42" strokeDasharray="3 4" />
+            {[0, 1, 2, 3, 4, 5].map((i) => <polygon key={i} points={`${xFor(i)},${yFor(eased[i])} ${xFor(i + 1)},${yFor(eased[i + 1])} ${xFor(i + 1)},${y0} ${xFor(i)},${y0}`} fill={i >= 4 && segColor(i) === TEAL ? "url(#weekend-recovery-fill)" : "url(#weekend-debt-fill)"} />)}
+            {[0, 1, 2, 3, 4, 5].map((i) => <line key={i} x1={xFor(i)} y1={yFor(eased[i])} x2={xFor(i + 1)} y2={yFor(eased[i + 1])} stroke={segColor(i)} strokeWidth="3.4" strokeLinecap="round" filter="url(#weekend-glow)" />)}
             {eased.map((d, i) => {
               const col = pointColor(i);
-              return (
-                <g key={i}>
-                  <circle cx={xFor(i)} cy={yFor(d)} r="5" fill={col} stroke="#fff" strokeWidth="1.5" />
-                  <text x={xFor(i)} y={yFor(d) - 11} fontSize="10" fontWeight="600" fill={col} textAnchor="middle">
-                    {d < 0.05 ? "0h" : `-${fmtHrs(d)}h`}
-                  </text>
-                </g>
-              );
+              return <g key={i}><circle cx={xFor(i)} cy={yFor(d)} r="8" fill={col} fillOpacity=".16" /><circle cx={xFor(i)} cy={yFor(d)} r="4.5" fill={col} stroke="#EAF5FC" strokeWidth="1.2" /><text x={xFor(i)} y={Math.max(24, yFor(d) - 12)} fontSize="10" fontWeight="700" fill={i >= 5 ? "#63D5CA" : "#F68B88"} textAnchor="middle">{d < .05 ? "0h" : `−${fmtHrs(d)}h`}</text></g>;
             })}
-
-            {dayLabels.map((lb, i) => (
-              <text key={i} x={xFor(i)} y={padT + plotH + 18} fontSize="10"
-                fill={i >= 5 ? "#0D9488" : "#9CA3AF"} textAnchor="middle" fontWeight={i >= 5 ? 600 : 400}>
-                {lb}
-              </text>
-            ))}
+            {dayLabels.map((lb, i) => <g key={i}><rect x={xFor(i) - 14} y={padT + plotH + 7} width="28" height="18" rx="9" fill={i >= 5 ? "#0D9488" : "#FFFFFF"} fillOpacity={i >= 5 ? ".3" : ".08"} /><text x={xFor(i)} y={padT + plotH + 19} fontSize="9" fill={i >= 5 ? "#74E0D6" : "#A6BDD0"} textAnchor="middle" fontWeight="700">{lb}</text></g>)}
           </svg>
         </div>
+      </div>
 
-        {/* Insight */}
-        <div className="mt-4 rounded p-3" style={{ backgroundColor: `${mondayCol}10`, border: `1px solid ${mondayCol}30` }}>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--ink)" }}>{insight}</p>
-        </div>
-
-        {/* Secondary readout */}
-        <div className="grid grid-cols-2 gap-2 mt-3">
-          <div className="rounded p-3" style={{ background: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.6)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)" }}>
-            <p className="text-xs" style={{ color: "var(--ink-soft)" }}>Total weekday debt</p>
-            <p className="text-lg font-bold" style={{ color: "#DC2626" }}>{fmtHrs(fridayDebt)} {hrAbbr(fridayDebt)}</p>
-          </div>
-          <div className="rounded p-3" style={{ background: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.6)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)" }}>
-            <p className="text-xs" style={{ color: "var(--ink-soft)" }}>Weekend recovery</p>
-            <p className="text-lg font-bold" style={{ color: "#0D9488" }}>{fmtHrs(weekendRecovery)} {hrAbbr(weekendRecovery)}</p>
-          </div>
-        </div>
-        <p className="text-sm mt-3" style={{ color: "var(--ink-soft)" }}>
-          Monday morning starts with{" "}
-          <strong style={{ color: mondayCol }}>{fmtHrs(mondayDebt)} {hrWord(mondayDebt)}</strong> of debt.
-        </p>
-
-        <p className="text-xs mt-3" style={{ color: "var(--ink-faint)" }}>
-          Sleeping in partially restores function but doesn&apos;t erase cognitive debt. Dinges et al., <em>SLEEP</em> (1997)
-        </p>
+      <div className="weekend-summary">
+        <div><i style={{ background: "#DC2626" }} /><span>Friday debt</span><strong style={{ color: "#DC2626" }}>{fmtHrs(fridayDebt)} {hrAbbr(fridayDebt)}</strong></div>
+        <div><i style={{ background: "#0D9488" }} /><span>Weekend recovery</span><strong style={{ color: "#0D9488" }}>{fmtHrs(weekendRecovery)} {hrAbbr(weekendRecovery)}</strong></div>
+        <div><i style={{ background: mondayCol }} /><span>Monday debt</span><strong style={{ color: mondayCol }}>{fmtHrs(mondayDebt)} {hrAbbr(mondayDebt)}</strong></div>
+      </div>
+      <div className="weekend-insight" style={{ backgroundColor: `${mondayCol}10`, borderColor: `${mondayCol}30` }}>{insight}</div>
+      <p className="weekend-source">Sleeping in partially restores function but doesn&apos;t erase cognitive debt. Dinges et al., <em>SLEEP</em> (1997)</p>
     </LiquidGlass>
   );
 }
@@ -1322,7 +1216,7 @@ export default function SleepLab() {
       />
 
       <div className="flex flex-1 min-h-0" style={{ position: "relative", zIndex: 10 }}>
-        <main ref={mainRef} className="flex-1 overflow-y-auto">
+        <main id="main-content" tabIndex={-1} ref={mainRef} className="flex-1 overflow-y-auto">
 
           <StickyBar visible={scrolled} sleepHours={effectiveSleepH} score={sleepScore} onBackToTop={handleBackToTop} />
 
@@ -1379,44 +1273,15 @@ export default function SleepLab() {
               </div>
             </div>
 
-            {/* 5-day timeline — figures on a refracting glass deck */}
+            {/* 5-day timeline — illustrated night rooms */}
             <LiquidGlass
               className="mb-9"
               radius={26}
               bezel={26}
               scale={52}
-              style={{ padding: "22px 12px 20px" }}
+              style={{ padding: "24px 22px 22px", overflow: "hidden" }}
             >
-              <div className="flex gap-2 justify-center flex-wrap sm:gap-4">
-                {dayData.map(({ day, debtHours, energy, fatigue }, i) => (
-                  <div
-                    key={day}
-                    className="flex flex-col items-center gap-2.5"
-                    style={{
-                      width: "98px", padding: "12px 4px 10px", borderRadius: "18px",
-                      background: "linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.12))",
-                      border: "1px solid rgba(255,255,255,0.5)",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
-                    }}
-                  >
-                    <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--ink-soft)" }}>{day}</span>
-                    <div className="flex items-end gap-3" style={{ minHeight: "138px" }}>
-                      <PersonFigure fatigue={fatigue} index={i} scale={1.45} />
-                    </div>
-                    <EnergyBar energy={energy} />
-                    <div className="text-center" style={{ animation: "sleepLabFadeSlide 0.3s ease-out" }}>
-                      <div className="font-bold leading-tight tabular-nums" style={{
-                        fontSize: "16px",
-                        color: debtHours === 0 ? "#0D9488" : debtHours >= 12 ? "#DC2626" : "#F59E0B",
-                        transition: "color 0.5s ease",
-                      }}>
-                        {debtHours === 0 ? "✓" : `-${Number.isInteger(debtHours) ? debtHours : debtHours.toFixed(1)}h`}
-                      </div>
-                      <div className="text-[11px] mt-0.5" style={{ color: "var(--ink-faint)" }}>{debtHours === 0 ? "no debt" : "debt"}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <WeekdaySleepStatus days={dayData} />
             </LiquidGlass>
 
             {/* Inline brain stats */}
@@ -1472,13 +1337,13 @@ export default function SleepLab() {
               title="What changes the math"
               subtitle="Small habits that add up, or quietly undo your week."
             />
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-stretch">
-              <div className="lg:col-span-2 flex" style={{ minWidth: 0 }}>
-                <div className="flex w-full" style={{ minWidth: "380px", maxWidth: "100%" }}>
+            <div id="sleep-behavior-panels" className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-stretch">
+              <div className="flex" style={{ minWidth: 0 }}>
+                <div className="flex w-full" style={{ minWidth: 0, maxWidth: "100%" }}>
                   <PhoneBeforeBed />
                 </div>
               </div>
-              <div className="lg:col-span-3 flex" style={{ minWidth: 0 }}>
+              <div className="flex" style={{ minWidth: 0 }}>
                 <WeekendSection
                   dayDebts={dayDebts} fridayDebt={fridayDebt}
                   satH={satH} setSatH={setSatH} sunH={sunH} setSunH={setSunH}

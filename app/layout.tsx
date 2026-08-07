@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 const TITLE = `${SITE_NAME} · An Interactive Public Health Platform`
 const DESCRIPTION =
-  'Nine interactive Blueprints where you set your real habits and watch real, cited data respond. Sleep, hydration, stress, energy, and more, made something you can see.'
+  'Nine interactive, evidence-led models covering sleep, hydration, stress, energy, and other everyday health topics.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -55,8 +55,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${geistMono.variable} bg-background`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} ${geistMono.variable} bg-background`}>
       <body className="font-sans antialiased">
+        <a href="#main-content" className="skip-link">Skip to main content</a>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

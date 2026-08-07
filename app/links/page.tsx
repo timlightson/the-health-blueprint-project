@@ -7,7 +7,7 @@ import { TAGLINE, INSTAGRAM_HANDLE, INSTAGRAM_URL, GITHUB_URL } from "@/lib/site
 export const metadata: Metadata = {
   title: "Links · The Health Blueprint",
   description:
-    "Health lessons school never taught you. Interactive Blueprints, short cited reads, and one place to start: sleep.",
+    "Interactive health Blueprints, short cited explainers, and a focused place to begin.",
 };
 
 // ─── /links — the link-in-bio page ────────────────────────────────────────────
@@ -36,7 +36,7 @@ const CARDS: StartCard[] = [
   {
     href: "/",
     title: "Explore All Blueprints",
-    sub: "Nine interactive Blueprints. Move the controls, watch real data respond.",
+    sub: "Nine interactive Blueprints with visible assumptions and cited context.",
     icon: FlaskConical,
     tone: "#2563EB",
   },
@@ -77,7 +77,7 @@ export default function LinksPage() {
     <div className="relative min-h-screen flex flex-col overflow-hidden">
       <div className="lab-aurora" aria-hidden="true" />
 
-      <main className="relative z-10 flex-1 flex flex-col items-center px-5 py-12 sm:py-16">
+      <main id="main-content" tabIndex={-1} className="relative z-10 flex-1 flex flex-col items-center px-5 py-12 sm:py-16">
         <div className="w-full max-w-md flex flex-col items-center">
           {/* Identity */}
           <BrandMark size={64} />

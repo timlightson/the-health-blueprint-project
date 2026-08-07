@@ -433,6 +433,7 @@ export default function StressLab() {
   return (
     <LabShell lab="stress">
       <LabHero
+        lab="stress"
         kicker="Stress Blueprint · 03"
         title="Find your breaking point"
         subtitle="A little pressure sharpens you. Too much takes your brain offline, and a real break brings it back. Feel the whole curve happen to you in five rounds."

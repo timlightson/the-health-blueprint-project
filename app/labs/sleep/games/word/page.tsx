@@ -586,12 +586,12 @@ export default function WordStrandsPage() {
           Back
         </Link>
         <div className="flex-1 text-center">
-          <span className="font-bold" style={{ color: "#001A33" }}>Word Strands</span>
+          <h1 className="font-bold" style={{ color: "#001A33" }}>Word Strands</h1>
         </div>
         <span style={{ width: 52 }} />
       </header>
 
-      <main className="flex-1">
+      <main id="main-content" tabIndex={-1} className="flex-1">
         <div className="max-w-md mx-auto px-6 py-8">
           <p className="text-sm text-center mb-6" style={{ color: "#4A5568" }}>
             Find the theme words. Use every letter. One puzzle a day.

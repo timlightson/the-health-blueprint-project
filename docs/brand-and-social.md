@@ -4,7 +4,7 @@
 
 Everything the brand makes points at a single line:
 
-> **Health lessons school never taught you.**
+> **Interactive health education, grounded in evidence.**
 
 Every Instagram carousel answers ONE question and hands off to the site. Keep posts
 lighter and more focused than dense info-dumps. Recurring hook, like
@@ -17,9 +17,9 @@ actually do? · Why do I get sick after exams? · Why do I forget things when I'
 
 ## The ecosystem ladder
 
-- **Instagram** → "Here's something you didn't know." (the hook)
-- **Website** → "Here's the full explanation." (the interactive labs)
-- **App** → "Here's how it applies to your habits."
+- **Instagram** → One focused question and a concise, sourced answer.
+- **Website** → The fuller explanation and an interactive model.
+- **App** → A planned personal layer for relating concepts to habits.
 
 ## Instagram visual style
 
@@ -38,27 +38,24 @@ actually do? · Why do I get sick after exams? · Why do I forget things when I'
 
 ### Caption
 
-You're not lazy. You're running on sleep debt. 😴
+Sleep debt builds when short nights accumulate. 😴
 
-Teens need 8 to 10 hours. Most of us run on far less, and your brain makes you pay for
-it the next day.
+The American Academy of Sleep Medicine recommends 8 to 10 hours per night for teenagers.
+Controlled studies find that insufficient sleep can impair memory formation, attention,
+and emotional regulation, although the size of the effect differs by person and study.
 
-On under six hours of sleep:
-- reaction time drops about 25%
-- memory drops about 20%
-- your emotions hit about 60% harder
+In one controlled comparison, cognitive performance after 17 hours awake was comparable
+to performance at a 0.05% blood alcohol concentration. That is a performance comparison,
+not a claim that fatigue and alcohol affect the brain in the same way.
 
-And here's the one that gets people: staying awake 17 hours slows your reactions about
-as much as a 0.05% blood alcohol level. You just can't feel it.
+Evening use of light-emitting devices can suppress melatonin and delay circadian timing.
+The effect depends on timing, brightness, duration, and individual sensitivity.
 
-The good news is it comes back fast. Same bedtime even on weekends, sunlight early in the
-morning, and your phone out of reach an hour before bed does most of the work.
+The free Sleep Blueprint lets you model a week of different sleep schedules and inspect
+the assumptions behind its estimates. Link in bio.
 
-Want to see it happen to your own week? We built a free Sleep Lab where you set your real
-schedule and watch your reaction time, memory, and mood respond in real time. Link in bio.
-
-Sources: CDC YRBS 2023 · Yoo et al., Current Biology 2007 · Chang et al., PNAS 2014 ·
-Dawson & Reid, Nature 1997
+Sources: Paruthi et al., J Clin Sleep Med 2016 · CDC YRBS 2023 · Yoo et al., Current
+Biology 2007 · Chang et al., PNAS 2014 · Dawson & Reid, Nature 1997
 
 Hashtags: #sleep #sleephealth #teenhealth #studentlife #studytips #studygram #highschool
 #health #wellness #brainhealth #sleepdeprivation #healtheducation #circadianrhythm
@@ -80,30 +77,30 @@ Keep both labels identical in position, size, and style on every slide.
    heaviest). Thin navy brainwave line below going from sharp healthy peaks on the left to
    a flat line on the right. Subtext "Sleep · Blueprint 01". Bottom-left "Evidence-based.
    Built for students."
-2. "YOU'RE NOT LAZY. YOU'RE RUNNING ON DEBT." ("RUNNING ON DEBT" heaviest). Bulleted list,
-   emoji-led: "😴 tired no matter how long you slept", "🧠 losing focus, forgetting things
-   fast", "😤 snapping at people over nothing", "📉 slower reactions you never even notice".
+2. "SLEEP DEBT BUILDS ACROSS SHORT NIGHTS." ("BUILDS" heaviest). Bulleted list:
+   "less alert", "harder to form new memories", "stronger emotional responses", and
+   "slower performance on attention tasks".
 3. "YOUR BRAIN NEEDS 8 TO 10 HOURS" ("8 TO 10 HOURS" heaviest). Clean flat navy bar graphic:
    a full bar "what teens need" vs a shorter dimmer bar "what most teens get". Caption:
    "That's when your brain locks in what you learned and resets your mood. Miss it and the
    next day shows it."
-4. "WHAT SHORT SLEEP TAKES FROM YOU". Three stacked rows, big navy number + lighter label,
-   hairline rules: "−25%" / "reaction time on under six hours 🕐"; "−20%" / "memory 🧠";
-   "+60%" / "how much harder your emotions flare 😤". Faint citation: "Yoo et al.,
-   Current Biology 2007."
+4. "WHAT CONTROLLED STUDIES FIND". Three stacked rows with simple icons and lighter labels:
+   "attention" / "slower and less consistent"; "memory" / "harder to form new memories";
+   "emotion" / "stronger responses to negative images". Faint citation: "Yoo et al.,
+   Current Biology 2007." Avoid presenting one percentage as universal.
 5. "STAY AWAKE 17 HOURS AND THIS HAPPENS". Center equivalence "17 HRS AWAKE ≈ 0.05% BAC"
    ("≈" and "0.05% BAC" heaviest). Subtext "Your reaction time looks like you have been
    drinking. You just cannot feel it." Citation "Dawson & Reid, Nature 1997."
-6. "YOUR PHONE PUSHES BEDTIME LATER THAN YOU THINK" ("LATER THAN YOU THINK" heaviest).
-   Center stat "≈ 90 MIN 📱". Subtext "That is how long bright screens can hold back
-   melatonin, the signal that tells your brain to wind down." Citation "Chang et al.,
-   PNAS 2014."
-7. "THE GOOD NEWS: IT COMES BACK FAST" ("COMES BACK FAST" heaviest). Emoji-led lines:
-   "⏰ keep the same bedtime, even on weekends", "☀️ get sunlight early in the morning",
-   "📵 put your phone away an hour before bed". Thin strong steady navy brainwave at bottom.
-8. CTA: "SEE IT HAPPEN TO YOUR OWN WEEK". Subtext "Build your real sleep schedule and watch
-   your reaction time, memory, and mood respond in real time. Free, no sign-up." Navy pill
-   button with cream text "TRY THE SLEEP LAB". Slightly larger, bolder URL at bottom.
+6. "EVENING SCREEN LIGHT CAN DELAY SLEEP TIMING" ("DELAY" heaviest). Subtext: "In a
+   controlled e-reader study, evening light exposure suppressed melatonin, delayed circadian
+   timing, and increased the time it took participants to fall asleep." Citation "Chang et
+   al., PNAS 2014."
+7. "START WITH ENOUGH TIME FOR SLEEP" ("ENOUGH TIME" heaviest). Lines: "keep a regular
+   schedule", "allow 8 to 10 hours for teenagers", and "reduce bright light close to bed
+   when it delays sleep." Thin steady navy brainwave at bottom.
+8. CTA: "EXPLORE A MODEL OF YOUR WEEK". Subtext "Compare different sleep schedules and see
+   how the model estimates accumulated sleep debt. Free, no sign-up." Navy pill button with
+   cream text "OPEN THE SLEEP BLUEPRINT". Slightly larger, bolder URL at bottom.
 
 Cut slide 5 or 6 for a tight 6-card version. Slides 5 and 8 would take a subtle dark-bedroom
 or phone-glow background photo well once real photos exist.

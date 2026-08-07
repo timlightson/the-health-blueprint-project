@@ -27,13 +27,15 @@ export default function FocusLab() {
   const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
   useEffect(() => () => clearTimers(), []);
 
+  // spawn and nextTrial form one timer loop; both callbacks remain stable for
+  // the life of a round and are cleared before a new round begins.
   const spawn = useCallback((noisy: boolean) => {
     const decoy = noisy && Math.random() < 0.3;
     setTarget({ x: 8 + Math.random() * 78, y: 12 + Math.random() * 62, decoy });
     t0.current = performance.now();
     // auto-miss if ignored
     timers.current.push(window.setTimeout(() => { setTarget(null); nextTrial(noisy, null, decoy); }, 1500));
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const nextTrial = useCallback((noisy: boolean, reaction: number | null, wasDecoy: boolean) => {
     clearTimers();
@@ -81,37 +83,42 @@ export default function FocusLab() {
   return (
     <LabShell lab="focus" badge={r1 ? { color: ACCENT, text: `${r1} ms clear` } : undefined}>
       <LabHero
+        lab="focus"
         kicker="Focus Blueprint · 06"
         title="Feel the switch cost"
         subtitle="Two rounds of the same simple game: tap the dot the instant it appears. First in a clean room, then buried in notifications. Your own reaction times tell the story."
         accent={ACCENT}
       />
 
-      <LiquidGlass radius={26} bezel={26} scale={52} style={{ padding: "20px" }}>
+      <LiquidGlass radius={26} bezel={26} scale={52} style={{ padding: "14px", overflow: "hidden" }}>
         {/* Play field */}
         <div
-          className="lg-well relative overflow-hidden rounded-2xl select-none"
+          className={`focus-playfield relative overflow-hidden rounded-2xl select-none ${phase === "run" && round === 2 ? "is-noisy" : ""}`}
           style={{ height: 300, touchAction: "manipulation" }}
         >
+          <div className="focus-field-grid" aria-hidden="true" />
+          <div className="focus-field-beam" aria-hidden="true" />
+          <div className="focus-field-mode" aria-hidden="true"><i />{round === 2 ? "DISTRACTION FIELD" : "CLEAR FIELD"}</div>
           {phase === "intro" && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-              <p className="text-sm mb-4" style={{ color: "var(--ink-soft)", maxWidth: 340 }}>
+            <div className="focus-field-content absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+              <div className="focus-ready-target" aria-hidden="true"><i /></div>
+              <p className="text-sm mb-4" style={{ color: "#C4D5E4", maxWidth: 340 }}>
                 Round 1: a calm room. Tap each dot as fast as you can. Ignore the red ones later.
               </p>
-              <button onClick={() => startRound(false)} className="lg-pill rounded-full font-semibold px-6 flex items-center gap-2" style={{ minHeight: 48, color: ACCENT }}>
+              <button onClick={() => startRound(false)} className="focus-field-button rounded-full font-semibold px-6 flex items-center gap-2" style={{ minHeight: 48 }}>
                 <Play className="w-4 h-4" /> Start round 1
               </button>
             </div>
           )}
 
           {phase === "between" && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--ink-faint)" }}>Round 1 done</p>
-              <div className="text-3xl font-bold tabular-nums my-1" style={{ color: ACCENT }}>{r1} ms</div>
-              <p className="text-sm mb-4" style={{ color: "var(--ink-soft)", maxWidth: 340 }}>
+            <div className="focus-field-content absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#8FA9BF" }}>Round 1 done</p>
+              <div className="text-3xl font-bold tabular-nums my-1" style={{ color: "#6EE7B7" }}>{r1} ms</div>
+              <p className="text-sm mb-4" style={{ color: "#C4D5E4", maxWidth: 340 }}>
                 Now round 2: same game, but your phone won't leave you alone. Tap green, never red.
               </p>
-              <button onClick={() => startRound(true)} className="lg-pill rounded-full font-semibold px-6 flex items-center gap-2" style={{ minHeight: 48, color: ACCENT }}>
+              <button onClick={() => startRound(true)} className="focus-field-button rounded-full font-semibold px-6 flex items-center gap-2" style={{ minHeight: 48 }}>
                 <Play className="w-4 h-4" /> Bring the noise
               </button>
             </div>
@@ -122,7 +129,7 @@ export default function FocusLab() {
               {/* distractor banners */}
               {banners.map((b) => (
                 <div key={b.id} className="absolute text-xs font-semibold rounded-lg pointer-events-none"
-                  style={{ left: `${b.x}%`, top: `${b.y}%`, padding: "6px 10px", background: "rgba(255,255,255,0.9)", border: "1px solid rgba(11,26,43,0.1)", boxShadow: "0 6px 16px -6px rgba(20,30,60,0.3)", color: "var(--ink)", animation: "labFloatUp 0.25s ease both" }}>
+                  style={{ left: `${b.x}%`, top: `${b.y}%`, padding: "6px 10px", background: "rgba(255,255,255,0.92)", border: "1px solid rgba(249,168,212,.42)", boxShadow: "0 8px 22px -8px rgba(0,0,0,.6)", color: "var(--ink)", animation: "labFloatUp 0.25s ease both" }}>
                   {b.text}
                 </div>
               ))}
@@ -134,25 +141,25 @@ export default function FocusLab() {
                   className="absolute rounded-full"
                   style={{
                     left: `${target.x}%`, top: `${target.y}%`, width: 52, height: 52,
-                    background: target.decoy ? "radial-gradient(circle at 35% 30%, #FCA5A1, #D8443B)" : "radial-gradient(circle at 35% 30%, #F9A8D4, #DB2777)",
-                    boxShadow: `0 6px 18px -4px ${target.decoy ? "#D8443B" : ACCENT}aa`,
+                    background: target.decoy ? "radial-gradient(circle at 35% 30%, #FCA5A1, #D8443B)" : "radial-gradient(circle at 35% 30%, #A7F3D0, #0D9488)",
+                    boxShadow: `0 0 0 9px ${target.decoy ? "#D8443B" : "#0D9488"}22, 0 8px 22px -4px ${target.decoy ? "#D8443B" : "#0D9488"}cc`,
                     animation: "labPop 0.14s ease both",
                   }}
                 />
               )}
-              <div className="absolute bottom-2 left-3 text-xs font-semibold" style={{ color: "var(--ink-faint)" }}>
+              <div className="absolute bottom-3 left-4 text-xs font-semibold" style={{ color: "#8FA9BF" }}>
                 {round === 2 ? "Round 2 · dodge red" : "Round 1"} · {trialRef.current}/{TRIALS}
               </div>
             </>
           )}
 
           {phase === "done" && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--ink-faint)" }}>The distraction tax</p>
+            <div className="focus-field-content absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#8FA9BF" }}>The distraction tax</p>
               <div className="text-4xl font-bold tabular-nums my-1" style={{ color: cost > 0 ? "#D8443B" : "#0E8A7D" }}>
                 {cost > 0 ? `+${cost}` : cost} ms
               </div>
-              <p className="text-sm" style={{ color: "var(--ink-soft)", maxWidth: 360 }}>
+              <p className="text-sm" style={{ color: "#C4D5E4", maxWidth: 360 }}>
                 Clean: <b>{r1} ms</b>. Noisy: <b>{r2} ms</b>. {misses > 0 && <>You also tapped <b>{misses}</b> wrong. </>}
                 Same task, slower and sloppier, just from stuff pulling at your attention.
               </p>

@@ -29,7 +29,7 @@ export default function SportPage() {
         </div>
       </header>
 
-      <main className="flex-1" style={{ position: "relative", zIndex: 10 }}>
+      <main id="main-content" tabIndex={-1} className="flex-1" style={{ position: "relative", zIndex: 10 }}>
         <div className="max-w-4xl mx-auto px-6 py-12 sm:py-14">
           {sport ? (
             <>

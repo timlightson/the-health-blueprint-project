@@ -129,7 +129,7 @@ export default function GameShell({
         </Link>
       </header>
 
-      <main className="flex-1" style={{ position: "relative", zIndex: 10 }}>
+      <main id="main-content" tabIndex={-1} className="flex-1" style={{ position: "relative", zIndex: 10 }}>
         <div ref={topRef} className="max-w-2xl mx-auto px-6 py-10 sm:py-12">
           <p className="hb-kicker mb-3" style={{ color: "#0B6F65" }}>Sleep Blueprint · Game</p>
           <h1 className="font-bold mb-2.5" style={{ fontSize: "clamp(1.9rem, 5vw, 2.6rem)", color: "var(--ink)", lineHeight: 1.05, letterSpacing: "-0.03em" }}>

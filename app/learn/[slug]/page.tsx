@@ -22,14 +22,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const a = articleBySlug(slug);
   if (!a) notFound();
   const lab = labMeta(a.lab);
-  const Icon = lab.icon;
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: "transparent", position: "relative" }}>
       <div className="lab-aurora" aria-hidden="true" />
       <SiteNav active="learn" />
 
-      <main className="flex-1 relative z-10">
+      <main id="main-content" tabIndex={-1} className="flex-1 relative z-10">
         <article className="max-w-2xl mx-auto px-6 sm:px-8 py-10 sm:py-14">
           <Link href="/learn" className="inline-flex items-center gap-1.5 text-sm font-medium lg-pill rounded-full pl-2.5 pr-4 py-2" style={{ color: "var(--ink-soft)" }}>
             <ArrowLeft className="w-4 h-4" /> All of Learn

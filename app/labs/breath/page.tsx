@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, type CSSProperties } from "react";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabShell, LabHero, StatTile, SciencePanel } from "@/components/labs/kit";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -9,9 +9,9 @@ const ACCENT = "#0891B2";
 
 type Ph = { l: string; s: number; scale: number };
 const PATTERNS: { id: string; name: string; note: string; bpm: string; phases: Ph[] }[] = [
-  { id: "coherence", name: "Coherence", bpm: "6 / min", note: "Even in, even out. Lands right on the resonance peak where heart-rate variability maxes out.", phases: [{ l: "Breathe in", s: 5, scale: 1 }, { l: "Breathe out", s: 5, scale: 0.5 }] },
-  { id: "box", name: "Box · 4·4·4·4", bpm: "3.75 / min", note: "In, hold, out, hold. Steady and grounding. Used by athletes and first responders to stay calm under fire.", phases: [{ l: "Breathe in", s: 4, scale: 1 }, { l: "Hold", s: 4, scale: 1 }, { l: "Breathe out", s: 4, scale: 0.5 }, { l: "Hold", s: 4, scale: 0.5 }] },
-  { id: "478", name: "Relax · 4·7·8", bpm: "3.2 / min", note: "Short in, long hold, slow out. The extended exhale leans hard on the vagus nerve. Good before sleep.", phases: [{ l: "Breathe in", s: 4, scale: 1 }, { l: "Hold", s: 7, scale: 1 }, { l: "Breathe out", s: 8, scale: 0.5 }] },
+  { id: "coherence", name: "Coherence", bpm: "6 / min", note: "Equal five-second inhales and exhales. Breathing near this pace is commonly used in studies of heart-rate variability.", phases: [{ l: "Breathe in", s: 5, scale: 1 }, { l: "Breathe out", s: 5, scale: 0.5 }] },
+  { id: "box", name: "Box · 4·4·4·4", bpm: "3.75 / min", note: "Four equal phases: inhale, hold, exhale, hold. The complete cycle lasts 16 seconds.", phases: [{ l: "Breathe in", s: 4, scale: 1 }, { l: "Hold", s: 4, scale: 1 }, { l: "Breathe out", s: 4, scale: 0.5 }, { l: "Hold", s: 4, scale: 0.5 }] },
+  { id: "478", name: "Relax · 4·7·8", bpm: "3.2 / min", note: "A four-second inhale, seven-second hold, and eight-second exhale. Return to normal breathing if the hold feels uncomfortable.", phases: [{ l: "Breathe in", s: 4, scale: 1 }, { l: "Hold", s: 7, scale: 1 }, { l: "Breathe out", s: 8, scale: 0.5 }] },
 ];
 
 export default function BreathLab() {
@@ -64,15 +64,16 @@ export default function BreathLab() {
   return (
     <LabShell lab="breath" badge={running ? { color: ACCENT, text: `${cycles} cycles` } : undefined}>
       <LabHero
+        lab="breath"
         kicker="Breath Blueprint · 07"
         title="The one system you can steer"
-        subtitle="Your heart, your nerves, your stress response, mostly on autopilot. Breathing is the one dial you can grab by hand. Pick a pattern and follow the orb."
+        subtitle="Breathing is automatic, but it can also be controlled voluntarily. Choose a paced pattern and follow the timing guide."
         accent={ACCENT}
       />
 
-      <LiquidGlass radius={26} bezel={26} scale={52} style={{ padding: "24px" }}>
+      <LiquidGlass radius={26} bezel={26} scale={52} style={{ padding: "14px", overflow: "hidden" }}>
         {/* Pattern picker */}
-        <div className="grid grid-cols-3 gap-2 mb-6">
+        <div className="grid grid-cols-3 gap-2 mb-4 px-2 pt-2">
           {PATTERNS.map((p) => {
             const active = p.id === patternId;
             return (
@@ -86,55 +87,63 @@ export default function BreathLab() {
           })}
         </div>
 
-        {/* Guided orb */}
-        <div className="flex flex-col items-center py-4">
-          <div style={{ width: 210, height: 210, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        {/* Guided breath chamber */}
+        <div className="breath-stage flex flex-col items-center justify-center">
+          <div className="breath-stage-label"><i />{running ? pattern.name.toUpperCase() : "READY TO BREATHE"}</div>
+          <svg className="breath-lungs" viewBox="0 0 300 230" aria-hidden="true">
+            <path d="M146 54v76c-12 36-41 58-75 58-31 0-51-21-46-51 8-48 48-80 93-80h13" fill="rgba(6,182,212,.13)" stroke="rgba(165,243,252,.38)" strokeWidth="2" />
+            <path d="M154 54v76c12 36 41 58 75 58 31 0 51-21 46-51-8-48-48-80-93-80h-13" fill="rgba(6,182,212,.13)" stroke="rgba(165,243,252,.38)" strokeWidth="2" />
+            <path d="M150 20v111M150 91l-34 36M150 91l34 36" fill="none" stroke="rgba(224,251,255,.54)" strokeWidth="7" strokeLinecap="round" />
+            {[0,1,2].map((i)=><circle key={i} className="breath-stage-ring" cx="150" cy="122" r={46+i*26} fill="none" stroke="rgba(103,232,249,.16)" strokeWidth="2" style={{animationDelay:`${i*.4}s`}} />)}
+          </svg>
+          <div className="breath-orb-wrap">
             <div
+              className="breath-orb"
               style={{
-                width: 210, height: 210, borderRadius: "50%",
-                background: `radial-gradient(circle at 50% 38%, ${ACCENT}3a, ${ACCENT}12 70%)`,
-                border: `2px solid ${ACCENT}66`,
                 transform: `scale(${reduced ? 0.82 : scale})`,
                 transition: reduced ? "none" : `transform ${running ? pattern.phases[phaseIdx].s : 0.6}s cubic-bezier(0.45,0,0.25,1)`,
-                display: "flex", alignItems: "center", justifyContent: "center",
               }}
             >
               <div className="text-center">
-                <div className="text-lg font-bold" style={{ color: ACCENT }}>{phaseLabel}</div>
-                {running && <div className="text-3xl font-bold tabular-nums" style={{ color: "var(--ink)" }}>{secLeft}</div>}
+                <div className="text-lg font-bold" style={{ color: "#CFFAFE" }}>{phaseLabel}</div>
+                {running && <div className="text-3xl font-bold tabular-nums" style={{ color: "#fff" }}>{secLeft}</div>}
               </div>
             </div>
           </div>
 
+          <div className="breath-phase-track" aria-label={`${phaseLabel}, ${secLeft} seconds remaining`}>
+            {pattern.phases.map((ph, i) => <i key={`${ph.l}-${i}`} className={running && i === phaseIdx ? "active" : ""} style={{ "--phase-duration": `${ph.s}s` } as CSSProperties} />)}
+          </div>
+
           {!running ? (
-            <button onClick={start} className="mt-3 lg-pill rounded-full font-semibold px-8" style={{ minHeight: 50, color: ACCENT }}>
+            <button onClick={start} className="breath-stage-button mt-4 rounded-full font-semibold px-8" style={{ minHeight: 50 }}>
               Begin
             </button>
           ) : (
-            <button onClick={stop} className="mt-3 lg-pill rounded-full font-semibold px-8" style={{ minHeight: 50, color: "var(--ink-soft)" }}>
+            <button onClick={stop} className="breath-stage-button mt-4 rounded-full font-semibold px-8" style={{ minHeight: 50 }}>
               Stop
             </button>
           )}
         </div>
 
-        <p className="text-sm text-center mt-2 mx-auto" style={{ color: "var(--ink-soft)", lineHeight: 1.55, maxWidth: 400 }}>
+        <p className="text-sm text-center my-4 mx-auto px-4" style={{ color: "var(--ink-soft)", lineHeight: 1.55, maxWidth: 440 }}>
           {pattern.note}
         </p>
       </LiquidGlass>
 
       <div className="grid grid-cols-3 gap-3 mt-4">
-        <StatTile value="6/min" label="the pace where heart-rate variability peaks" accent={ACCENT} />
-        <StatTile value="Exhale" label="the calming half: long out-breaths slow the heart" accent={ACCENT} />
-        <StatTile value="~2 min" label="of slow breathing measurably lowers stress signals" accent={ACCENT} />
+        <StatTile value="~6/min" label="a pace commonly studied for heart-rate variability" accent={ACCENT} />
+        <StatTile value="HRV" label="often rises during slow, paced breathing" accent={ACCENT} />
+        <StatTile value="Stop" label="if you feel dizzy, strained, or short of breath" accent={ACCENT} />
       </div>
 
       <SciencePanel
         accent={ACCENT}
-        intro="Your heart speeds up a little when you breathe in and slows when you breathe out. Stretch the out-breath and you lean on the vagus nerve, the brake on your nervous system. Around six breaths a minute the rhythm lines up and heart-rate variability, a sign of a calm, flexible system, hits its peak."
+        intro="Heart rate typically rises during inhalation and falls during exhalation, a pattern called respiratory sinus arrhythmia. Slow, paced breathing can increase heart-rate variability in many people, although the response and most comfortable pace differ between individuals."
         points={[
-          { text: "Slow breathing near 6 breaths per minute maximizes heart-rate variability and vagal tone", cite: "Lehrer & Gevirtz, Front Psychol 2014" },
-          { text: "Longer exhales activate the parasympathetic 'rest and digest' branch and lower arousal", cite: "Zaccaro et al., Front Hum Neurosci 2018" },
-          { text: "Even a couple minutes of paced slow breathing shifts stress and mood markers", cite: "Russo et al., Breathe 2017" },
+          { text: "Breathing near 6 breaths per minute is widely studied in heart-rate-variability biofeedback", cite: "Lehrer & Gevirtz, Front Psychol 2014" },
+          { text: "Reviews associate slow breathing practices with changes in autonomic and psychological measures", cite: "Zaccaro et al., Front Hum Neurosci 2018" },
+          { text: "The physiological response depends on breathing rate, depth, and the individual", cite: "Russo et al., Breathe 2017" },
         ]}
         sources="A pacing tool, not therapy. If it makes you lightheaded, stop and breathe normally."
       />

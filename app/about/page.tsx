@@ -6,7 +6,7 @@ import { SiteNav, SiteFooter } from "@/components/site/SiteChrome";
 export const metadata: Metadata = {
   title: "About · The Health Blueprint",
   description:
-    "Why The Health Blueprint exists: the health lessons school never taught you, built as interactive labs with real research behind every number.",
+    "How The Health Blueprint uses cited explainers and interactive models to make preventive health concepts easier to examine.",
 };
 
 const LADDER = [
@@ -20,7 +20,7 @@ const LADDER = [
     icon: FlaskConical,
     tone: "#2563EB",
     title: "Explore",
-    body: "Interactive Blueprints. You move the controls, the data responds, and the mechanism clicks.",
+    body: "Interactive Blueprints that make assumptions visible and show how a simplified model responds.",
   },
   {
     icon: Smartphone,
@@ -32,8 +32,8 @@ const LADDER = [
 
 const RULES = [
   {
-    title: "Every number is real",
-    body: "No made-up stats, no rounded-for-drama figures. If a Blueprint says reaction time drops 25%, there's a study behind it, and the citation is on the page.",
+    title: "Claims need support",
+    body: "Health claims and quantitative estimates should be traceable to a named source. Simplified model outputs are labeled as estimates, not personal predictions.",
   },
   {
     title: "Sources you can check",
@@ -45,7 +45,7 @@ const RULES = [
   },
   {
     title: "Free, no sign-up",
-    body: "Nothing is gated. Open a Blueprint, play with it, leave whenever.",
+    body: "Nothing is gated. Open a Blueprint, adjust it, and leave whenever.",
   },
 ];
 
@@ -55,19 +55,18 @@ export default function AboutPage() {
       <div className="lab-aurora" aria-hidden="true" />
       <SiteNav />
 
-      <main className="flex-1 relative z-10">
+      <main id="main-content" tabIndex={-1} className="flex-1 relative z-10">
         <div className="max-w-3xl mx-auto px-6 sm:px-8 py-12 sm:py-16">
           <p className="hb-kicker hb-reveal" style={{ color: "var(--teal-deep)" }}>About</p>
           <h1
             className="mt-3 font-bold hb-reveal"
             style={{ fontSize: "clamp(2.2rem, 6vw, 3.5rem)", lineHeight: 1.02, letterSpacing: "-0.035em", color: "var(--ink)", animationDelay: "80ms" }}
           >
-            Built because health class didn&apos;t cover it.
+            Designed to make health evidence easier to examine.
           </h1>
           <p className="mt-5 text-lg hb-reveal" style={{ color: "var(--ink-soft)", lineHeight: 1.6, animationDelay: "160ms" }}>
-            School teaches you the food pyramid and moves on. Nobody explains why you can&apos;t fall asleep
-            after scrolling, why your energy crashes at 2 PM, or why everything feels personal when you&apos;re
-            running on five hours. That gap is the whole reason this exists.
+            Common advice about sleep, hydration, stress, and attention often arrives without a clear explanation
+            of the mechanism or the evidence. This project connects concise reading with models you can inspect.
           </p>
           <div className="hb-tick-rule mt-8 max-w-xs" aria-hidden="true" />
 
@@ -77,11 +76,9 @@ export default function AboutPage() {
               The idea
             </h2>
             <p className="mt-3" style={{ color: "var(--ink-soft)", lineHeight: 1.7 }}>
-              Most health problems are easier to understand before they start. But the way this stuff usually
-              gets taught, as warnings and worksheets, doesn&apos;t stick. What sticks is seeing it happen.
-              So instead of another article telling you sleep matters, you get a simulation where you set your
-              real schedule and watch your reaction time slide. The Health Blueprint is an independent health
-              education project built on one belief: if you can play with a system, you understand it.
+              Preventive health is easier to use when the assumptions are visible. A short article can summarize
+              the evidence; an interactive model can show how inputs relate to an estimated outcome. The Health
+              Blueprint combines both, while separating educational models from medical advice or personal prediction.
             </p>
           </section>
 

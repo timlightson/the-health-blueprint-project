@@ -7,7 +7,7 @@ import { labMeta } from "@/components/labs/labs-meta";
 
 export const metadata: Metadata = {
   title: "Learn · The Health Blueprint",
-  description: "Short, cited explainers on the health stuff school skips. Every one hands off to an interactive Blueprint.",
+  description: "Short, cited explainers on common health questions, each paired with an interactive Blueprint.",
 };
 
 const KIND_COLOR: Record<string, string> = { Explainer: "#0E8A7D", Myth: "#C9760F", Research: "#2563EB" };
@@ -18,14 +18,14 @@ export default function LearnIndex() {
       <div className="lab-aurora" aria-hidden="true" />
       <SiteNav active="learn" />
 
-      <main className="flex-1 relative z-10">
+      <main id="main-content" tabIndex={-1} className="flex-1 relative z-10">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 py-12 sm:py-16">
           <p className="hb-kicker" style={{ color: "var(--teal-deep)" }}>Learn</p>
           <h1 className="mt-3 font-bold" style={{ fontSize: "clamp(2.2rem, 6vw, 3.5rem)", lineHeight: 1.02, letterSpacing: "-0.035em", color: "var(--ink)" }}>
-            The stuff school skips.
+            Clear answers to common health questions.
           </h1>
           <p className="mt-4 text-lg max-w-2xl" style={{ color: "var(--ink-soft)", lineHeight: 1.55 }}>
-            Short reads that answer one real question, backed by actual research. Each one ends where the explaining stops being enough: an interactive Blueprint you can play with.
+            Short, cited explainers that distinguish what the research shows from what a simplified model can illustrate. Each article links to a Blueprint on the same topic.
           </p>
           <div className="hb-tick-rule mt-7 max-w-xs" aria-hidden="true" />
 

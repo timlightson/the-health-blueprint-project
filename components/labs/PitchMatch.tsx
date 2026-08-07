@@ -12,7 +12,6 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 // your ear and your memory. The surface IS the instrument: touch it and it
 // sings at wherever your finger is.
 
-const ACCENT = "#7C3AED";
 const TEAL = "#0E8A7D";
 const ROUNDS = 5;
 const F_MIN = 110; // A2
