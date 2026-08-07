@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Play } from "lucide-react";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabShell, LabHero, StatTile, SciencePanel } from "@/components/labs/kit";
@@ -27,15 +27,15 @@ export default function FocusLab() {
   const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
   useEffect(() => () => clearTimers(), []);
 
-  const spawn = useCallback((noisy: boolean) => {
+  function spawn(noisy: boolean) {
     const decoy = noisy && Math.random() < 0.3;
     setTarget({ x: 8 + Math.random() * 78, y: 12 + Math.random() * 62, decoy });
     t0.current = performance.now();
     // auto-miss if ignored
     timers.current.push(window.setTimeout(() => { setTarget(null); nextTrial(noisy, null, decoy); }, 1500));
-  }, []);
+  }
 
-  const nextTrial = useCallback((noisy: boolean, reaction: number | null, wasDecoy: boolean) => {
+  function nextTrial(noisy: boolean, reaction: number | null, wasDecoy: boolean) {
     clearTimers();
     if (reaction !== null && !wasDecoy) {
       setRt((p) => noisy ? { ...p, r2: [...p.r2, reaction] } : { ...p, r1: [...p.r1, reaction] });
@@ -48,7 +48,7 @@ export default function FocusLab() {
       return;
     }
     timers.current.push(window.setTimeout(() => spawn(noisy), 350 + Math.random() * 550));
-  }, [spawn]);
+  }
 
   const startRound = (noisy: boolean) => {
     trialRef.current = 0;
@@ -81,9 +81,10 @@ export default function FocusLab() {
   return (
     <LabShell lab="focus" badge={r1 ? { color: ACCENT, text: `${r1} ms clear` } : undefined}>
       <LabHero
+        lab="focus"
         kicker="Focus Blueprint · 06"
-        title="Feel the switch cost"
-        subtitle="Two rounds of the same simple game: tap the dot the instant it appears. First in a clean room, then buried in notifications. Your own reaction times tell the story."
+        title="Compare attention with interruptions"
+        subtitle="Run the same reaction-time task twice—first without interruptions, then with them—and compare your results."
         accent={ACCENT}
       />
 

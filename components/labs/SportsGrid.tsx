@@ -1,74 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { SPORTS, PROFILE_COLOR, type Profile } from "@/lib/sports-energy";
 
-// Rich fallback art until real photos land in /public/sports: a deep duotone
-// gradient field, light streaks, and a big crisp emoji. Apple emoji are
-// high-res raster art, so at this size they read as illustration, not text.
-const SPORT_EMOJI: Record<string, string> = {
-  track: "🏃", swimming: "🏊", rowing: "🚣", "cross-country": "🌲",
-  cycling: "🚴", weightlifting: "🏋️", gymnastics: "🤸", soccer: "⚽",
-  basketball: "🏀", football: "🏈", hockey: "🏒", lacrosse: "🥍",
-  tennis: "🎾", volleyball: "🏐", baseball: "⚾", wrestling: "🤼",
+const PROFILE_SIGNAL: Record<Profile, [number, number, number]> = {
+  explosive: [0.95, 0.48, 0.18],
+  burn: [0.52, 0.95, 0.34],
+  aerobic: [0.18, 0.38, 0.95],
+  mixed: [0.72, 0.72, 0.72],
 };
 
-function SportArt({ id, theme }: { id: string; theme: string }) {
+function SportArt({ name, profile, theme }: { name: string; profile: Profile; theme: string }) {
+  const values = PROFILE_SIGNAL[profile];
+  const initials = name.split(/\s|&/).filter(Boolean).map((word) => word[0]).join("").slice(0, 2).toUpperCase();
   return (
-    <div className="w-full h-full relative overflow-hidden" aria-hidden="true"
-      style={{ background: `linear-gradient(150deg, ${theme} 0%, ${theme}CC 45%, #0B1A2B 145%)` }}>
-      {/* top-left light bloom */}
-      <div className="absolute inset-0" style={{ background: "radial-gradient(90% 70% at 18% 8%, rgba(255,255,255,0.34), transparent 55%)" }} />
-      {/* motion streaks */}
-      <div className="absolute" style={{ width: "150%", height: 22, top: "30%", left: "-20%", transform: "rotate(-18deg)", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent)", filter: "blur(5px)" }} />
-      <div className="absolute" style={{ width: "150%", height: 14, top: "58%", left: "-20%", transform: "rotate(-18deg)", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent)", filter: "blur(4px)" }} />
-      {/* emoji subject */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span style={{ fontSize: 58, lineHeight: 1, transform: "rotate(-6deg) translateY(-8%)", filter: "drop-shadow(0 10px 16px rgba(0,0,0,0.38)) saturate(1.05)" }}>
-          {SPORT_EMOJI[id] ?? "🏅"}
-        </span>
-      </div>
-      {/* bottom depth for the pill */}
-      <div className="absolute inset-x-0 bottom-0" style={{ height: "52%", background: "linear-gradient(180deg, transparent, rgba(0,0,0,0.34))" }} />
-    </div>
-  );
-}
-
-/**
- * Tile background: a real action photo from /public/sports/{id}.jpg when one
- * exists, duotoned into the sport's theme color so all 16 tiles stay cohesive.
- * Until a photo lands (or if it 404s), the SVG illustration underneath shows —
- * the photo simply layers over it once it loads, so nothing ever flashes.
- */
-function SportPhoto({ id, theme }: { id: string; theme: string }) {
-  const [failed, setFailed] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  if (failed) return null;
-  return (
-    <div className="absolute inset-0" style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease" }}>
-      <Image
-        src={`/sports/${id}.jpg`}
-        alt=""
-        fill
-        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        style={{ objectFit: "cover", filter: "grayscale(1) contrast(1.08)" }}
-        onError={() => setFailed(true)}
-        onLoad={() => setLoaded(true)}
-      />
-      {/* duotone: theme color multiplied over the grayscale shot, stronger at the bottom */}
-      <div
-        className="absolute inset-0"
-        style={{ background: `linear-gradient(180deg, ${theme}8C 0%, ${theme}B8 100%)`, mixBlendMode: "multiply" }}
-      />
-      {/* soft lift so highlights keep the theme hue */}
-      <div className="absolute inset-0" style={{ background: `${theme}33` }} />
-      {/* bottom scrim so the glass pill stays legible over any photo */}
-      <div
-        className="absolute inset-x-0 bottom-0"
-        style={{ height: "55%", background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.42) 100%)" }}
-      />
+    <div className="w-full h-full relative overflow-hidden" aria-hidden="true" style={{ background: `radial-gradient(100% 90% at 8% 0%, ${theme}E6, ${theme}A8 46%, #0B1A2B 150%)` }}>
+      <svg viewBox="0 0 240 180" className="absolute inset-0 w-full h-full" fill="none">
+        <path d="M0 36H240M0 72H240M0 108H240M0 144H240M48 0V180M96 0V180M144 0V180M192 0V180" stroke="rgba(255,255,255,.07)" />
+        <path d="M18 126C52 112 71 47 110 51s40 67 73 49 29-43 57-44" className="sport-signal-trace" stroke="rgba(255,255,255,.72)" strokeWidth="2" strokeLinecap="round" />
+        {values.map((value, index) => {
+          const y = 31 + index * 29;
+          const colors = ["#FB923C", "#FBBF24", "#5EEAD4"];
+          return (
+            <g key={y}>
+              <text x="18" y={y + 3} fill="rgba(255,255,255,.6)" fontSize="7" fontFamily="ui-monospace,monospace">{["P", "G", "A"][index]}</text>
+              <rect x="31" y={y - 4} width="78" height="7" rx="3.5" fill="rgba(255,255,255,.12)" />
+              <rect x="31" y={y - 4} width={78 * value} height="7" rx="3.5" fill={colors[index]} opacity=".9" />
+            </g>
+          );
+        })}
+        <circle cx="184" cy="69" r="31" stroke="rgba(255,255,255,.22)" />
+        <circle cx="184" cy="69" r="22" stroke="rgba(255,255,255,.13)" />
+        <text x="184" y="77" textAnchor="middle" fill="white" fontSize="23" fontWeight="700" fontFamily="Inter,sans-serif">{initials}</text>
+        <path d="M164 20h40M184 0v40" stroke="rgba(255,255,255,.18)" strokeDasharray="2 4" />
+      </svg>
+      <div className="absolute inset-x-0 bottom-0" style={{ height: "54%", background: "linear-gradient(180deg, transparent, rgba(0,0,0,0.46))" }} />
     </div>
   );
 }
@@ -106,8 +73,7 @@ export default function SportsGrid() {
               style={{ aspectRatio: "4 / 3", borderRadius: "20px", border: "1px solid rgba(255,255,255,0.55)", boxShadow: "var(--glass-shadow)" }}
             >
               <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.06]">
-                <SportArt id={sport.id} theme={sport.theme} />
-                <SportPhoto id={sport.id} theme={sport.theme} />
+                <SportArt name={sport.name} profile={sport.profile} theme={sport.theme} />
               </div>
 
               {/* luminous inner ring */}

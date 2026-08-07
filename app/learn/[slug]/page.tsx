@@ -22,8 +22,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const a = articleBySlug(slug);
   if (!a) notFound();
   const lab = labMeta(a.lab);
-  const Icon = lab.icon;
-
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: "transparent", position: "relative" }}>
       <div className="lab-aurora" aria-hidden="true" />
@@ -58,7 +56,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <Link href={`/labs/${a.lab}`} className="group block lg lg-hover mt-10" style={{ borderRadius: 22, overflow: "hidden" }}>
             <div className="p-6 flex items-center justify-between gap-5" style={{ background: `linear-gradient(150deg, ${lab.tint}, transparent 80%)` }}>
               <div>
-                <p className="hb-kicker" style={{ color: lab.accent }}>Now try it yourself</p>
+                <p className="hb-kicker" style={{ color: lab.accent }}>Explore the model</p>
                 <h3 className="text-xl font-bold mt-1.5" style={{ color: "var(--ink)", letterSpacing: "-0.02em" }}>Open the {lab.name} Blueprint</h3>
                 <p className="text-sm mt-1" style={{ color: "var(--ink-soft)" }}>{lab.description}</p>
               </div>
@@ -71,10 +69,18 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
           {/* Sources */}
           <div className="mt-8 pt-5" style={{ borderTop: "1px solid var(--hairline)" }}>
-            <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--ink-soft)" }}>Sources</p>
-            <ul className="space-y-1">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--ink-soft)" }}>Sources and context</p>
+              <p className="text-xs" style={{ color: "var(--ink-faint)" }}>{a.reviewed}</p>
+            </div>
+            <ul className="space-y-3">
               {a.sources.map((s, i) => (
-                <li key={i} className="text-xs" style={{ color: "var(--ink-faint)" }}>{s}</li>
+                <li key={i} className="text-xs" style={{ color: "var(--ink-faint)" }}>
+                  <a href={s.href} target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline" style={{ color: "var(--ink-soft)" }}>
+                    {s.label}
+                  </a>
+                  <span className="block mt-0.5">{s.note}</span>
+                </li>
               ))}
             </ul>
           </div>

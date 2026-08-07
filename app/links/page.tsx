@@ -7,7 +7,7 @@ import { TAGLINE, INSTAGRAM_HANDLE, INSTAGRAM_URL, GITHUB_URL } from "@/lib/site
 export const metadata: Metadata = {
   title: "Links · The Health Blueprint",
   description:
-    "Health lessons school never taught you. Interactive Blueprints, short cited reads, and one place to start: sleep.",
+    "Cited health explainers and interactive educational models, with sleep as a practical starting point.",
 };
 
 // ─── /links — the link-in-bio page ────────────────────────────────────────────
@@ -36,7 +36,7 @@ const CARDS: StartCard[] = [
   {
     href: "/",
     title: "Explore All Blueprints",
-    sub: "Nine interactive Blueprints. Move the controls, watch real data respond.",
+    sub: "Nine interactive Blueprints built from simplified, cited models.",
     icon: FlaskConical,
     tone: "#2563EB",
   },

@@ -38,27 +38,20 @@ actually do? · Why do I get sick after exams? · Why do I forget things when I'
 
 ### Caption
 
-You're not lazy. You're running on sleep debt. 😴
+Most US high school students report getting less than eight hours of sleep on school
+nights. That does not produce one fixed penalty for everyone, but insufficient sleep can
+affect attention, reaction time, learning, and mood.
 
-Teens need 8 to 10 hours. Most of us run on far less, and your brain makes you pay for
-it the next day.
+The research is easy to overstate. A laboratory comparison between prolonged wakefulness
+and alcohol, for example, cannot turn a weekly sleep schedule into a blood alcohol level.
+And a study of adults reading on a bright e-reader for four hours before bed is evidence
+about sustained evening light, not a universal rule for every glance at a phone.
 
-On under six hours of sleep:
-- reaction time drops about 25%
-- memory drops about 20%
-- your emotions hit about 60% harder
+The Sleep Blueprint lets you compare schedules in a simplified model. It shows its
+assumptions and does not calculate personal impairment. Link in bio.
 
-And here's the one that gets people: staying awake 17 hours slows your reactions about
-as much as a 0.05% blood alcohol level. You just can't feel it.
-
-The good news is it comes back fast. Same bedtime even on weekends, sunlight early in the
-morning, and your phone out of reach an hour before bed does most of the work.
-
-Want to see it happen to your own week? We built a free Sleep Lab where you set your real
-schedule and watch your reaction time, memory, and mood respond in real time. Link in bio.
-
-Sources: CDC YRBS 2023 · Yoo et al., Current Biology 2007 · Chang et al., PNAS 2014 ·
-Dawson & Reid, Nature 1997
+Sources: CDC Youth Risk Behavior Survey 2023 · Paruthi et al., J Clin Sleep Med 2016 ·
+Chang et al., PNAS 2015 · Dawson & Reid, Nature 1997
 
 Hashtags: #sleep #sleephealth #teenhealth #studentlife #studytips #studygram #highschool
 #health #wellness #brainhealth #sleepdeprivation #healtheducation #circadianrhythm
@@ -80,30 +73,21 @@ Keep both labels identical in position, size, and style on every slide.
    heaviest). Thin navy brainwave line below going from sharp healthy peaks on the left to
    a flat line on the right. Subtext "Sleep · Blueprint 01". Bottom-left "Evidence-based.
    Built for students."
-2. "YOU'RE NOT LAZY. YOU'RE RUNNING ON DEBT." ("RUNNING ON DEBT" heaviest). Bulleted list,
-   emoji-led: "😴 tired no matter how long you slept", "🧠 losing focus, forgetting things
-   fast", "😤 snapping at people over nothing", "📉 slower reactions you never even notice".
-3. "YOUR BRAIN NEEDS 8 TO 10 HOURS" ("8 TO 10 HOURS" heaviest). Clean flat navy bar graphic:
-   a full bar "what teens need" vs a shorter dimmer bar "what most teens get". Caption:
-   "That's when your brain locks in what you learned and resets your mood. Miss it and the
-   next day shows it."
-4. "WHAT SHORT SLEEP TAKES FROM YOU". Three stacked rows, big navy number + lighter label,
-   hairline rules: "−25%" / "reaction time on under six hours 🕐"; "−20%" / "memory 🧠";
-   "+60%" / "how much harder your emotions flare 😤". Faint citation: "Yoo et al.,
-   Current Biology 2007."
-5. "STAY AWAKE 17 HOURS AND THIS HAPPENS". Center equivalence "17 HRS AWAKE ≈ 0.05% BAC"
-   ("≈" and "0.05% BAC" heaviest). Subtext "Your reaction time looks like you have been
-   drinking. You just cannot feel it." Citation "Dawson & Reid, Nature 1997."
-6. "YOUR PHONE PUSHES BEDTIME LATER THAN YOU THINK" ("LATER THAN YOU THINK" heaviest).
-   Center stat "≈ 90 MIN 📱". Subtext "That is how long bright screens can hold back
-   melatonin, the signal that tells your brain to wind down." Citation "Chang et al.,
-   PNAS 2014."
-7. "THE GOOD NEWS: IT COMES BACK FAST" ("COMES BACK FAST" heaviest). Emoji-led lines:
-   "⏰ keep the same bedtime, even on weekends", "☀️ get sunlight early in the morning",
-   "📵 put your phone away an hour before bed". Thin strong steady navy brainwave at bottom.
-8. CTA: "SEE IT HAPPEN TO YOUR OWN WEEK". Subtext "Build your real sleep schedule and watch
-   your reaction time, memory, and mood respond in real time. Free, no sign-up." Navy pill
-   button with cream text "TRY THE SLEEP LAB". Slightly larger, bolder URL at bottom.
+2. "MOST STUDENTS ARE SLEEPING SHORT." Show the CDC 2023 result as a survey finding:
+   about one in four high school students reported at least eight hours on an average
+   school night.
+3. "8 TO 10 HOURS IS A GUIDELINE, NOT A SCORE." Explain that recommendations describe a
+   population range and do not diagnose an individual.
+4. "THERE IS NO UNIVERSAL 25% PENALTY." List attention, reaction time, learning, and mood
+   as areas that may be affected, with a note that effect sizes vary by study and person.
+5. "LAB COMPARISONS NEED CONTEXT." Explain that prolonged wakefulness and alcohol were
+   compared on selected tasks; do not present a personal BAC equivalence.
+6. "EVENING LIGHT DEPENDS ON DOSE." Describe the Chang study as four hours of adult
+   e-reader use before bed, not ordinary phone use.
+7. "START WITH TIMING AND LIGHT." Suggest a reasonably regular sleep window and reducing
+   sustained bright light late in the evening, without promising a fixed result.
+8. CTA: "COMPARE SCHEDULES IN THE SLEEP BLUEPRINT." Subtext: "A simplified educational
+   model with visible assumptions. Free, no sign-up."
 
 Cut slide 5 or 6 for a tight 6-card version. Slides 5 and 8 would take a subtle dark-bedroom
 or phone-glow background photo well once real photos exist.

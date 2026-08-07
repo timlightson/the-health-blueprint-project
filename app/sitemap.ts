@@ -4,7 +4,7 @@ import { ARTICLES } from "@/lib/articles";
 import { SPORTS } from "@/lib/sports-energy";
 import { GAMES } from "@/components/labs/games/core";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://healthblueprint.app";
+import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const url = (path: string) => `${SITE_URL}${path}`;

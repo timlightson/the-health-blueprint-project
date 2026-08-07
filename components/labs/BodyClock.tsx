@@ -308,6 +308,22 @@ export default function BodyClock() {
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
   };
+  const onClockKeyDown = (e: React.KeyboardEvent<SVGSVGElement>) => {
+    const step = e.shiftKey ? 1 : 0.25;
+    if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+      e.preventDefault();
+      setHandH((h) => wrap24(h + step));
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+      e.preventDefault();
+      setHandH((h) => wrap24(h - step));
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      setHandH(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      setHandH(23.75);
+    }
+  };
 
   // ── Geometry for render ──
   const ringSegs = Array.from({ length: 24 }, (_, h) => {
@@ -346,7 +362,7 @@ export default function BodyClock() {
     <LiquidGlass radius={26} bezel={26} scale={52} style={{ padding: "24px" }}>
       <p className="hb-kicker" style={{ color: "#C9760F" }}>One clock, everybody</p>
       <p className="text-sm mt-2" style={{ color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "44rem" }}>
-        Drag the hand to any hour and read what your body is doing. The bright outer ring is your alertness across the day. The three faint loops inside are the chemistry driving it.
+        Drag the hand, or use the arrow keys, to inspect an illustrative 24-hour pattern. The curves are educational approximations, not personal measurements.
       </p>
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-7 items-start">
@@ -356,9 +372,15 @@ export default function BodyClock() {
             ref={svgRef}
             viewBox={`0 0 ${SZ} ${SZ}`}
             width="100%"
-            role="img"
-            aria-label="24-hour body clock dial. Drag the hand to any hour to read alertness, core temperature, melatonin and cortisol."
+            role="slider"
+            tabIndex={0}
+            aria-label="Time on the 24-hour body clock"
+            aria-valuemin={0}
+            aria-valuemax={23.75}
+            aria-valuenow={handH}
+            aria-valuetext={fmtClock(handH)}
             onPointerDown={onPointerDown}
+            onKeyDown={onClockKeyDown}
             style={{ display: "block", touchAction: "none", cursor: "grab", userSelect: "none" }}
           >
             <defs>

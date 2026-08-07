@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 const TITLE = `${SITE_NAME} · An Interactive Public Health Platform`
 const DESCRIPTION =
-  'Nine interactive Blueprints where you set your real habits and watch real, cited data respond. Sleep, hydration, stress, energy, and more, made something you can see.'
+  'Nine interactive educational Blueprints with cited sources, clear assumptions, and topics including sleep, hydration, stress, and energy.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

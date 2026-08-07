@@ -2,7 +2,7 @@
 
 **Health lessons school never taught you.**
 
-An interactive public health education platform for teens. The site has three layers: **Learn** (short, cited articles), **Explore** (nine interactive Blueprints where you move the controls and real data responds), and **Apply** (a personal habits app, coming later).
+An interactive health education project for teens. The site has two layers: **Learn** (short articles with linked, contextualized sources) and **Explore** (nine interactive Blueprints built from simplified educational models).
 
 Built with Next.js, Tailwind CSS, and Radix UI, on a custom Liquid Glass design system.
 
@@ -13,7 +13,7 @@ Built with Next.js, Tailwind CSS, and Radix UI, on a custom Liquid Glass design 
 | 01 | Sleep | Build your real week and watch sleep debt hit reaction time, memory, and mood. Eight playable brain games. |
 | 02 | Energy | Build your day, meet the 24-hour clock behind the afternoon slump, and see which engine fires in 16 sports. |
 | 03 | Stress | The Pressure Chamber: stack up load, then breathe it back down. |
-| 04 | Hydration | The Water Line: survive a school day and learn why thirst shows up late. |
+| 04 | Hydration | The Water Line: compare how activity and heat change an illustrative fluid-loss model. |
 | 05 | Sound | Pitch Match by ear, plus how fast loud volume spends your daily hearing budget. |
 | 06 | Focus | A distraction reaction game and the real cost of task switching. |
 | 07 | Breath | Paced breathing that drives your nervous system in real time. |
@@ -26,7 +26,7 @@ Built with Next.js, Tailwind CSS, and Radix UI, on a custom Liquid Glass design 
 - `/learn`, `/learn/[slug]` — cited articles that hand off to a Blueprint
 - `/labs/{id}` — the nine Blueprints
 - `/labs/sleep/games/[game]` — sleep mini-games
-- `/about` — mission, the Learn/Explore/Apply ladder, and the evidence rules
+- `/about` — mission, the Learn/Explore structure, and the evidence rules
 - `/project` — self-contained landing page for QR codes on resumes, applications, and posters
 - `/links` — mobile-first link-in-bio page (the Instagram bio URL, replaces Linktree)
 
@@ -58,9 +58,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Notes
 
-- All health data is evidence-based and cited (CDC, NIH, peer-reviewed research). No placeholder numbers, ever.
+- Central health claims should link to primary research, reviews, or authoritative guidance. Model outputs are educational estimates, not personal measurements or medical advice.
 - For educational purposes only. Not medical advice.
 
 ## Configuration
 
-Set `NEXT_PUBLIC_SITE_URL` to your deployed origin so social metadata, the sitemap, and the Open Graph image resolve to absolute URLs. Defaults to `https://healthblueprint.app`.
+Set `NEXT_PUBLIC_SITE_URL` to your deployed origin so social metadata, the sitemap, and the Open Graph image resolve to absolute URLs. Defaults to `https://thehealthblueprintproject.com`.

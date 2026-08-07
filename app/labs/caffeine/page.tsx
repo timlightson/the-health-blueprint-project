@@ -1,19 +1,18 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef } from "react";
+import { Coffee, CupSoda, Leaf, Zap, type LucideIcon } from "lucide-react";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabShell, LabHero, StatTile, SciencePanel, clamp } from "@/components/labs/kit";
 
 const ACCENT = "#B45309";
 const HALF_LIFE = 5;
-const THRESH = 50;
-
 const DRINKS = [
-  { id: "coffee", label: "Coffee", mg: 95, emoji: "☕" },
-  { id: "energy", label: "Energy drink", mg: 160, emoji: "⚡" },
-  { id: "tea", label: "Tea", mg: 47, emoji: "🍵" },
-  { id: "soda", label: "Soda", mg: 40, emoji: "🥤" },
-];
+  { id: "coffee", label: "Coffee", mg: 95, code: "CF", icon: Coffee },
+  { id: "energy", label: "Energy drink", mg: 160, code: "ED", icon: Zap },
+  { id: "tea", label: "Tea", mg: 47, code: "TE", icon: Leaf },
+  { id: "soda", label: "Soda", mg: 40, code: "SD", icon: CupSoda },
+] satisfies { id: string; label: string; mg: number; code: string; icon: LucideIcon }[];
 
 function fmtHour(h: number) {
   const hh = Math.floor(h), m = Math.round((h - hh) * 60);
@@ -25,11 +24,11 @@ function fmtHour(h: number) {
 const VW = 320, VH = 158, PADL = 30, PADR = 12, PADT = 12, PADB = 30;
 const H0 = 6, H1 = 24;
 
-interface Placed { id: number; mg: number; hour: number; emoji: string }
+interface Placed { id: number; mg: number; hour: number; code: string }
 let seq = 0;
 
 export default function CaffeineLab() {
-  const [placed, setPlaced] = useState<Placed[]>([{ id: ++seq, mg: 95, hour: 15, emoji: "☕" }]);
+  const [placed, setPlaced] = useState<Placed[]>([{ id: ++seq, mg: 95, hour: 15, code: "CF" }]);
   const [armed, setArmed] = useState<string | null>(null);
   const [bedH, setBedH] = useState(22.5);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -43,11 +42,11 @@ export default function CaffeineLab() {
   const xFor = (h: number) => PADL + ((h - H0) / (H1 - H0)) * (VW - PADL - PADR);
   const yFor = (mg: number) => PADT + (1 - mg / yMax) * (VH - PADT - PADB);
 
-  const path = useMemo(() => {
+  const path = (() => {
     let d = "";
     for (let h = H0; h <= H1; h += 0.5) d += `${h === H0 ? "M" : "L"} ${xFor(h).toFixed(1)} ${yFor(level(h)).toFixed(1)} `;
     return d;
-  }, [placed, yMax]);
+  })();
   const area = `${path} L ${xFor(H1).toFixed(1)} ${yFor(0).toFixed(1)} L ${xFor(H0).toFixed(1)} ${yFor(0).toFixed(1)} Z`;
 
   const hourFromClient = (clientX: number): number => {
@@ -61,7 +60,7 @@ export default function CaffeineLab() {
   const onPlot = (e: React.PointerEvent) => {
     if (!armed) return;
     const drink = DRINKS.find((d) => d.id === armed)!;
-    setPlaced((p) => [...p, { id: ++seq, mg: drink.mg, hour: hourFromClient(e.clientX), emoji: drink.emoji }]);
+    setPlaced((p) => [...p, { id: ++seq, mg: drink.mg, hour: hourFromClient(e.clientX), code: drink.code }]);
     setArmed(null);
   };
   const removeDrink = (id: number) => setPlaced((p) => p.filter((d) => d.id !== id));
@@ -74,14 +73,15 @@ export default function CaffeineLab() {
     window.addEventListener("pointermove", move); window.addEventListener("pointerup", up);
   };
 
-  const zone = atBed < 25 ? { label: "Clear enough to sleep", color: "#0E8A7D" } : atBed < 75 ? { label: "Still buzzing at bedtime", color: "#C9760F" } : { label: "Wired at bedtime", color: "#D8443B" };
+  const zone = atBed < 25 ? { label: "Below 25 mg in the model", color: "#0E8A7D" } : atBed < 75 ? { label: "25–74 mg in the model", color: "#C9760F" } : { label: "75 mg or more in the model", color: "#D8443B" };
 
   return (
     <LabShell lab="caffeine" badge={{ color: zone.color, text: `${atBed} mg @ bed` }}>
       <LabHero
+        lab="caffeine"
         kicker="Caffeine Blueprint · 08"
-        title="It stays longer than the buzz"
-        subtitle="Caffeine fades in slow steps, not all at once. Tap a drink, drop it on your day, then drag your bedtime and see how much is still working while you sleep."
+        title="How caffeine declines over time"
+        subtitle="Set a dose, time, and bedtime. The model estimates how much remains using a five-hour half-life."
         accent={ACCENT}
       />
 
@@ -101,8 +101,6 @@ export default function CaffeineLab() {
                 <stop offset="1" stopColor={ACCENT} stopOpacity="0.02" />
               </linearGradient>
             </defs>
-            <line x1={PADL} y1={yFor(THRESH)} x2={VW - PADR} y2={yFor(THRESH)} stroke="#D8443B" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
-            <text x={VW - PADR} y={yFor(THRESH) - 3} textAnchor="end" fontSize="7.5" fill="#D8443B" opacity="0.8">sleep starts to suffer</text>
             <line x1={PADL} y1={yFor(0)} x2={VW - PADR} y2={yFor(0)} stroke="rgba(11,26,43,0.18)" strokeWidth="1" />
             <path d={area} fill="url(#caf-fill)" />
             <path d={path} fill="none" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
@@ -111,7 +109,7 @@ export default function CaffeineLab() {
               <g key={d.id} style={{ cursor: "pointer" }} onPointerDown={(e) => { e.stopPropagation(); removeDrink(d.id); }}>
                 <line x1={xFor(d.hour)} y1={yFor(0)} x2={xFor(d.hour)} y2={yFor(d.mg)} stroke={ACCENT} strokeWidth="1" opacity="0.4" />
                 <circle cx={xFor(d.hour)} cy={yFor(d.mg)} r="9" fill="#fff" stroke={ACCENT} strokeWidth="1.5" />
-                <text x={xFor(d.hour)} y={yFor(d.mg) + 3.5} textAnchor="middle" fontSize="10">{d.emoji}</text>
+                <text x={xFor(d.hour)} y={yFor(d.mg) + 2.5} textAnchor="middle" fontSize="6.5" fontWeight="700" fill={ACCENT}>{d.code}</text>
               </g>
             ))}
             {/* bedtime flag (draggable) */}
@@ -136,11 +134,12 @@ export default function CaffeineLab() {
         <div className="grid grid-cols-4 gap-2">
           {DRINKS.map((d) => {
             const on = armed === d.id;
+            const DrinkIcon = d.icon;
             return (
               <button key={d.id} onClick={() => setArmed(on ? null : d.id)} aria-pressed={on}
                 className="rounded-2xl py-3 lg-pill flex flex-col items-center gap-1"
                 style={{ background: on ? `${ACCENT}18` : undefined, borderColor: on ? `${ACCENT}66` : undefined }}>
-                <span className="text-xl">{d.emoji}</span>
+                <DrinkIcon className="w-5 h-5" aria-hidden="true" style={{ color: ACCENT }} />
                 <span className="text-[11px] font-semibold" style={{ color: "var(--ink)" }}>{d.label}</span>
                 <span className="text-[10px]" style={{ color: "var(--ink-faint)" }}>{d.mg}mg</span>
               </button>
@@ -151,9 +150,9 @@ export default function CaffeineLab() {
       </LiquidGlass>
 
       <div className="grid grid-cols-3 gap-3 mt-4">
-        <StatTile value="~5 hr" label="to clear half of what you drank" accent={ACCENT} />
-        <StatTile value="~10 hr" label="until it's down to a quarter" accent={ACCENT} />
-        <StatTile value="6 hr" label="before bed is still enough to cost you sleep" accent={ACCENT} />
+        <StatTile value="~5 hr" label="half-life used by this model" accent={ACCENT} />
+        <StatTile value="~10 hr" label="to reach one quarter in this model" accent={ACCENT} />
+        <StatTile value="Estimate" label="clearance varies substantially" accent={ACCENT} />
       </div>
 
       <SciencePanel

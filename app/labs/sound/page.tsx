@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Volume2, VolumeX, Headphones, Play } from "lucide-react";
+import { Car, Headphones, MessageCircle, Music, Play, Siren, Volume2, VolumeX, type LucideIcon } from "lucide-react";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabShell, LabHero, StatTile, SciencePanel } from "@/components/labs/kit";
 import { playTone, beep, fmtHz, type Tone } from "@/components/labs/audio";
@@ -14,26 +14,14 @@ const ACCENT = "#7C3AED";
 // the highest tone you can still hear is a rough proxy for ear age.
 const FREQS = [8000, 10000, 12000, 14000, 15000, 16000, 17000, 18000, 19000, 20000];
 
-function ageRead(hz: number): string {
-  if (hz >= 19000) return "Under 20 — sharp, young ears";
-  if (hz >= 18000) return "Roughly under 24";
-  if (hz >= 17000) return "Roughly under 30";
-  if (hz >= 16000) return "Roughly under 40";
-  if (hz >= 15000) return "Roughly under 50";
-  if (hz >= 14000) return "Roughly 50s";
-  if (hz >= 12000) return "Roughly 50s to 60s";
-  if (hz >= 10000) return "Roughly 60s+";
-  return "Low ceiling — check your volume, or worth a real test";
-}
-
 // ─── Safe-listening (NIOSH) ─────────────────────────────────────────────────
 const LEVELS = [
-  { label: "Normal talk", db: 60, emoji: "💬" },
-  { label: "City traffic", db: 85, emoji: "🚗" },
-  { label: "Loud earbuds", db: 100, emoji: "🎧" },
-  { label: "Rock concert", db: 110, emoji: "🎸" },
-  { label: "Siren up close", db: 120, emoji: "🚨" },
-];
+  { label: "Normal talk", db: 60, icon: MessageCircle },
+  { label: "City traffic", db: 85, icon: Car },
+  { label: "Loud earbuds", db: 100, icon: Headphones },
+  { label: "Rock concert", db: 110, icon: Music },
+  { label: "Siren up close", db: 120, icon: Siren },
+] satisfies { label: string; db: number; icon: LucideIcon }[];
 const safeSeconds = (db: number) => 8 * 3600 * Math.pow(2, (85 - db) / 3);
 function fmtTime(s: number) {
   if (s >= 24 * 3600) return "all day";
@@ -67,14 +55,15 @@ export default function SoundLab() {
 
   const [selDb, setSelDb] = useState(100);
   const safe = safeSeconds(selDb);
-  const zone = selDb < 80 ? { label: "Easy on your ears", color: "#0E8A7D" } : selDb < 92 ? { label: "Turn it down soon", color: "#C9760F" } : { label: "Damage zone", color: "#D8443B" };
+  const zone = selDb < 85 ? { label: "Below the NIOSH reference level", color: "#0E8A7D" } : selDb < 100 ? { label: "NIOSH time limit applies", color: "#C9760F" } : { label: "Short NIOSH time limit", color: "#D8443B" };
 
   return (
     <LabShell lab="sound" badge={limit ? { color: ACCENT, text: `${fmtHz(limit)} ceiling` } : undefined}>
       <LabHero
+        lab="sound"
         kicker="Sound Blueprint · 05"
-        title="How good is your ear?"
-        subtitle="Hear a tone, hold it in your head, rebuild it by touch. Then find the top of your hearing range, check both channels, and see how fast loud gets dangerous."
+        title="Test pitch and listening limits"
+        subtitle="Match a tone by ear, check each audio channel, and compare exposure times with the NIOSH occupational model."
         accent={ACCENT}
       />
 
@@ -129,7 +118,7 @@ export default function SoundLab() {
               <>
                 <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--ink-soft)" }}>Your ceiling</p>
                 <div className="text-5xl font-bold tabular-nums mt-1" style={{ color: ACCENT, letterSpacing: "-0.03em" }}>{fmtHz(limit)}</div>
-                <p className="text-sm font-semibold mt-1" style={{ color: "var(--ink)" }}>{ageRead(limit)}</p>
+                <p className="text-sm font-semibold mt-1" style={{ color: "var(--ink)" }}>Highest tone reported in this device test</p>
                 <p className="text-xs mt-2 mx-auto" style={{ color: "var(--ink-faint)", maxWidth: 320 }}>
                   This is the top of your range, not a diagnosis. Speakers and volume matter, so treat it as a fun estimate.
                 </p>
@@ -161,11 +150,12 @@ export default function SoundLab() {
 
       {/* Safe-listening ladder */}
       <LiquidGlass radius={22} bezel={20} scale={44} className="mt-4" style={{ padding: "20px" }}>
-        <p className="text-sm font-semibold mb-1" style={{ color: "var(--ink)" }}>How long is safe?</p>
-        <p className="text-xs mb-4" style={{ color: "var(--ink-faint)" }}>Tap a sound. Damage is volume times time, so louder shrinks your window fast.</p>
+        <p className="text-sm font-semibold mb-1" style={{ color: "var(--ink)" }}>Compare NIOSH exposure times</p>
+        <p className="text-xs mb-4" style={{ color: "var(--ink-faint)" }}>Tap a sound to apply the NIOSH occupational model. This is not an individual safety guarantee.</p>
         <div className="space-y-2">
           {LEVELS.map((l) => {
             const active = l.db === selDb;
+            const LevelIcon = l.icon;
             return (
               <button
                 key={l.db}
@@ -174,7 +164,7 @@ export default function SoundLab() {
                 className="w-full flex items-center gap-3 rounded-xl text-left lg-pill"
                 style={{ minHeight: 52, padding: "0 14px", background: active ? `${ACCENT}14` : undefined, borderColor: active ? `${ACCENT}55` : undefined }}
               >
-                <span className="text-lg">{l.emoji}</span>
+                <LevelIcon className="w-5 h-5" aria-hidden="true" style={{ color: ACCENT }} />
                 <span className="flex-1">
                   <span className="block text-sm font-semibold" style={{ color: "var(--ink)" }}>{l.label}</span>
                   <span className="block text-xs" style={{ color: "var(--ink-faint)" }}>{l.db} dB</span>
@@ -185,14 +175,14 @@ export default function SoundLab() {
           })}
         </div>
         <p className="text-sm font-semibold mt-3 text-center" style={{ color: zone.color }}>
-          {LEVELS.find((l) => l.db === selDb)?.label}: safe for about {fmtTime(safe)} · {zone.label}
+          {LEVELS.find((l) => l.db === selDb)?.label}: {fmtTime(safe)} in the NIOSH model · {zone.label}
         </p>
       </LiquidGlass>
 
       <div className="grid grid-cols-3 gap-3 mt-4">
-        <StatTile value="20 kHz" label="the top of fresh young hearing" accent={ACCENT} />
-        <StatTile value="+3 dB" label="doubles the loudness hitting your ears" accent={ACCENT} />
-        <StatTile value="1 in 6" label="US teens already show some hearing loss" accent={ACCENT} />
+        <StatTile value="20 kHz" label="upper tone used in this device test" accent={ACCENT} />
+        <StatTile value="+3 dB" label="doubles sound energy in the NIOSH model" accent={ACCENT} />
+        <StatTile value="Screening" label="a hearing test needs calibrated equipment" accent={ACCENT} />
       </div>
 
       <SciencePanel
@@ -200,8 +190,8 @@ export default function SoundLab() {
         intro="Sound is caught by thousands of tiny hair cells in your inner ear, tuned from low pitches to high. The high-pitch cells sit first in line and wear out first, from age and from loud sound, which is why the top of your range drops over life and why the test above is a rough age check."
         points={[
           { text: "High-frequency hearing declines steadily with age, the basis of the 'mosquito tone' effect", cite: "ISO 7029; Rodriguez Valiente et al., Int J Audiol 2014" },
-          { text: "85 dBA is safe for about 8 hours, and every extra 3 dB halves that time", cite: "NIOSH Occupational Noise REL, 1998" },
-          { text: "About 1 in 6 US teens shows signs of noise-related hearing loss", cite: "Shargorodsky et al., JAMA 2010" },
+          { text: "NIOSH recommends an occupational limit of 85 dBA averaged over 8 hours and halves allowable time for each 3 dBA increase", cite: "NIOSH Occupational Noise REL, 1998" },
+          { text: "An occupational exposure limit is not a precise boundary between safe and damaged hearing for an individual listener", cite: "NIOSH, 1998" },
         ]}
         sources="Tones depend entirely on your device and volume, so this is for curiosity, not clinical use."
       />

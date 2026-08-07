@@ -4,8 +4,8 @@ import { TAGLINE, DISCLAIMER, INSTAGRAM_HANDLE, INSTAGRAM_URL, GITHUB_URL } from
 
 // ─── Shared platform chrome ───────────────────────────────────────────────────
 // One nav + footer for the platform-level pages (home, Learn). The Blueprints
-// keep their own in-lab header. Three sections, PhET/Brilliant-style:
-// Learn (articles), Explore (the Blueprints), Apply (the future app).
+// keep their own Blueprint header. The public product has two sections:
+// Learn (articles) and Explore (interactive educational models).
 
 export function SiteNav({ active }: { active?: "explore" | "learn" }) {
   const link = (href: string, label: string, key: "explore" | "learn", extra?: React.ReactNode) => (
@@ -30,14 +30,6 @@ export function SiteNav({ active }: { active?: "explore" | "learn" }) {
         <nav className="flex items-center gap-1" aria-label="Primary">
           {link("/learn", "Learn", "learn")}
           {link("/#blueprints", "Explore", "explore")}
-          <span
-            className="text-sm font-medium px-3 py-2 rounded-full inline-flex items-center gap-1.5 cursor-default"
-            style={{ color: "var(--ink-faint)" }}
-            title="The personalized app, coming later"
-          >
-            Apply
-            <span className="text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full" style={{ background: "rgba(11,26,43,0.06)", color: "var(--ink-faint)" }}>soon</span>
-          </span>
         </nav>
       </div>
     </header>

@@ -18,12 +18,9 @@ import BodyClock from "@/components/labs/BodyClock";
 import SportsGrid from "@/components/labs/SportsGrid";
 import EnergyGlowChart from "@/components/labs/EnergyGlowChart";
 import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
+import { BlueprintVisual } from "@/components/visuals/BlueprintVisual";
 
 // ─── Hero curve helpers (activity model from Build Your Day) ─────────────────────
-
-function clamp(v: number, lo: number, hi: number) {
-  return Math.max(lo, Math.min(hi, v));
-}
 
 // Energy 0–E_MAX mapped to a friendly 0–100 percentage.
 const pct = (e: number) => Math.max(0, Math.min(100, Math.round((e / E_MAX) * 100)));
@@ -105,31 +102,7 @@ function energyReadouts(curve: number[]): Readouts {
   return { peakT: tAt(maxI), peakLo: tAt(lo), peakHi: tAt(hi), peakVal, minT: tAt(minI), lowVal: curve[minI], crashes, avg };
 }
 
-function smoothPath(pts: { x: number; y: number }[]): string {
-  if (pts.length < 2) return "";
-  let d = `M ${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
-  for (let i = 1; i < pts.length; i++) {
-    const xc = (pts[i - 1].x + pts[i].x) / 2;
-    const yc = (pts[i - 1].y + pts[i].y) / 2;
-    d += ` Q ${pts[i - 1].x.toFixed(1)},${pts[i - 1].y.toFixed(1)} ${xc.toFixed(1)},${yc.toFixed(1)}`;
-  }
-  const last = pts[pts.length - 1];
-  d += ` L ${last.x.toFixed(1)},${last.y.toFixed(1)}`;
-  return d;
-}
-
 // ─── Hero energy chart ───────────────────────────────────────────────────────────
-
-const HW = 720;
-const HH = 250;
-const HPADL = 40;
-const HPADR = 16;
-const HPADT = 22;
-const HPADB = 40;
-const HPLOTW = HW - HPADL - HPADR;
-const HPLOTH = HH - HPADT - HPADB;
-const hx = (t: number) => HPADL + ((t - START_H) / (END_H - START_H)) * HPLOTW;
-const hy = (e: number) => HPADT + (1 - clamp(e, 0, E_MAX) / E_MAX) * HPLOTH;
 
 function HeroEnergyChart({ curve, peakT, minT }: { curve: number[]; peakT: number; minT: number }) {
   return (
@@ -214,14 +187,14 @@ function ScienceSection() {
         </div>
         {tab === 0 && (
           <div className="pb-8 space-y-4 text-sm" style={{ color: "var(--ink-soft)", lineHeight: "1.75" }}>
-            <p>Your brain is about 2% of your body weight but uses 20% of your energy. And it runs almost exclusively on glucose, not stored fat, not protein. Glucose. The kind that comes directly from what you ate in the last few hours.</p>
-            <p>The catch: your brain can&apos;t store much of it. It needs a steady supply. Which means what you had for breakfast is actively shaping how you think right now.</p>
+            <p>The brain accounts for roughly one-fifth of resting energy use and ordinarily relies heavily on glucose supplied through the blood. That does not mean a particular breakfast produces a predictable attention score.</p>
+            <p>Alertness across a school day reflects sleep, circadian timing, activity, stress, illness, food, caffeine, and individual differences. This model keeps only a few of those inputs so their possible effects are easier to explore.</p>
             <ul className="space-y-3 pl-1">
               {[
-                "Nothing → blood glucose running below baseline all morning. Your brain prioritizes basic function over higher-order thinking. Attention goes first.",
-                "Sugary cereal → big spike, then crash. That crash lands around 2nd or 3rd period. Tired, irritable, hard to focus. That's the glucose drop, not you being lazy.",
-                "Eggs and oats → slow, steady glucose. No spike, no crash. Your brain gets consistent fuel for 3–4 hours. This is the real difference between a good and bad morning.",
-                "Just coffee → caffeine masks the hunger signal, but doesn't feed your brain. You feel more alert, but you're running on empty. Cognitive performance drops without you noticing.",
+                "Skipping a meal can feel different from person to person. Research on breakfast and school performance is mixed and often observational.",
+                "Higher- and lower-glycemic meals produce different average glucose responses, but foods, portions, and individual responses vary.",
+                "Meals containing protein, fiber, and minimally processed carbohydrates often digest more gradually. The graph is illustrative, not a glucose monitor.",
+                "Caffeine can change alertness without replacing food. It also does not produce a fixed crash at a scheduled time.",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-2" style={{ listStyle: "none" }}>
                   <span className="flex-shrink-0 mt-2 rounded-full block" style={{ width: "5px", height: "5px", backgroundColor: "#0D9488" }} />
@@ -234,12 +207,9 @@ function ScienceSection() {
         {tab === 1 && (
           <div className="pb-8 space-y-3">
             {[
-              { stat: "20–40%", detail: "improvement in standardized test scores among students who ate breakfast vs. skipped it", source: "Pollitt & Mathews, Preventive Medicine (1998); Cooper et al., IJBEM (2012)" },
-              { stat: "17%", detail: "drop in working memory when blood glucose falls below baseline after a high-GI meal", source: "Ingwersen et al., Appetite (2007)" },
-              { stat: "5–6 hrs", detail: "caffeine half-life, so a 3pm energy drink still has 50% of its caffeine at 9pm", source: "Drake et al., J Clin Sleep Med (2013)" },
-              { stat: "85%", detail: "of teens regularly skip breakfast or eat high-GI foods, despite the clear hit to their focus", source: "Deshmukh-Taskar et al., JADA (2010)" },
-              { stat: "Low vs. high GI", detail: "same calories, different fuel. A low-GI breakfast noticeably improves afternoon attention and concentration", source: "Ingwersen et al., Appetite (2007)" },
-              { stat: "13%", detail: "improvement in memory recall in teens who ate a balanced lunch vs. fast food", source: "Liu et al., Nutrients (2012)" },
+              { stat: "~20%", detail: "share of resting energy expenditure commonly attributed to the adult brain", source: "Raichle & Gusnard, PNAS (2002)" },
+              { stat: "Mixed", detail: "breakfast studies report varied cognitive and academic outcomes, with study quality and confounding important", source: "Adolphus et al., Front Hum Neurosci (2016)" },
+              { stat: "Variable", detail: "caffeine half-life differs substantially among people; the simulator uses five hours as a teaching assumption", source: "Nehlig, Pharmacol Rev (2018)" },
             ].map(({ stat, detail, source }, i) => (
               <div key={i} className="flex items-start gap-4 p-4" style={{ background: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.6)", borderRadius: "14px", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)" }}>
                 <div className="flex-shrink-0 font-bold text-sm" style={{ color: "var(--ink)", minWidth: "72px" }}>{stat}</div>
@@ -254,11 +224,10 @@ function ScienceSection() {
         {tab === 2 && (
           <div className="pb-8 space-y-3 text-sm">
             {[
-              { tip: "Actually eat breakfast", why: "The data is the data. Students who eat breakfast consistently outperform those who skip. Not because breakfast is magic, but because your brain can't run on nothing. Something small beats empty." },
-              { tip: "Go for protein + complex carbs", why: "Eggs with toast, oatmeal with nuts, Greek yogurt. These digest slowly and give you 3–4 hours of steady glucose. Sugary cereals spike and crash before 2nd period." },
-              { tip: "Don't drink energy drinks before a test", why: "Caffeine raises alertness slightly but also raises anxiety and cortisol. The research on caffeine and teen focus is mixed, and the crash timing is terrible for school." },
-              { tip: "Eat lunch, even a small one", why: "Your brain's glucose supply runs low by 1pm. Even a 20-minute break with some protein significantly improves afternoon focus vs. skipping entirely." },
-              { tip: "If you use caffeine, cap it at noon", why: "Given the 5–6 hour half-life, afternoon caffeine sits in your system past midnight. Your sleep takes the hit, which compounds into tomorrow's performance." },
+              { tip: "Use the model as a comparison", why: "It can show how changing one input alters its curve. It cannot tell you which meal will improve your grades or diagnose fatigue." },
+              { tip: "Treat meal labels as broad examples", why: "Actual glucose responses depend on the whole meal, portion, preparation, activity, and the person." },
+              { tip: "Be cautious with energy drinks", why: "Caffeine content can be high, and pediatric guidance discourages energy drinks for children and adolescents." },
+              { tip: "Look beyond food when fatigue persists", why: "Sleep, mood, medication, anemia, infection, and other factors can matter. A recurring problem deserves more than a meal tweak." },
             ].map(({ tip, why }, i) => (
               <div key={i} className="p-4" style={{ background: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.6)", borderRadius: "14px", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)" }}>
                 <p className="font-medium mb-1" style={{ color: "var(--ink)" }}>{tip}</p>
@@ -412,14 +381,18 @@ export default function EnergyLab() {
 
           {/* ZONE 1 — DIAGNOSTIC HERO */}
           <ZoneSection first sectionRef={heroRef} padBottom={56}>
-            <div className="mb-10 text-center max-w-2xl mx-auto hb-reveal">
-              <p className="hb-kicker" style={{ color: "#C9760F" }}>Energy Blueprint · 02</p>
-              <h1 className="font-bold mt-4" style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.25rem)", color: "var(--ink)", lineHeight: 1.02, letterSpacing: "-0.035em" }}>
-                Your energy across the day
-              </h1>
-              <p className="mt-4 mx-auto" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "32rem" }}>
-                Build your real day below and watch the curve respond. You will see where you peak, where you crash, and the moment your tank runs lowest.
-              </p>
+            <div className="mb-11 grid md:grid-cols-[minmax(0,1.05fr)_minmax(250px,.95fr)] gap-7 md:gap-9 items-center hb-reveal">
+              <div>
+                <p className="hb-kicker" style={{ color: "#C9760F" }}>Energy Blueprint · 02</p>
+                <h1 className="font-bold mt-4" style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.25rem)", color: "var(--ink)", lineHeight: 1.02, letterSpacing: "-0.035em" }}>
+                  Your energy across the day
+                </h1>
+                <p className="mt-4" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "32rem" }}>
+                  Build a day and inspect how sleep, timing, activity, and meals change this educational alertness model.
+                </p>
+                <div className="hb-tick-rule mt-7" style={{ maxWidth: 220 }} aria-hidden="true" />
+              </div>
+              <BlueprintVisual lab="energy" mode="hero" />
             </div>
 
             {/* Headline readouts */}
@@ -458,7 +431,7 @@ export default function EnergyLab() {
           <ZoneSection wide>
             <ZoneHeader
               title="Your three energy engines"
-              subtitle="Every sport runs on the same three engines, just tuned differently. Pick yours and watch them fire, hand off, and recover in real time."
+              subtitle="Compare estimated phosphagen, glycolytic, and aerobic contributions across sports and event durations."
             />
             <SportsGrid />
           </ZoneSection>

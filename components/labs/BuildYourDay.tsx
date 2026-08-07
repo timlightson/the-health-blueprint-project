@@ -675,7 +675,7 @@ export default function BuildYourDay({
               className="text-xs font-semibold rounded-full lg-press"
               style={{
                 padding: "7px 13px",
-                minHeight: "34px",
+                minHeight: "44px",
                 background: name === "Clear all"
                   ? "rgba(255,255,255,0.5)"
                   : "linear-gradient(165deg, rgba(13,148,136,0.20), rgba(255,255,255,0.4))",

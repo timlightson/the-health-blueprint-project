@@ -12,7 +12,6 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 // your ear and your memory. The surface IS the instrument: touch it and it
 // sings at wherever your finger is.
 
-const ACCENT = "#7C3AED";
 const TEAL = "#0E8A7D";
 const ROUNDS = 5;
 const F_MIN = 110; // A2
@@ -236,7 +235,7 @@ export default function PitchMatch() {
               <span className="text-xs font-semibold tabular-nums" style={{ color: "#64748B" }}>{round + 1} / {ROUNDS}</span>
               <button onClick={replay} disabled={replaysLeft <= 0}
                 className="text-xs font-semibold rounded-full px-3 py-2 flex items-center gap-1.5"
-                style={{ color: replaysLeft > 0 ? "#A78BFA" : "#3F4A63", border: `1px solid ${replaysLeft > 0 ? "#A78BFA55" : "#1E2842"}`, minHeight: 36 }}>
+                style={{ color: replaysLeft > 0 ? "#A78BFA" : "#3F4A63", border: `1px solid ${replaysLeft > 0 ? "#A78BFA55" : "#1E2842"}`, minHeight: 44 }}>
                 <Volume2 className="w-3.5 h-3.5" /> hear it again ({replaysLeft})
               </button>
             </div>
