@@ -64,10 +64,9 @@ export default function BreathLab() {
   return (
     <LabShell lab="breath" badge={running ? { color: ACCENT, text: `${cycles} cycles` } : undefined}>
       <LabHero
-        lab="breath"
         kicker="Breath Blueprint · 07"
-        title="Follow a paced breathing pattern"
-        subtitle="Choose a timing pattern and follow the visual guide. This is a breathing timer, not a stress measurement."
+        title="The one system you can steer"
+        subtitle="Your heart, your nerves, your stress response, mostly on autopilot. Breathing is the one dial you can grab by hand. Pick a pattern and follow the orb."
         accent={ACCENT}
       />
 

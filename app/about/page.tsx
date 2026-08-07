@@ -1,12 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, BookOpen, FlaskConical } from "lucide-react";
+import { ArrowRight, BookOpen, FlaskConical, Smartphone } from "lucide-react";
 import { SiteNav, SiteFooter } from "@/components/site/SiteChrome";
 
 export const metadata: Metadata = {
   title: "About · The Health Blueprint",
   description:
-    "Why The Health Blueprint exists, how its educational models work, and how claims and sources are reviewed.",
+    "Why The Health Blueprint exists: the health lessons school never taught you, built as interactive labs with real research behind every number.",
 };
 
 const LADDER = [
@@ -14,24 +14,30 @@ const LADDER = [
     icon: BookOpen,
     tone: "#0E8A7D",
     title: "Learn",
-    body: "Short articles that answer one question and link each central claim to a source with context.",
+    body: "Short articles that answer one real question, like why you're always tired. Every claim is cited.",
   },
   {
     icon: FlaskConical,
     tone: "#2563EB",
     title: "Explore",
-    body: "Interactive Blueprints. You change inputs and compare the output of a simplified educational model.",
+    body: "Interactive Blueprints. You move the controls, the data responds, and the mechanism clicks.",
+  },
+  {
+    icon: Smartphone,
+    tone: "#C9760F",
+    title: "Apply",
+    body: "A personal app that turns all of this into habits built around you. Coming later.",
   },
 ];
 
 const RULES = [
   {
-    title: "Claims have limits",
-    body: "Sources, populations, and study designs matter. The project distinguishes a research finding from an illustrative model output.",
+    title: "Every number is real",
+    body: "No made-up stats, no rounded-for-drama figures. If a Blueprint says reaction time drops 25%, there's a study behind it, and the citation is on the page.",
   },
   {
     title: "Sources you can check",
-    body: "Central claims link to primary papers, reviews, or authoritative guidance, with notes when evidence comes from adults or a narrow setting.",
+    body: "CDC, NIH, and peer-reviewed journals. The papers are named right next to the claims they back.",
   },
   {
     title: "No scare tactics",
@@ -71,19 +77,20 @@ export default function AboutPage() {
               The idea
             </h2>
             <p className="mt-3" style={{ color: "var(--ink-soft)", lineHeight: 1.7 }}>
-              Health guidance often compresses uncertainty into a rule or a statistic. This project takes a
-              different approach: explain the mechanism, identify what the evidence actually measured, and let
-              readers change the assumptions in an educational model. The output is not a diagnosis or a
-              personal prediction.
+              Most health problems are easier to understand before they start. But the way this stuff usually
+              gets taught, as warnings and worksheets, doesn&apos;t stick. What sticks is seeing it happen.
+              So instead of another article telling you sleep matters, you get a simulation where you set your
+              real schedule and watch your reaction time slide. The Health Blueprint is an independent health
+              education project built on one belief: if you can play with a system, you understand it.
             </p>
           </section>
 
           {/* The ladder */}
           <section className="mt-12">
             <h2 className="font-bold" style={{ fontSize: "1.5rem", letterSpacing: "-0.02em", color: "var(--ink)" }}>
-              One idea, two ways in
+              One idea, three ways in
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">
               {LADDER.map((step) => {
                 const Icon = step.icon;
                 return (

@@ -39,7 +39,7 @@ export default function SportPage() {
                   {sport.name}
                 </h1>
                 <p className="mt-4 mx-auto" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "32rem" }}>
-                  Compare how the model distributes effort among three energy systems for {sport.name}, then inspect recovery between efforts.
+                  The same three engines as every sport, tuned to how {sport.name} actually plays out. Hit play and watch them carry the load, then recover.
                 </p>
               </div>
 

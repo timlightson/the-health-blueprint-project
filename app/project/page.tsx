@@ -1,14 +1,14 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, ArrowUpRight, BookOpen, FlaskConical, Github, Instagram } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BookOpen, FlaskConical, Github, Instagram, Smartphone } from "lucide-react";
 import { BrandMark } from "@/components/site/BrandMark";
 import { LABS } from "@/components/labs/labs-meta";
 import { TAGLINE, INSTAGRAM_HANDLE, INSTAGRAM_URL, GITHUB_URL, DISCLAIMER } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "The Health Blueprint · Interactive health education",
+  title: "The Health Blueprint · An interactive public health platform",
   description:
-    "Nine interactive educational Blueprints with cited sources and explicit assumptions.",
+    "Health lessons school never taught you. Nine interactive Blueprints where teens play with real, cited data and watch their habits change the outcome.",
 };
 
 // ─── /project — the QR landing page ───────────────────────────────────────────
@@ -18,13 +18,14 @@ export const metadata: Metadata = {
 
 const PROOF = [
   { value: "9", label: "interactive Blueprints, live now" },
-  { value: "3", label: "reviewed articles with linked sources" },
+  { value: "100%", label: "of the numbers cited to real research" },
   { value: "$0", label: "free and open, no sign-up" },
 ];
 
 const LADDER = [
   { icon: Instagram, tone: "#D8443B", step: "Instagram", line: "One question per post. Something you didn't know." },
-  { icon: FlaskConical, tone: "#2563EB", step: "Blueprints", line: "Simplified models whose inputs and assumptions you can inspect." },
+  { icon: FlaskConical, tone: "#2563EB", step: "Platform", line: "The full explanation, as a simulation you can play with." },
+  { icon: Smartphone, tone: "#C9760F", step: "App", line: "Your habits, your data, your plan. Coming later." },
 ];
 
 const FUTURE = ["Nutrition", "Exercise", "Screen Time", "Preventive Medicine"];
@@ -53,7 +54,7 @@ export default function ProjectPage() {
           {/* ── HERO ─────────────────────────────────────────────────── */}
           <section className="pt-20 sm:pt-28 text-center max-w-3xl mx-auto">
             <p className="hb-kicker hb-reveal-fade" style={{ color: "var(--teal-deep)" }}>
-              Interactive health education
+              An interactive public health platform
             </p>
             <h1
               className="mt-5 font-bold hb-reveal"
@@ -67,9 +68,9 @@ export default function ProjectPage() {
               className="mt-6 text-lg sm:text-xl mx-auto hb-reveal"
               style={{ color: "var(--ink-soft)", lineHeight: 1.55, maxWidth: "36rem", animationDelay: "200ms" }}
             >
-              The Health Blueprint pairs concise explanations with interactive educational
-              models. Each model simplifies the science, states its limits, and points readers
-              to the underlying evidence.
+              Teens don&apos;t need another lecture about sleep. They need to set their real
+              schedule and watch their reaction time slide. The Health Blueprint turns
+              preventive health into simulations you can play with.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3 hb-reveal" style={{ animationDelay: "300ms" }}>
               <Link
@@ -108,15 +109,16 @@ export default function ProjectPage() {
               Most health problems are easier to understand before they start.
             </h2>
             <p className="mt-4" style={{ color: "var(--ink-soft)", lineHeight: 1.7 }}>
-              Health claims are easy to repeat and hard to check. This project links central
-              claims to sources, describes important study limitations, and separates published
-              findings from illustrative model outputs.
+              School covers the food pyramid and moves on. Nobody explains why you can&apos;t
+              fall asleep after scrolling, or why everything feels personal on five hours of
+              sleep. This project fills that gap with one rule: every number comes from real
+              research, and the citation sits right next to the claim.
             </p>
           </section>
 
           {/* ── THE LADDER ───────────────────────────────────────────── */}
           <section className="mt-16 sm:mt-20">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
               {LADDER.map((step, i) => {
                 const Icon = step.icon;
                 return (
@@ -180,8 +182,9 @@ export default function ProjectPage() {
             <p className="hb-kicker" style={{ color: "var(--teal-deep)" }}>About the project</p>
             <p className="mt-4" style={{ color: "var(--ink-soft)", lineHeight: 1.7 }}>
               The Health Blueprint is an independent public health education project, built
-              and maintained by one person. The code is open source, and published articles
-              include linked sources and notes about the limits of the evidence.
+              and maintained by one person who saw the gap in health education and started
+              closing it. The whole platform is open source, and every Instagram post grows
+              into a cited article and an interactive Blueprint here.
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
               {[

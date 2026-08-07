@@ -32,6 +32,7 @@ export default function OpengraphImage() {
       >
         {/* Wordmark */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={mark} width={52} height={52} alt="" />
           <div style={{ fontSize: 28, fontWeight: 600, color: '#0B1A2B', letterSpacing: '-0.01em' }}>
             The Health Blueprint
@@ -53,7 +54,7 @@ export default function OpengraphImage() {
             See what&apos;s actually happening inside your body.
           </div>
           <div style={{ marginTop: 28, fontSize: 30, color: '#5A6675', maxWidth: 820, lineHeight: 1.4 }}>
-            Pick a topic. Change the inputs. Examine a cited educational model.
+            Pick a topic. Move the controls. Watch real data react in real time.
           </div>
         </div>
 

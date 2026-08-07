@@ -7,7 +7,7 @@ import { labMeta, type LabId } from "@/components/labs/labs-meta";
 import { DISCLAIMER, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/site";
 
 // ─── Shared lab chrome ────────────────────────────────────────────────────────
-// One sticky glass header and one footer, used by every Blueprint. They stand alone,
+// One sticky glass header and one footer, used by every lab. Labs stand alone,
 // PhET-style: the homepage is the catalog, and each lab links back to it.
 
 export function LabHeader({ lab, badge }: { lab: LabId; badge?: ReactNode }) {
@@ -19,15 +19,15 @@ export function LabHeader({ lab, badge }: { lab: LabId; badge?: ReactNode }) {
       className="flex items-center justify-between px-3 sm:px-6 flex-shrink-0 lg-bar sticky top-0"
       style={{ height: "62px", zIndex: 40, position: "sticky" }}
     >
-      {/* Back to the Blueprint catalog */}
+      {/* Back to the lab catalog */}
       <Link
         href="/"
         className="group flex items-center gap-1.5 lg-pill rounded-full px-2.5 sm:pl-2.5 sm:pr-4 py-2"
         style={{ color: "var(--ink-soft)", minHeight: "44px" }}
-        aria-label="Back to all Blueprints"
+        aria-label="Back to all labs"
       >
         <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-        <span className="text-sm font-medium hidden sm:inline">Blueprints</span>
+        <span className="text-sm font-medium hidden sm:inline">Labs</span>
       </Link>
 
       {/* Lab identity */}

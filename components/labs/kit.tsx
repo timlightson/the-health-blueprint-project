@@ -3,8 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
-import { type LabId } from "@/components/labs/labs-meta";
-import { BlueprintVisual } from "@/components/visuals/BlueprintVisual";
+import { labMeta, type LabId } from "@/components/labs/labs-meta";
 
 // ─── Shared lab kit ───────────────────────────────────────────────────────────
 // Primitives every lab is built from, so a new lab is a short, consistent file.
@@ -32,21 +31,18 @@ export function LabShell({
   );
 }
 
-/** Shared editorial intro paired with the lab's explanatory signal diagram. */
-export function LabHero({ lab, kicker, title, subtitle, accent }: { lab: LabId; kicker: string; title: string; subtitle: string; accent: string }) {
+/** Centered kicker / title / subtitle block used at the top of every lab. */
+export function LabHero({ kicker, title, subtitle, accent }: { kicker: string; title: string; subtitle: string; accent: string }) {
   return (
-    <div className="grid md:grid-cols-[minmax(0,1.05fr)_minmax(250px,.95fr)] gap-7 md:gap-9 items-center hb-reveal mb-12">
-      <div>
-        <p className="hb-kicker" style={{ color: accent }}>{kicker}</p>
-        <h1 className="font-bold mt-4" style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.25rem)", color: "var(--ink)", lineHeight: 1.02, letterSpacing: "-0.035em" }}>
-          {title}
-        </h1>
-        <p className="mt-4" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "34rem" }}>
-          {subtitle}
-        </p>
-        <div className="hb-tick-rule mt-7" style={{ maxWidth: "220px" }} aria-hidden="true" />
-      </div>
-      <BlueprintVisual lab={lab} mode="hero" />
+    <div className="text-center max-w-2xl mx-auto hb-reveal mb-11">
+      <p className="hb-kicker" style={{ color: accent }}>{kicker}</p>
+      <h1 className="font-bold mt-4" style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.25rem)", color: "var(--ink)", lineHeight: 1.02, letterSpacing: "-0.035em" }}>
+        {title}
+      </h1>
+      <p className="mt-4 mx-auto" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "34rem" }}>
+        {subtitle}
+      </p>
+      <div className="hb-tick-rule mt-7 mx-auto" style={{ maxWidth: "220px" }} aria-hidden="true" />
     </div>
   );
 }
@@ -73,7 +69,7 @@ export function Segmented<T extends string>({
             onClick={() => onChange(o.value)}
             aria-pressed={active}
             className={`rounded-full text-xs font-semibold px-4 ${active ? "lg-segment-active" : ""}`}
-            style={{ minHeight: "44px", color: active ? "var(--ink)" : "var(--ink-soft)" }}
+            style={{ minHeight: "38px", color: active ? "var(--ink)" : "var(--ink-soft)" }}
           >
             {o.label}
           </button>
@@ -108,7 +104,7 @@ export function Chips<T extends string>({
             aria-pressed={active}
             className="text-xs font-semibold rounded-full lg-pill"
             style={{
-              minHeight: "44px",
+              minHeight: "36px",
               padding: "0 14px",
               color: active ? "#fff" : "var(--ink-soft)",
               background: active ? accent : undefined,

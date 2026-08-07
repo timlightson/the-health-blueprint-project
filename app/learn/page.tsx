@@ -7,7 +7,7 @@ import { labMeta } from "@/components/labs/labs-meta";
 
 export const metadata: Metadata = {
   title: "Learn · The Health Blueprint",
-  description: "Short, cited explainers paired with interactive educational Blueprints.",
+  description: "Short, cited explainers on the health stuff school skips. Every one hands off to an interactive Blueprint.",
 };
 
 const KIND_COLOR: Record<string, string> = { Explainer: "#0E8A7D", Myth: "#C9760F", Research: "#2563EB" };
@@ -22,10 +22,10 @@ export default function LearnIndex() {
         <div className="max-w-5xl mx-auto px-6 sm:px-8 py-12 sm:py-16">
           <p className="hb-kicker" style={{ color: "var(--teal-deep)" }}>Learn</p>
           <h1 className="mt-3 font-bold" style={{ fontSize: "clamp(2.2rem, 6vw, 3.5rem)", lineHeight: 1.02, letterSpacing: "-0.035em", color: "var(--ink)" }}>
-            Start with the evidence.
+            The stuff school skips.
           </h1>
           <p className="mt-4 text-lg max-w-2xl" style={{ color: "var(--ink-soft)", lineHeight: 1.55 }}>
-            Short explanations with linked sources and notes about what each study can support. Each article leads to an interactive educational model.
+            Short reads that answer one real question, backed by actual research. Each one ends where the explaining stops being enough: an interactive Blueprint you can play with.
           </p>
           <div className="hb-tick-rule mt-7 max-w-xs" aria-hidden="true" />
 
@@ -53,7 +53,7 @@ export default function LearnIndex() {
           </div>
 
           <p className="text-sm mt-10" style={{ color: "var(--ink-faint)" }}>
-            Articles are reviewed before publication. New topics appear here when their sources and claims are ready.
+            More on the way. Every Instagram post becomes a full article here.
           </p>
         </div>
       </main>

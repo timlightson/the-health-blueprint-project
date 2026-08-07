@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo, useId } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { ChevronDown, ChevronRight, ChevronLeft, ArrowUp } from "lucide-react";
 import GamesSection from "@/components/labs/games/GamesSection";
 import PhoneBeforeBed from "@/components/labs/PhoneBeforeBed";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
 import { playSound } from "@/lib/sleep-sound";
-import { BlueprintVisual } from "@/components/visuals/BlueprintVisual";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -195,7 +194,7 @@ function useCountUp(target: number) {
     };
     rafRef.current = requestAnimationFrame(run);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [target]);
+  }, [target]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return val;
 }
@@ -1041,13 +1040,13 @@ function ScienceSection() {
 
         {tab === 0 && (
           <div className="pb-8 space-y-4 text-sm" style={{ color: "var(--ink-soft)", lineHeight: "1.75" }}>
-            <p>Sleep recommendations for teenagers are based on evidence about health, alertness, and functioning across development. Eight to ten hours is a population guideline, not a test of whether one person is healthy.</p>
+            <p>Teens need 8–10 hours, and not because someone decided it sounded good. Your brain is still under construction until your mid-20s. Every night of sleep is a maintenance window. Skip it and the maintenance doesn&apos;t get delayed. Some of it just doesn&apos;t happen.</p>
             <ul className="space-y-3 pl-1">
               {[
-                "Sleep supports learning and memory, but it does not work like a nightly filing system with a fixed amount of lost work.",
-                "Reaction time and sustained attention often worsen with insufficient sleep, although the size of the effect varies.",
-                "Sleep timing changes during adolescence, while early school schedules can make adequate sleep harder.",
-                "Mood and emotional regulation are associated with sleep, but one short night does not predict a specific emotional response.",
+                "Your brain runs a cleanup cycle that washes out waste products that accumulate while you're awake. Skip it and the waste sits there.",
+                "Memories from that day get sorted and filed into long-term storage. Without this step, what you studied barely sticks. The information isn't just hazy, it's gone.",
+                "Growth hormone gets released. Teens need more sleep than adults partly because your body is still literally growing.",
+                "Your emotional thermostat resets, so small things don't feel catastrophic tomorrow morning.",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-2" style={{ listStyle: "none" }}>
                   <span className="flex-shrink-0 mt-2 rounded-full block" style={{ width: "5px", height: "5px", backgroundColor: "#0D9488" }} />
@@ -1055,7 +1054,7 @@ function ScienceSection() {
                 </li>
               ))}
             </ul>
-            <p>The model adds the difference between scheduled sleep and a nine-hour reference point. It illustrates accumulation; it does not diagnose impairment or predict how you will perform.</p>
+            <p>Monday on 6 hours feels survivable. By Friday, you&apos;re running a deficit that&apos;s been compounding for 5 days. And the worst part: you lose the ability to notice. You feel fine. You&apos;re not fine.</p>
           </div>
         )}
 
@@ -1063,8 +1062,11 @@ function ScienceSection() {
           <div className="pb-8 space-y-3">
             {[
               { stat: "77%",      detail: "of US high schoolers don't get the recommended 8+ hours",                                               source: "CDC YRBS, 2023" },
-              { stat: "Small study", detail: "adult brain-imaging study found greater amygdala response after total sleep deprivation",             source: "Yoo et al., Current Biology (2007)" },
-              { stat: "17–19 hrs",detail: "selected tracking-task performance after sustained wakefulness resembled performance after alcohol",     source: "Dawson & Reid, Nature (1997)" },
+              { stat: "60%",      detail: "more reactive, how much the amygdala overreacts after sleep loss",                                     source: "Yoo et al., Current Biology (2007)" },
+              { stat: "17–19 hrs",detail: "awake = cognitive impairment equal to 0.05% blood alcohol concentration",                              source: "Dawson & Reid, Nature (1997)" },
+              { stat: "35%",      detail: "drop in chemistry test scores among sleep-deprived 11th–12th graders",                                  source: "Auctores Online (2024)" },
+              { stat: "20% / 23%",detail: "drop in memory and concentration under sleep restriction",                                              source: "Auctores Online (2024)" },
+              { stat: "Similar",  detail: "memory impairment from sleep restriction vs. total sleep deprivation, where partial loss hits almost as hard",source: "Newbury & Bhatt (2024)" },
               { stat: "Higher",   detail: "risk of depression and suicidal ideation in teens with insufficient sleep",                             source: "Fitzgerald et al., J Clin Sleep Med (2011)" },
             ].map(({ stat, detail, source }, i) => (
               <div key={i} className="flex items-start gap-4 p-3 rounded" style={{ background: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.6)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)" }}>
@@ -1081,10 +1083,11 @@ function ScienceSection() {
         {tab === 2 && (
           <div className="pb-8 space-y-3 text-sm">
             {[
-              { tip: "Keep sleep timing reasonably regular", why: "Large changes in sleep timing can make early starts harder. Some weekend catch-up sleep may still be useful when weekday sleep is short." },
-              { tip: "Reduce sustained bright light before bed", why: "Evening light can delay circadian timing. Brightness, duration, distance, and the content keeping you awake all matter." },
-              { tip: "Use a comfortable room temperature", why: "Temperature affects sleep, but there is no single ideal setting for every person or home." },
-              { tip: "Notice caffeine dose and timing", why: "Caffeine clearance varies widely. A simplified half-life model can show why a large afternoon dose may still matter at bedtime." },
+              { tip: "Same bedtime every night, weekends included",   why: "Your brain runs on a clock. Every time you stay up 2 hours later on Saturday, it's like flying to a different time zone. Monday morning feels like jet lag because it is." },
+              { tip: "No screens 30 min before bed",                    why: "Blue light delays melatonin release by up to 90 minutes. Your phone is physiologically keeping you awake. It's not about willpower." },
+              { tip: "Keep your room cool, around 65°F",               why: "Your core temperature has to drop a little for you to fall asleep. A cool room helps that happen. A hot room makes it physically harder to get into deep sleep." },
+              { tip: "No caffeine after 2 pm",                          why: "Caffeine has a 6-hour half-life. That 3 pm energy drink still has half its effect at 9 pm. A 5 pm coffee is basically a bedtime cup." },
+              { tip: "Don't try to sleep in to 'make up' for the week",why: "Sleeping until noon Sunday doesn't undo the cognitive debt, and it shifts your clock forward. Monday morning will feel even harder." },
             ].map(({ tip, why }, i) => (
               <div key={i} className="p-4 rounded" style={{ background: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.6)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)" }}>
                 <p className="font-medium mb-1" style={{ color: "var(--ink)" }}>{tip}</p>
@@ -1110,9 +1113,6 @@ function ScheduleControls({
   perDayHours: number[]; setPerDayHours: (v: number[]) => void;
   onReset: () => void;
 }) {
-  const controlId = useId();
-  const bedtimeId = `${controlId}-bedtime`;
-  const wakeId = `${controlId}-wake`;
   const hrs = calcHours(bedtime, wake);
   const fillCol = hrs >= 8 ? "#0D9488" : hrs >= 6 ? "#D97706" : "#DC2626";
   const bedH = parseTimeH(bedtime);
@@ -1126,14 +1126,14 @@ function ScheduleControls({
             <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "var(--ink-soft)" }}>Your Schedule</p>
             <div className="space-y-3">
               <div>
-                <label htmlFor={bedtimeId} className="text-xs mb-1.5 block" style={{ color: "var(--ink-soft)" }}>Bedtime</label>
-                <input id={bedtimeId} type="time" value={bedtime} onChange={e => setBedtime(e.target.value)}
+                <label className="text-xs mb-1.5 block" style={{ color: "var(--ink-soft)" }}>Bedtime</label>
+                <input type="time" value={bedtime} onChange={e => setBedtime(e.target.value)}
                   className="w-full px-3 py-2.5 text-sm font-medium lg-well"
                   style={{ borderRadius: "12px", border: "1px solid rgba(255,255,255,0.5)", color: "var(--ink)" }} />
               </div>
               <div>
-                <label htmlFor={wakeId} className="text-xs mb-1.5 block" style={{ color: "var(--ink-soft)" }}>Wake up</label>
-                <input id={wakeId} type="time" value={wake} onChange={e => setWake(e.target.value)}
+                <label className="text-xs mb-1.5 block" style={{ color: "var(--ink-soft)" }}>Wake up</label>
+                <input type="time" value={wake} onChange={e => setWake(e.target.value)}
                   className="w-full px-3 py-2.5 text-sm font-medium lg-well"
                   style={{ borderRadius: "12px", border: "1px solid rgba(255,255,255,0.5)", color: "var(--ink)" }} />
               </div>
@@ -1330,18 +1330,17 @@ export default function SleepLab() {
           <ZoneSection first sectionRef={heroRef} particles padBottom={48}>
 
             {/* Page title */}
-            <div className="mb-11 grid md:grid-cols-[minmax(0,1.05fr)_minmax(250px,.95fr)] gap-7 md:gap-9 items-center hb-reveal">
-              <div>
-                <p className="hb-kicker" style={{ color: "#0D9488" }}>Sleep Blueprint · 01</p>
-                <h1 className="font-bold mt-4" style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.25rem)", color: "var(--ink)", lineHeight: 1.02, letterSpacing: "-0.035em" }}>
-                  Sleep debt across your week
-                </h1>
-                <p className="mt-4" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "32rem" }}>
-                  Enter a weekly schedule and inspect how this simplified model accumulates sleep loss.
-                </p>
-                <div className="hb-tick-rule mt-7" style={{ maxWidth: 220 }} aria-hidden="true" />
-              </div>
-              <BlueprintVisual lab="sleep" mode="hero" />
+            <div className="mb-10 text-center max-w-2xl mx-auto hb-reveal">
+              <p className="hb-kicker" style={{ color: "#0D9488" }}>Sleep Blueprint · 01</p>
+              <h1
+                className="font-bold mt-4"
+                style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.25rem)", color: "var(--ink)", lineHeight: 1.02, letterSpacing: "-0.035em" }}
+              >
+                Sleep debt across your week
+              </h1>
+              <p className="mt-4 mx-auto" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "32rem" }}>
+                Put in your real schedule. Watch what builds up by Friday, and what starts to break down.
+              </p>
             </div>
 
             {/* Sleep score */}
@@ -1366,14 +1365,19 @@ export default function SleepLab() {
               })}
             </div>
 
-            {showCallout && (
-              <div className="mb-6 lg-tint-rose" style={{ padding: "20px 24px", border: "1px solid rgba(244,63,94,0.24)", borderRadius: "20px" }}>
+            {/* BAC callout (conditional) */}
+            <div className="mb-6 overflow-hidden"
+              style={{ borderRadius: "20px", maxHeight: showCallout ? "260px" : "0px", opacity: showCallout ? 1 : 0, transition: "max-height 0.5s var(--ease-glass), opacity 0.4s ease" }}>
+              <div className="lg-tint-rose" style={{ padding: "20px 24px", border: "1px solid rgba(244,63,94,0.32)", borderRadius: "20px", backdropFilter: "var(--glass-blur)", WebkitBackdropFilter: "var(--glass-blur)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), 0 12px 30px -16px rgba(220,38,38,0.4)" }}>
                 <p className="text-sm leading-relaxed" style={{ color: "var(--ink)" }}>
-                  This schedule is {Number.isInteger(fridayDebt) ? fridayDebt : fridayDebt.toFixed(1)} hours below the model&apos;s nine-hour reference by Friday.
-                  That total is descriptive only. It cannot be converted into a blood alcohol level or a personal performance score.
+                  By Friday on {baseSleepH} hours a night, you&apos;ve built up{" "}
+                  {Number.isInteger(fridayDebt) ? fridayDebt : fridayDebt.toFixed(1)} hours of sleep debt.
+                  Your brain is running the way it would after 17+ hours awake. That&apos;s the same
+                  level of impairment as a 0.05% blood alcohol level, basically legally drunk. You wouldn&apos;t drive drunk. But you&apos;re going to school like this.
                 </p>
+                <p className="text-xs mt-2 font-semibold" style={{ color: "#DC2626" }}>Dawson &amp; Reid, <em>Nature</em> (1997)</p>
               </div>
-            )}
+            </div>
 
             {/* 5-day timeline — figures on a refracting glass deck */}
             <LiquidGlass

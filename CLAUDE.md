@@ -1,7 +1,7 @@
 # The Health Blueprint
 
 ## What This Is
-An interactive health education project for teens. Each Blueprint combines a simplified educational model, explicit assumptions, linked sources, interactive tools, and games. Built with Next.js and Tailwind CSS.
+An interactive public health education platform for teens. Each Blueprint topic has its own simulation lab with real data, interactive tools, and games. Built with Next.js, Tailwind CSS, Recharts, and Radix UI.
 
 ## Design Direction
 The goal is a modern, clean, Apple-style aesthetic. Think apple.com — premium, minimal, confident, a lot of whitespace, smooth animations, everything feeling intentional. Not clinical, not childish, not generic. The kind of site where the design itself communicates that the content is credible.

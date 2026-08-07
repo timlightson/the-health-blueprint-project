@@ -133,7 +133,7 @@ function PatternGame({ difficulty, finish }: GameApi) {
 
   return (
     <div className="rounded p-6" style={{ backgroundColor: "#fff", border: "1px solid #E5E0D8" }}>
-      <p className="text-sm text-center mb-4" aria-live="polite" style={{ color: "#4A5568" }}>
+      <p className="text-sm text-center mb-4" style={{ color: "#4A5568" }}>
         {phase === "idle" && `Watch the ${cfg.len}-dot pattern, then drag through the same dots. Three rounds.`}
         {phase === "demo" && `Round ${round + 1} of ${ROUNDS}. Watch the pattern.`}
         {phase === "input" && `Round ${round + 1} of ${ROUNDS}. Drag through it.`}
@@ -179,30 +179,6 @@ function PatternGame({ difficulty, finish }: GameApi) {
           })}
         </svg>
       </div>
-
-      {phase === "input" && (
-        <div className="grid grid-cols-3 gap-2 mx-auto mb-4" style={{ maxWidth: 280 }} role="group" aria-label="Pattern dots in reading order">
-          {DOTS.map((d) => (
-            <button
-              key={d.i}
-              type="button"
-              onClick={() => {
-                addDot(d.i);
-                if (pathRef.current.length === pattern.length) {
-                  dragging.current = true;
-                  onUp();
-                }
-              }}
-              aria-label={`Dot ${d.i + 1}`}
-              aria-pressed={path.includes(d.i)}
-              className="lg-pill rounded-xl text-xs font-semibold"
-              style={{ minHeight: 44, color: path.includes(d.i) ? "#0D9488" : "#4A5568" }}
-            >
-              {d.i + 1}
-            </button>
-          ))}
-        </div>
-      )}
 
       {phase === "idle" && (
         <button

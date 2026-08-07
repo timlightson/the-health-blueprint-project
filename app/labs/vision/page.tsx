@@ -8,9 +8,9 @@ import { LabShell, LabHero, StatTile, SciencePanel, clamp } from "@/components/l
 const ACCENT = "#059669";
 
 function zoneFor(risk: number) {
-  if (risk < 30) return { label: "More outdoor time in this example", color: "#0E8A7D" };
-  if (risk < 60) return { label: "Mixed example", color: "#C9760F" };
-  return { label: "More near work in this example", color: "#D8443B" };
+  if (risk < 30) return { label: "Low risk", color: "#0E8A7D" };
+  if (risk < 60) return { label: "Worth watching", color: "#C9760F" };
+  return { label: "High risk", color: "#D8443B" };
 }
 
 export default function VisionLab() {
@@ -36,15 +36,6 @@ export default function VisionLab() {
     const up = () => { dragging.current = false; window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", up); };
     window.addEventListener("pointermove", move); window.addEventListener("pointerup", up);
   };
-  const onBalanceKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "ArrowRight" || e.key === "ArrowUp") {
-      e.preventDefault();
-      setBalance((v) => clamp(v + 0.025, 0, 1));
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
-      e.preventDefault();
-      setBalance((v) => clamp(v - 0.025, 0, 1));
-    }
-  };
 
   // Blind-spot finder
   const [dotX, setDotX] = useState(62); // % across the box
@@ -59,20 +50,19 @@ export default function VisionLab() {
   };
 
   return (
-    <LabShell lab="vision" badge={{ color: zone.color, text: `Index ${risk}` }}>
+    <LabShell lab="vision" badge={{ color: zone.color, text: `${risk}% risk` }}>
       <LabHero
-        lab="vision"
         kicker="Vision Blueprint · 09"
-        title="Outdoor time and near work"
-        subtitle="Research links more outdoor time with lower incidence of myopia in children. This model illustrates that association; it does not calculate personal risk."
+        title="Your eyes grow into your day"
+        subtitle="Nearsightedness isn't just genetic. Close focus with little daylight slowly stretches the eyeball. Slide your day between screens and sunlight and watch the board go blurry."
         accent={ACCENT}
       />
 
       {/* Balance bar */}
       <LiquidGlass radius={26} bezel={26} scale={52} style={{ padding: "24px" }}>
         <div className="text-center mb-5">
-          <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--ink-soft)" }}>Illustrative balance index</p>
-          <div className="text-5xl font-bold tabular-nums mt-1" style={{ color: zone.color, letterSpacing: "-0.03em", transition: "color 0.4s ease" }}>{risk}</div>
+          <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--ink-soft)" }}>Nearsightedness risk</p>
+          <div className="text-5xl font-bold tabular-nums mt-1" style={{ color: zone.color, letterSpacing: "-0.03em", transition: "color 0.4s ease" }}>{risk}%</div>
           <p className="text-sm font-semibold mt-1" style={{ color: zone.color }}>{zone.label}</p>
         </div>
 
@@ -89,19 +79,19 @@ export default function VisionLab() {
           <span className="flex items-center gap-1.5" style={{ color: "#64748B" }}><Monitor className="w-4 h-4" /> {near} hr close-up</span>
           <span className="flex items-center gap-1.5" style={{ color: ACCENT }}>{outdoor} hr daylight <Sun className="w-4 h-4" /></span>
         </div>
-        <div ref={barRef} onPointerDown={startDrag} onKeyDown={onBalanceKeyDown} tabIndex={0} role="slider" aria-label="Balance between near work and outdoor time" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(balance * 100)} className="relative rounded-full" style={{ height: 44, touchAction: "none", cursor: "ew-resize", background: `linear-gradient(90deg, #64748B33, ${ACCENT}44)` }}>
+        <div ref={barRef} onPointerDown={startDrag} className="relative rounded-full" style={{ height: 40, touchAction: "none", cursor: "ew-resize", background: `linear-gradient(90deg, #64748B33, ${ACCENT}44)` }}>
           <div className="absolute top-0 bottom-0 rounded-full" style={{ left: 0, width: `${balance * 100}%`, background: `linear-gradient(90deg, transparent, ${ACCENT}33)` }} />
           <div className="absolute top-1/2 rounded-full shadow-md flex items-center justify-center" style={{ left: `calc(${balance * 100}% - 18px)`, width: 36, height: 36, transform: "translateY(-50%)", background: "#fff", border: `2px solid ${ACCENT}` }}>
             <Sun className="w-4 h-4" style={{ color: ACCENT }} />
           </div>
         </div>
-        <p className="text-xs mt-2 text-center" style={{ color: "var(--ink-faint)" }}>Drag or use the arrow keys. The index shows only the direction of the research association.</p>
+        <p className="text-xs mt-2 text-center" style={{ color: "var(--ink-faint)" }}>Drag toward the sun. Daylight is the strongest thing that protects growing eyes.</p>
 
         {/* 20-20-20 */}
         <div className="mt-5 p-4 rounded-2xl" style={{ background: `linear-gradient(165deg, ${ACCENT}1A, rgba(255,255,255,0.5))`, border: `1px solid ${ACCENT}33`, boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)" }}>
           <p className="text-sm font-semibold" style={{ color: "var(--ink)" }}>The 20-20-20 break</p>
           <p className="text-sm mt-1" style={{ color: "var(--ink-soft)", lineHeight: 1.5 }}>
-            Looking away from close work can relieve temporary eye strain for some people. The 20-20-20 rule is a practical reminder, not a proven way to prevent myopia.
+            Every 20 minutes of close work, look at something about 20 feet away for 20 seconds. It relaxes the focusing muscle before it locks up.
           </p>
         </div>
       </LiquidGlass>

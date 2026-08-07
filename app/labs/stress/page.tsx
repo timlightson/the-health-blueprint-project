@@ -193,7 +193,7 @@ function PressureChamber() {
         {phase === "intro" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#F87171" }}>The Pressure Chamber · 5 rounds</p>
-            <h3 className="text-3xl font-bold mt-2 text-white" style={{ letterSpacing: "-0.02em" }}>Test load and recovery</h3>
+            <h3 className="text-3xl font-bold mt-2 text-white" style={{ letterSpacing: "-0.02em" }}>Find your breaking point</h3>
             <p className="text-sm mt-3 mb-6" style={{ color: "#94A3B8", maxWidth: 370, lineHeight: 1.55 }}>
               Quick math, and the clock keeps shrinking. A little pressure will sharpen you. Then it won't. After the worst round you get 15 seconds to breathe, and you'll see what that buys back.
             </p>
@@ -390,10 +390,10 @@ function LoadTest() {
               ))}
             </div>
             <div className="flex gap-2 mt-2">
-              <button onClick={() => setEntry(entry.slice(0, -1))} aria-label="Delete last digit" className="lg-pill rounded-full px-4 text-sm font-semibold" style={{ minHeight: 44, color: "var(--ink-soft)" }}>⌫</button>
+              <button onClick={() => setEntry(entry.slice(0, -1))} className="lg-pill rounded-full px-4 text-sm font-semibold" style={{ minHeight: 40, color: "var(--ink-soft)" }}>⌫</button>
               <button onClick={submit} disabled={entry.length !== len}
                 className="rounded-full px-5 text-sm font-bold"
-                style={{ minHeight: 44, background: entry.length === len ? ACCENT : "rgba(120,130,170,0.2)", color: entry.length === len ? "#fff" : "var(--ink-faint)" }}>
+                style={{ minHeight: 40, background: entry.length === len ? ACCENT : "rgba(120,130,170,0.2)", color: entry.length === len ? "#fff" : "var(--ink-faint)" }}>
                 Check
               </button>
             </div>
@@ -417,7 +417,7 @@ function LoadTest() {
                 <p className="text-xs mt-3" style={{ color: "var(--ink-faint)", maxWidth: 330, lineHeight: 1.5 }}>
                   Same brain, heavier load. Every stressor you carry rents space from this exact system (Klingberg 2010).
                 </p>
-                <button onClick={() => { setResults([]); begin(0); }} className="mt-3 lg-pill rounded-full font-semibold px-5 text-sm" style={{ minHeight: 44, color: ACCENT }}>
+                <button onClick={() => { setResults([]); begin(0); }} className="mt-3 lg-pill rounded-full font-semibold px-5 text-sm" style={{ minHeight: 42, color: ACCENT }}>
                   Start over
                 </button>
               </>
@@ -433,10 +433,9 @@ export default function StressLab() {
   return (
     <LabShell lab="stress">
       <LabHero
-        lab="stress"
         kicker="Stress Blueprint · 03"
-        title="Stress load and recovery"
-        subtitle="Add common pressures to an illustrative load model, then compare how short and longer breaks change its output."
+        title="Find your breaking point"
+        subtitle="A little pressure sharpens you. Too much takes your brain offline, and a real break brings it back. Feel the whole curve happen to you in five rounds."
         accent={ACCENT}
       />
 
