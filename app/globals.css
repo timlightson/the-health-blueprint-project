@@ -225,6 +225,29 @@
 @keyframes bpEqualize { 0%,100% { transform:scaleY(.72); } 50% { transform:scaleY(1.08); } }
 @keyframes bpScan { 0%,100% { transform:translateY(-38px); opacity:.15; } 50% { transform:translateY(38px); opacity:.65; } }
 @keyframes bpFlow { to { stroke-dashoffset:-30; } }
+@keyframes bpContourDrift { from { transform:translate3d(-5px,2px,0); opacity:.7; } to { transform:translate3d(7px,-4px,0); opacity:1; } }
+@keyframes bpSignal { 0%,100% { opacity:.45; transform:scale(.8); } 45% { opacity:1; transform:scale(1.25); } }
+@keyframes bpMoonFloat { 0%,100% { transform:translateY(0) rotate(-1deg); } 50% { transform:translateY(-4px) rotate(1deg); } }
+@keyframes bpWaveTrace { 0%,100% { stroke-dashoffset:0; opacity:.42; } 50% { stroke-dashoffset:-48; opacity:1; } }
+@keyframes bpEnergyTravel { 0%,100% { transform:translate(-8px,13px) scale(.72); opacity:.45; } 52% { transform:translate(28px,-34px) scale(1.12); opacity:1; } }
+@keyframes bpCellCharge { 0%,100% { transform:translateY(1px); } 50% { transform:translateY(-2px); } }
+@keyframes bpBolt { 0%,100% { opacity:.72; transform:scale(.96); } 48% { opacity:1; transform:scale(1.045); } }
+@keyframes bpMeter { 0%,100% { transform:scaleX(.78); opacity:.55; } 55% { transform:scaleX(1.08); opacity:1; } }
+@keyframes bpStressNode { 0%,100% { opacity:.48; transform:scale(.82); } 48% { opacity:1; transform:scale(1.15); } }
+@keyframes bpPressure { 0%,100% { opacity:.28; transform:scale(.93); } 50% { opacity:.8; transform:scale(1.045); } }
+@keyframes bpLoad { 0%,100% { transform:scaleX(.76); opacity:.78; } 55% { transform:scaleX(1.12); opacity:1; } }
+@keyframes bpDrop { 0%,100% { transform:translateY(0) scale(.96); } 50% { transform:translateY(-5px) scale(1.035); } }
+@keyframes bpSoundField { 0% { opacity:0; transform:scale(.72); } 35% { opacity:.8; } 100% { opacity:0; transform:scale(1.14); } }
+@keyframes bpDistraction { 0%,100% { opacity:.58; transform:translateY(1px) scale(.97); } 50% { opacity:1; transform:translateY(-4px) scale(1.025); } }
+@keyframes bpTarget { 0%,100% { transform:scale(.98); } 50% { transform:scale(1.025); } }
+@keyframes bpFocusCone { 0%,100% { opacity:.38; transform:rotate(-2deg); } 50% { opacity:1; transform:rotate(2deg); } }
+@keyframes bpBreathe { 0%,100% { transform:scale(.94,.92); opacity:.72; } 50% { transform:scale(1.035,1.045); opacity:1; } }
+@keyframes bpBreathRing { 0%,100% { opacity:.2; transform:scale(.9); } 50% { opacity:.66; transform:scale(1.06); } }
+@keyframes bpAirDot { 0%,100% { opacity:.25; transform:translateX(-54px) scale(.75); } 50% { opacity:1; transform:translateX(0) scale(1.15); } }
+@keyframes bpSteam { 0% { opacity:0; stroke-dashoffset:38; transform:translateY(5px); } 45% { opacity:.82; } 100% { opacity:0; stroke-dashoffset:0; transform:translateY(-6px); } }
+@keyframes bpIris { 0%,100% { transform:scale(.97); } 50% { transform:scale(1.025); } }
+@keyframes bpPupil { 0%,100% { transform:scale(.82); } 50% { transform:scale(1.08); } }
+@keyframes bpSun { to { transform:rotate(360deg); } }
 
 .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
 .animate-breathe { animation: breathe 4s ease-in-out infinite; }
@@ -323,32 +346,74 @@
 .blueprint-card-open { position:absolute; z-index:3; }
 .blueprint-card-open { right:16px; bottom:14px; display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(255,255,255,.2); border-radius:50%; background:rgba(255,255,255,.13); backdrop-filter:blur(10px); color:#fff; opacity:0; transform:translateX(-6px) scale(.88); transition:opacity .35s ease,transform .45s var(--spring),background .3s ease; }
 .blueprint-card:hover .blueprint-card-open,.blueprint-card:focus-visible .blueprint-card-open { opacity:1; transform:translateX(0) scale(1); background:rgba(255,255,255,.2); }
-.bp-art-root { overflow:visible; }
-.bp-art-scene { transform-origin:center; transition:transform .7s var(--spring); }
-.bp-art-root.is-hovered .bp-art-scene { transform:scale(1.018); }
-.bp-art-stars circle { transform-box:fill-box; transform-origin:center; animation:bpTwinkle 3.2s ease-in-out infinite; }
-.bp-art-wave-stack path { stroke-dasharray:90; animation:bpDraw 3.2s ease-in-out infinite alternate; }
-.bp-art-cycle,.bp-art-clock { transform-box:fill-box; transform-origin:center; animation:bpRotate 18s linear infinite; }
-.bp-art-orbit { transform-origin:181px 106px; animation:bpRotate 20s linear infinite; }
-.bp-art-bolt { transform-box:fill-box; transform-origin:center; animation:bpPulse 2.8s ease-in-out infinite; }
-.bp-art-meter rect { transform-box:fill-box; transform-origin:left center; transition:transform .45s var(--spring),opacity .35s ease; }
-.bp-art-root.is-hovered .bp-art-meter rect { transform:scaleX(1.13); }
-.bp-art-node { transform-box:fill-box; transform-origin:center; animation:bpPulse 3s ease-in-out infinite; }
-.bp-art-pressure { transform-box:fill-box; transform-origin:center; animation:bpPulse 3.4s ease-in-out infinite; }
-.bp-art-load { transform-box:fill-box; transform-origin:left center; transition:transform .65s var(--spring); }
-.bp-art-root.is-hovered .bp-art-load { transform:scaleX(1.13); }
-.bp-art-water { animation:bpWater 4.2s linear infinite; }
-.bp-art-bubble { transform-box:fill-box; transform-origin:center; animation:bpBubble 3.4s ease-out infinite; }
-.bp-art-sound-ring { transform-box:fill-box; transform-origin:center; animation:bpPulse 3.7s ease-in-out infinite; }
-.bp-art-eq rect { transform-box:fill-box; transform-origin:center; animation:bpEqualize 1.5s ease-in-out infinite; }
-.bp-art-distraction { transform-box:fill-box; transform-origin:center; animation:bpFloat 4.5s ease-in-out infinite; }
-.bp-art-target { transform-box:fill-box; transform-origin:center; animation:bpPulse 3.1s ease-in-out infinite; }
-.bp-art-scan { animation:bpScan 4.4s ease-in-out infinite; }
-.bp-art-breath-ring { transform-box:fill-box; transform-origin:center; animation:bpPulse 5.8s ease-in-out infinite; }
-.bp-art-airflow path,.bp-art-focus-ray { stroke-dasharray:8 7; animation:bpFlow 2.2s linear infinite; }
-.bp-art-steam { stroke-dasharray:38; animation:bpDraw 3.5s ease-in-out infinite; }
-.bp-art-receptor { transform-box:fill-box; transform-origin:center; animation:bpFloat 4s ease-in-out infinite; }
-.bp-art-iris { transform-box:fill-box; transform-origin:center; animation:bpPulse 4.8s ease-in-out infinite; }
+.bp-art-root { overflow:visible; isolation:isolate; }
+.bp-art-scene { transform-origin:center; transition:transform .75s var(--spring); }
+.bp-art-root.is-hovered .bp-art-scene { transform:scale(1.025); }
+.bp-art-contours { animation:bpContourDrift 12s ease-in-out infinite alternate; }
+.bp-art-sheen { transform:translateX(-45px); transition:transform 1.05s var(--ease-glass),opacity .6s ease; }
+.bp-art-root.is-hovered .bp-art-sheen { transform:translateX(390px); opacity:.72; }
+.bp-art-live circle { transform-box:fill-box; transform-origin:center; animation:bpSignal 2.2s ease-in-out infinite; }
+.bp-art-title circle { transform-box:fill-box; transform-origin:center; animation:bpSignal 3s ease-in-out infinite; }
+
+/* Sleep: a calm night scene with a moving cycle dial and live sleep waves. */
+.bp-sleep-moon { transform-box:fill-box; transform-origin:center; animation:bpMoonFloat 7s ease-in-out infinite; }
+.bp-sleep-bed { transform-box:fill-box; transform-origin:center bottom; transition:transform .8s var(--spring); }
+.bp-art-root.is-hovered .bp-sleep-bed { transform:translateY(-2px) scale(1.01); }
+.bp-art-stars circle { transform-box:fill-box; transform-origin:center; animation:bpTwinkle 3.4s ease-in-out infinite; }
+.bp-art-cycle-ring { transform-origin:center; transform-box:fill-box; animation:bpRotate 16s linear infinite; }
+.bp-sleep-waves path { stroke-dasharray:62 38; animation:bpWaveTrace 3.8s ease-in-out infinite; }
+
+/* Energy: charge moves through the day arc while the battery breathes. */
+.bp-energy-orb { transform-box:fill-box; transform-origin:center; animation:bpEnergyTravel 4.8s ease-in-out infinite; }
+.bp-energy-cell { transform-box:fill-box; transform-origin:center; animation:bpCellCharge 4.2s ease-in-out infinite; }
+.bp-energy-bolt { transform-box:fill-box; transform-origin:center; animation:bpBolt 2.7s ease-in-out infinite; }
+.bp-energy-meter rect { transform-box:fill-box; transform-origin:left center; animation:bpMeter 3.2s ease-in-out infinite; }
+.bp-energy-readout circle { transform-box:fill-box; transform-origin:center; animation:bpSignal 2.5s ease-in-out infinite; }
+
+/* Stress: incoming demands pulse toward a compressed central field. */
+.bp-stress-node { transform-box:fill-box; transform-origin:center; animation:bpStressNode 3s ease-in-out infinite; }
+.bp-stress-ring { transform-box:fill-box; transform-origin:center; animation:bpPressure 3.5s ease-in-out infinite; }
+.bp-stress-load rect:last-of-type { transform-box:fill-box; transform-origin:left center; animation:bpLoad 4.2s ease-in-out infinite; }
+
+/* Hydration: two offset surfaces create a convincing rolling fluid line. */
+.bp-water-vessel { transform-box:fill-box; transform-origin:center bottom; transition:transform .75s var(--spring); }
+.bp-art-root.is-hovered .bp-water-vessel { transform:translateY(-3px) rotate(-.5deg); }
+.bp-water-wave { animation:bpWater 4.5s linear infinite; }
+.bp-water-wave-back { animation-duration:6.5s; animation-direction:reverse; }
+.bp-water-bubble { transform-box:fill-box; transform-origin:center; animation:bpBubble 3.5s ease-out infinite; }
+.bp-water-drop { transform-box:fill-box; transform-origin:center; animation:bpDrop 3.6s ease-in-out infinite; }
+
+/* Sound: the spectrum remains active while the listening field expands slowly. */
+.bp-sound-field ellipse { transform-box:fill-box; transform-origin:center; animation:bpSoundField 4.2s ease-out infinite; }
+.bp-sound-headphones { transform-box:fill-box; transform-origin:center; transition:transform .7s var(--spring); }
+.bp-art-root.is-hovered .bp-sound-headphones { transform:scale(1.025); }
+.bp-sound-eq rect { transform-box:fill-box; transform-origin:center; animation:bpEqualize 1.45s ease-in-out infinite; }
+
+/* Focus: interruptions drift at the edge while the scan stays locked to center. */
+.bp-focus-chip { transform-box:fill-box; transform-origin:center; animation:bpDistraction 5s ease-in-out infinite; }
+.bp-focus-target { transform-box:fill-box; transform-origin:center; animation:bpTarget 4s ease-in-out infinite; }
+.bp-focus-scan { animation:bpScan 4.2s ease-in-out infinite; }
+.bp-focus-cone { transform-origin:180px 7px; animation:bpFocusCone 5.5s ease-in-out infinite; }
+
+/* Breath: the lungs and concentric field follow a slow six-breath rhythm. */
+.bp-breath-lungs { transform-box:fill-box; transform-origin:center bottom; animation:bpBreathe 5.8s ease-in-out infinite; }
+.bp-breath-rings circle { transform-box:fill-box; transform-origin:center; animation:bpBreathRing 5.8s ease-in-out infinite; }
+.bp-breath-airflow path { animation:bpFlow 2.2s linear infinite; }
+.bp-breath-dot { animation:bpAirDot 2.2s ease-in-out infinite; }
+
+/* Caffeine: steam dissipates as the half-life dial advances. */
+.bp-coffee-clock > circle:nth-child(2) { transform-box:fill-box; transform-origin:center; animation:bpRotate 18s linear infinite; }
+.bp-coffee-cup { transform-box:fill-box; transform-origin:center bottom; transition:transform .75s var(--spring); }
+.bp-art-root.is-hovered .bp-coffee-cup { transform:translateY(-3px); }
+.bp-coffee-steam path { stroke-dasharray:36; animation:bpSteam 3.3s ease-in-out infinite; }
+.bp-coffee-receptor { transform-box:fill-box; transform-origin:center; animation:bpFloat 4s ease-in-out infinite; }
+
+/* Vision: ray flow and pupil response suggest focus shifting near to far. */
+.bp-vision-rays path { animation:bpFlow 2.8s linear infinite; }
+.bp-vision-iris { transform-box:fill-box; transform-origin:center; animation:bpIris 5s ease-in-out infinite; }
+.bp-vision-pupil { transform-box:fill-box; transform-origin:center; animation:bpPupil 5s ease-in-out infinite; }
+.bp-vision-sun { transform-box:fill-box; transform-origin:center; animation:bpSun 9s linear infinite; }
+.bp-vision-screen { transform-box:fill-box; transform-origin:center; animation:bpFloat 4.8s ease-in-out infinite; }
 .bp-art-root.is-reduced * { animation:none !important; transition:none !important; }
 
 @media (max-width: 767px) {
