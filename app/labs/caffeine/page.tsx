@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, type CSSProperties } from "react";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabShell, LabHero, StatTile, SciencePanel, clamp } from "@/components/labs/kit";
+import { useMotionPresence } from "@/hooks/use-motion-presence";
 
 const ACCENT = "#B45309";
 const HALF_LIFE = 5;
@@ -46,6 +47,59 @@ const H0 = 6, H1 = 24;
 
 interface Placed { id: number; mg: number; hour: number; kind: DrinkKind }
 let seq = 0;
+
+function AdenosineScene({ atBed, totalMg, bedH }: { atBed: number; totalMg: number; bedH: number }) {
+  const { ref, motionActive } = useMotionPresence<HTMLDivElement>();
+  const load = clamp(atBed / 120, 0, 1);
+  const particles = Math.max(1, Math.min(9, Math.ceil(atBed / 18)));
+  const visualLoad = atBed < 25 ? "LOW" : atBed < 75 ? "MID" : "HIGH";
+  const style = {
+    "--caf-load": load,
+    "--caf-glow-opacity": Math.max(.12, load * .8),
+    "--caf-eye-height": `${2 + load * 4}px`,
+    "--caf-head-y": `${5 - load * 6}px`,
+    "--caf-scene-accent": atBed < 25 ? "#6EE7B7" : atBed < 75 ? "#FBBF24" : "#FB7185",
+  } as CSSProperties;
+
+  return (
+    <div
+      ref={ref}
+      className={`caf-scene ${motionActive ? "is-motion-active" : ""}`}
+      style={style}
+      role="img"
+      aria-label={`${atBed} milligrams of caffeine remain in the model at ${fmtHour(bedH)}. The illustration shows caffeine occupying adenosine receptors.`}
+    >
+      <div className="caf-scene-grid" />
+      <div className="caf-room">
+        <div className="caf-window"><i /><b /><span /></div>
+        <div className="caf-poster"><span>LIGHTS OUT</span><i /></div>
+        <div className="caf-desk"><span /><b /></div>
+        <div className="caf-laptop"><i /><span>12:14</span></div>
+        <div className="caf-cup"><i /><b /><span /></div>
+        <div className="caf-student">
+          <span className="caf-student-body" />
+          <span className="caf-student-head"><i /><b /><em /></span>
+          <span className="caf-student-arm" />
+        </div>
+        <div className="caf-room-glow" />
+      </div>
+      <div className="caf-divider"><span>MODELED AT BEDTIME</span></div>
+      <div className="caf-receptor-field">
+        <div className="caf-receptor-readout"><span>ILLUSTRATIVE VIEW</span><strong>{visualLoad}</strong></div>
+        <div className="caf-receptors">
+          {Array.from({ length: 6 }, (_, i) => <i key={i} className={i < Math.ceil(load * 6) ? "is-blocked" : ""}><b /></i>)}
+        </div>
+        <div className="caf-particles">
+          {Array.from({ length: particles }, (_, i) => (
+            <i key={i} style={{ "--caf-particle-x": `${9 + ((i * 31) % 83)}%`, "--caf-particle-y": `${24 + ((i * 23) % 63)}%`, "--caf-particle-delay": `${i * -.31}s` } as CSSProperties}>C</i>
+          ))}
+        </div>
+        <div className="caf-field-caption"><i />{atBed} mg modeled remainder <span>of {totalMg} mg added</span></div>
+      </div>
+      <div className="caf-scene-vignette" />
+    </div>
+  );
+}
 
 export default function CaffeineLab() {
   const [placed, setPlaced] = useState<Placed[]>([{ id: ++seq, mg: 95, hour: 15, kind: "coffee" }]);
@@ -114,6 +168,8 @@ export default function CaffeineLab() {
             <div><span>ACTIVE AT {fmtHour(bedH)}</span><strong style={{ color: zone.color }}>{zone.label}</strong></div>
             <div><strong style={{ color: zone.color }}>{atBed}</strong><span>MG</span></div>
           </div>
+
+          <AdenosineScene atBed={atBed} totalMg={totalMg} bedH={bedH} />
 
           {/* Interactive timeline */}
           <div ref={wrapRef} onPointerDown={onPlot} className="caffeine-chart" style={{ cursor: armed ? "copy" : "default", touchAction: "none" }}>

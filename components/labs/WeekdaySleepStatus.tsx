@@ -1,3 +1,8 @@
+"use client";
+
+import type { CSSProperties } from "react";
+import { useMotionPresence } from "@/hooks/use-motion-presence";
+
 type SleepDay = {
   day: string;
   debtHours: number;
@@ -11,67 +16,99 @@ function fmtHours(value: number) {
 }
 
 function statusFor(debt: number) {
-  if (debt < 0.05) return { label: "rested", accent: "#0D9488", glow: "rgba(45,212,191,.32)", sky: "#16354A" };
-  if (debt < 6) return { label: "debt building", accent: "#D97706", glow: "rgba(245,158,11,.3)", sky: "#46384C" };
-  return { label: "low reserve", accent: "#DC4A43", glow: "rgba(248,113,113,.32)", sky: "#492B3C" };
+  if (debt < 0.05) return { label: "rested", accent: "#0D9488", glow: "rgba(45,212,191,.28)" };
+  if (debt < 6) return { label: "debt building", accent: "#D97706", glow: "rgba(245,158,11,.27)" };
+  return { label: "low reserve", accent: "#DC4A43", glow: "rgba(248,113,113,.3)" };
 }
 
-function SleepRoom({ data, index }: { data: SleepDay; index: number }) {
+function StudentDay({ data, index }: { data: SleepDay; index: number }) {
   const status = statusFor(data.debtHours);
+  const fatigue = Math.max(0, Math.min(1, data.fatigue));
   const reserve = Math.max(0.06, data.energy);
-  const blanketY = 90 + data.fatigue * 7;
-  const headY = 78 + data.fatigue * 4;
-  const stars = [
-    [28, 29], [52, 20], [76, 34], [113, 21], [139, 37], [154, 17],
-  ];
+  const sceneStyle = {
+    "--fatigue": fatigue,
+    "--energy": reserve,
+    "--day-accent": status.accent,
+    "--day-glow": status.glow,
+    "--day-delay": `${index * 90}ms`,
+    "--story-sky-a": fatigue * .42,
+    "--story-sky-b": fatigue * .35,
+    "--story-sun-y": `${fatigue * 20}px`,
+    "--story-sun-opacity": 1 - fatigue * .34,
+    "--story-lamp-angle": `${-7 - fatigue * 10}deg`,
+    "--story-lamp-opacity": 1 - fatigue * .35,
+    "--story-cup-opacity": .2 + fatigue * .8,
+    "--story-shadow-scale": 1 + fatigue * .18,
+    "--story-student-y": `${fatigue * 5}px`,
+    "--story-student-angle": `${fatigue * 8}deg`,
+    "--story-idle-duration": `${3.2 + fatigue * 3.8}s`,
+    "--story-idle-rise": `${-3 + fatigue * 2}px`,
+    "--story-head-angle": `${fatigue * 10}deg`,
+    "--story-head-y": `${fatigue * 3}px`,
+    "--story-eye-scale": 1 - fatigue * .72,
+    "--story-arm-back": `${-10 + fatigue * 18}deg`,
+    "--story-arm-front": `${9 + fatigue * 22}deg`,
+    "--story-leg-back": `${2 + fatigue * 8}deg`,
+    "--story-leg-front": `${-2 + fatigue * 6}deg`,
+    "--story-pack-x": `${fatigue * -5}px`,
+    "--story-pack-scale": .9 + fatigue * .18,
+    "--story-fatigue-opacity": fatigue * .85,
+    "--story-weight-y": `${fatigue * 10}px`,
+    "--story-drift-opacity": fatigue * .8,
+  } as CSSProperties;
 
   return (
-    <article
-      className="sleep-day-card"
-      style={{ "--sleep-accent": status.accent, "--sleep-glow": status.glow } as React.CSSProperties}
-    >
-      <div className="sleep-day-head">
+    <article className="sleep-story-day" style={sceneStyle}>
+      <div className="sleep-story-head">
         <span>{data.day}</span>
         <span>{fmtHours(data.sleep)}h</span>
       </div>
 
-      <div className="sleep-room-scene" style={{ background: `linear-gradient(160deg, ${status.sky}, #0A1729 78%)` }}>
-        <svg viewBox="0 0 180 145" aria-hidden="true">
-          <defs>
-            <linearGradient id={`blanket-${index}`} x1="0" y1="0" x2="1" y2="1">
-              <stop stopColor={status.accent} />
-              <stop offset="1" stopColor="#16384A" />
-            </linearGradient>
-          </defs>
-
-          <path d="M18 111h145" stroke="rgba(255,255,255,.12)" />
-          <path d="M22 111v19M158 111v19" stroke="rgba(255,255,255,.3)" strokeWidth="3" strokeLinecap="round" />
-
-          {stars.slice(0, Math.max(2, 6 - Math.floor(data.fatigue * 4))).map(([x, y], i) => (
-            <circle key={i} className="sleep-star" cx={x} cy={y} r={i % 2 ? 1.3 : 1.8} fill="#F7E8A6" style={{ animationDelay: `${i * 320 + index * 120}ms` }} />
-          ))}
-          <path d="M137 25a14 14 0 1 1-13-18 11 11 0 0 0 13 18Z" fill="#F7E8A6" opacity=".9" />
-          <circle cx="137" cy="24" r="25" fill={status.glow} opacity=".55" />
-
-          <rect x="25" y="80" width="136" height="34" rx="9" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.22)" />
-          <rect x="30" y="82" width="38" height="18" rx="9" fill="#F7F1E8" />
-          <circle cx="61" cy={headY} r="13" fill="#D99A78" />
-          <path d={`M48 ${headY - 1}c2-15 25-15 27 0-8-5-19-6-27 0Z`} fill="#162238" />
-          <path d={`M68 ${blanketY}C91 ${blanketY - 10} 124 ${blanketY - 5} 159 ${blanketY + 2}v23H68Z`} fill={`url(#blanket-${index})`} />
-          <path d={`M74 ${blanketY + 4}c23-7 52-4 77 4`} stroke="rgba(255,255,255,.25)" strokeWidth="2" strokeLinecap="round" />
-
-          {[0, 1, 2].slice(0, data.fatigue > 0.75 ? 1 : data.fatigue > 0.35 ? 2 : 3).map((n) => (
-            <text key={n} className="sleep-z" x={84 + n * 13} y={68 - n * 12} fill="#D9F4EF" fontSize={10 + n * 2} fontWeight="700" style={{ animationDelay: `${n * 450 + index * 180}ms` }}>z</text>
-          ))}
-        </svg>
-
-        <div className="sleep-reserve" aria-label={`${Math.round(reserve * 100)} percent rest reserve`}>
-          <span>rest reserve</span>
-          <div><i style={{ width: `${reserve * 100}%`, background: status.accent }} /></div>
+      <div className="sleep-story-scene" aria-hidden="true">
+        <div className="sleep-story-sky" />
+        <div className="sleep-story-window">
+          <i className="sleep-story-sun" />
+          <span className="sleep-story-cloud cloud-one" />
+          <span className="sleep-story-cloud cloud-two" />
         </div>
+        <div className="sleep-story-desk">
+          <i className="sleep-story-lamp"><b /></i>
+          <span className="sleep-story-books"><i /><i /><i /></span>
+          <span className="sleep-story-cup" />
+        </div>
+        <div className="sleep-story-shadow" />
+        <div className="sleep-story-student">
+          <span className="sleep-story-backpack" />
+          <span className="sleep-story-leg leg-back" />
+          <span className="sleep-story-leg leg-front" />
+          <span className="sleep-story-shoe shoe-back" />
+          <span className="sleep-story-shoe shoe-front" />
+          <span className="sleep-story-body" />
+          <span className="sleep-story-arm arm-back" />
+          <span className="sleep-story-arm arm-front" />
+          <span className="sleep-story-neck" />
+          <span className="sleep-story-head-shape">
+            <i className="sleep-story-hair" />
+            <b className="sleep-story-eye eye-left" />
+            <b className="sleep-story-eye eye-right" />
+            <em className="sleep-story-mouth" />
+          </span>
+        </div>
+        <div className="sleep-story-drift drift-one">z</div>
+        <div className="sleep-story-drift drift-two">z</div>
+        <div className="sleep-story-weight"><i /><i /><i /></div>
+        <div className="sleep-story-floor" />
       </div>
 
-      <div className="sleep-day-foot">
+      <div className="sleep-story-reserve">
+        <div className="sleep-story-reserve-copy">
+          <span>rest reserve</span>
+          <strong style={{ color: status.accent }}>{Math.round(reserve * 100)}%</strong>
+        </div>
+        <div className="sleep-story-track"><i style={{ width: `${reserve * 100}%`, background: status.accent }} /></div>
+      </div>
+
+      <div className="sleep-story-foot">
         <strong style={{ color: status.accent }}>
           {data.debtHours < 0.05 ? "Full reserve" : `−${fmtHours(data.debtHours)}h`}
         </strong>
@@ -82,18 +119,20 @@ function SleepRoom({ data, index }: { data: SleepDay; index: number }) {
 }
 
 export default function WeekdaySleepStatus({ days }: { days: SleepDay[] }) {
+  const { ref, motionActive } = useMotionPresence<HTMLDivElement>();
+
   return (
-    <div className="sleep-week-feature">
+    <div ref={ref} className={`sleep-week-feature sleep-story ${motionActive ? "is-motion-active" : ""}`}>
       <div className="sleep-week-title">
         <div>
-          <p>Your week at a glance</p>
-          <span>Each room shows that night&apos;s sleep and the reserve carried into the next day.</span>
+          <p>Watch the same student reach Friday</p>
+          <span>Posture, pace, and morning light change with the reserve carried into each day.</span>
         </div>
         <div className="sleep-week-direction" aria-hidden="true"><span>MON</span><i /><span>FRI</span></div>
       </div>
       <div className="sleep-week-scroll">
         <div className="sleep-week-grid">
-          {days.map((data, index) => <SleepRoom key={data.day} data={data} index={index} />)}
+          {days.map((data, index) => <StudentDay key={data.day} data={data} index={index} />)}
         </div>
       </div>
     </div>

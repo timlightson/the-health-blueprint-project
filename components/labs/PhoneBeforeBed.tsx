@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useRef, type CSSProperties } from "react"
 import { Sun } from "lucide-react";
 import { playSound } from "@/lib/sleep-sound";
 import LiquidGlass from "@/components/labs/LiquidGlass";
+import { useMotionPresence } from "@/hooks/use-motion-presence";
 
 // ─── Phone Before Bed — illustrated night scene + overlapping signals ────────
 
@@ -110,6 +111,7 @@ export default function PhoneBeforeBed() {
   const [phoneMin, setPhoneMin] = useState(45);
   const [brightness, setBrightness] = useState<Brightness>("medium");
   const [targetTime, setTargetTime] = useState("23:00"); // 11:00 PM
+  const { ref: sceneRef, motionActive } = useMotionPresence<HTMLDivElement>();
 
   const delayMin = computeDelay(phoneMin, brightness);
   const suppression = Math.min(0.5, delayMin / 200);
@@ -203,56 +205,65 @@ export default function PhoneBeforeBed() {
         </div>
 
         <div className="phb-scene">
-          <div className="phb-stage" style={{ "--phone-glow": br.glow } as CSSProperties}>
-            <div
-              className="phb-aura"
-              style={{ width: glowSize, height: glowSize, background: `radial-gradient(circle, ${br.glow}, transparent 66%)` }}
-            />
-            <svg viewBox="0 0 260 238" role="img" aria-label={`${phoneMin} minutes of phone use at ${brightness} brightness`}>
-              <defs>
-                <linearGradient id="phb-room" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#07172C" />
-                  <stop offset="1" stopColor="#173452" />
-                </linearGradient>
-                <linearGradient id="phb-screen" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stopColor={br.screen} />
-                  <stop offset="1" stopColor={brightness === "low" ? "#F4A261" : "#8FC5FF"} />
-                </linearGradient>
-                <filter id="phb-soft-glow"><feGaussianBlur stdDeviation="5" /></filter>
-              </defs>
-              <rect width="260" height="238" rx="22" fill="url(#phb-room)" />
-              <circle cx="42" cy="42" r="18" fill="#FFF2C2" />
-              <circle cx="51" cy="35" r="18" fill="#07172C" />
-              {[ [76,28], [210,31], [232,61], [25,83], [61,107] ].map(([x,y], i) => (
-                <circle key={i} className="phb-star" cx={x} cy={y} r={i % 2 ? 1.5 : 2} fill="#D8EDFF" style={{ animationDelay: `${i * .34}s` }} />
-              ))}
-              <path d="M0 188 Q70 172 130 190 T260 181 V238 H0Z" fill="#0B2138" />
-              <path d="M24 200 H236" stroke="#61809C" strokeOpacity=".35" />
-              <g opacity={Math.min(.95, .35 + phonePct * .6)} filter="url(#phb-soft-glow)">
-                <path d="M126 55 L62 30" stroke={br.accent} strokeWidth="8" strokeLinecap="round" />
-                <path d="M126 70 L210 36" stroke={br.accent} strokeWidth="10" strokeLinecap="round" />
-                <path d="M126 98 L238 101" stroke={br.accent} strokeWidth="7" strokeLinecap="round" />
-              </g>
-              <g className="phb-phone">
-                <rect x="76" y="15" width="108" height="207" rx="23" fill="#020813" stroke="#29445F" strokeWidth="2" />
-                <rect x="84" y="29" width="92" height="176" rx="14" fill="url(#phb-screen)" />
-                <rect x="112" y="20" width="36" height="7" rx="4" fill="#020813" />
-                <text x="130" y="55" fill="#07172C" fontSize="11" fontWeight="700" textAnchor="middle">{phoneMin} MIN</text>
-                <text x="130" y="69" fill="#07172C" fillOpacity=".58" fontSize="7" fontWeight="700" letterSpacing="1.2" textAnchor="middle">SCREEN TIME</text>
+          <div
+            ref={sceneRef}
+            className={`phb-stage phb-room-diorama is-${brightness} ${motionActive ? "is-motion-active" : ""}`}
+            style={{
+              "--phone-glow": br.glow,
+              "--phone-accent": br.accent,
+              "--phone-screen": br.screen,
+              "--phone-pct": phonePct,
+              "--phone-delay": delayMin / 100,
+              "--glow-size": `${glowSize}px`,
+              "--phone-wall-opacity": .2 + phonePct * .9,
+              "--phone-cone-opacity": .12 + phonePct * .68,
+              "--phone-person-angle": `${-5 - phonePct * 5}deg`,
+              "--phone-eye-glow": `${phonePct * 7}px`,
+              "--phone-shell-glow": `${10 + phonePct * 26}px`,
+              "--phone-shell-angle": `${2 - phonePct * 3}deg`,
+              "--phone-orbit-opacity": .2 + phonePct * .8,
+              "--phone-orbit-radius": `${22 + phonePct * 24}px`,
+              "--phone-orbit-duration": `${5 - phonePct * 2}s`,
+            } as CSSProperties}
+            role="img"
+            aria-label={`${phoneMin} minutes of phone use at ${brightness} brightness. Estimated sleep shifts to ${fmtTime12(actualH)}.`}
+          >
+            <div className="phb-room-wall" />
+            <div className="phb-room-window"><i /><b /><span /><span /></div>
+            <div className="phb-room-poster"><i /><i /><i /></div>
+            <div className="phb-room-clock">
+              <span>{fmtTime12(actualH).replace(" ", "")}</span>
+              <small>estimated sleep</small>
+            </div>
+            <div className="phb-light-cone cone-left" />
+            <div className="phb-light-cone cone-right" />
+            <div className="phb-aura" />
+            <div className="phb-bed">
+              <span className="phb-pillow" />
+              <span className="phb-blanket" />
+              <span className="phb-bedframe" />
+            </div>
+            <div className="phb-person">
+              <span className="phb-person-body" />
+              <span className="phb-person-head"><i /><b /><em /></span>
+              <span className="phb-person-arm" />
+            </div>
+            <div className="phb-phone-shell">
+              <div className="phb-phone-screen">
+                <div className="phb-phone-readout"><strong>{phoneMin}</strong><span>MIN</span></div>
                 {[0, 1, 2].map((i) => (
-                  <g key={i} className="phb-notification" style={{ animationDelay: `${i * .42}s`, opacity: Math.min(1, .28 + phonePct + i * .08) }}>
-                    <rect x="94" y={84 + i * 31} width="72" height="23" rx="7" fill="rgba(255,255,255,.55)" />
-                    <circle cx="104" cy={95 + i * 31} r="4" fill={i === 1 ? "#F97370" : "#2563EB"} />
-                    <rect x="112" y={91 + i * 31} width={38 - i * 4} height="3" rx="2" fill="#0B1A2B" fillOpacity=".55" />
-                    <rect x="112" y={97 + i * 31} width={25 + i * 4} height="2" rx="1" fill="#0B1A2B" fillOpacity=".3" />
-                  </g>
+                  <div key={i} className={`phb-message message-${i + 1}`} style={{ opacity: Math.min(1, .2 + phonePct + i * .08) }}>
+                    <i /><span><b /><b /></span>
+                  </div>
                 ))}
-                <path d="M112 192 H148" stroke="rgba(7,23,44,.55)" strokeWidth="3" strokeLinecap="round" />
-              </g>
-              <rect x="202" y="181" width="27" height="19" rx="4" fill="#E7F2FA" />
-              <path d="M205 181 V174 H226 V181" fill="none" stroke="#E7F2FA" strokeWidth="3" />
-              <path d="M208 189 H223" stroke="#A1B7C9" strokeWidth="2" />
-            </svg>
+                <div className="phb-phone-home" />
+              </div>
+            </div>
+            <div className="phb-nightstand"><span /><i /></div>
+            <div className="phb-melatonin-orbit">
+              {[0, 1, 2, 3, 4].map((i) => <i key={i} style={{ "--orbit-angle": `${i * 72}deg`, "--orbit-delay": `${i * -.34}s` } as CSSProperties} />)}
+            </div>
+            <div className="phb-room-floor" />
           </div>
 
           <div className="phb-brightness" role="group" aria-label="Screen brightness">

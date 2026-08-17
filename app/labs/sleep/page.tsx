@@ -8,6 +8,7 @@ import WeekdaySleepStatus from "@/components/labs/WeekdaySleepStatus";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
 import { playSound } from "@/lib/sleep-sound";
+import { useMotionPresence } from "@/hooks/use-motion-presence";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -286,53 +287,48 @@ function ParticleField() {
 
 // ─── Sleep Score (Zone 1 hero) ────────────────────────────────────────────────
 
-function SleepScore({ score, sleepHours }: { score: number; sleepHours: number }) {
+function SleepScore({ score, sleepHours, debtHours }: { score: number; sleepHours: number; debtHours: number }) {
   const col = score >= 80 ? "#0D9488" : score >= 60 ? "#F59E0B" : "#DC2626";
-  const R = 58;
-  const CIRC = 2 * Math.PI * R;
-  const offset = CIRC * (1 - Math.max(0, Math.min(100, score)) / 100);
-  // 3-digit scores (100) shrink ~20% so they sit in the ring like 2-digit ones.
-  const scoreFontSize = String(score).length >= 3 ? 42 : 52;
+  const fatigue = Math.max(0, Math.min(1, 1 - score / 100));
+  const { ref, motionActive } = useMotionPresence<HTMLDivElement>();
+  const sceneStyle = {
+    "--sleep-hero-fatigue": fatigue,
+    "--sleep-hero-score": `${score * 3.6}deg`,
+    "--sleep-hero-accent": col,
+    "--sleep-hero-face-y": `${fatigue * 8}px`,
+    "--sleep-hero-lean": `${fatigue * 8 - 2}deg`,
+    "--sleep-hero-eye": `${Math.max(2, 5 - fatigue * 3)}px`,
+    "--sleep-hero-dim": Math.max(0.08, fatigue * 0.55),
+    "--sleep-hero-z-opacity": Math.max(0.15, 1 - fatigue * 0.75),
+  } as React.CSSProperties;
+
   return (
-    <div className="flex flex-col items-center">
-      <div style={{ position: "relative", width: 156, height: 156 }}>
-        {/* refracting glass pedestal */}
-        <LiquidGlass
-          className="absolute inset-0"
-          radius={78}
-          bezel={24}
-          scale={40}
-          tint={0.22}
-          style={{
-            position: "absolute",
-            borderRadius: "50%",
-            boxShadow: `inset 0 1px 0 rgba(255,255,255,0.9), 0 18px 40px -16px ${col}55, 0 4px 12px -6px rgba(20,30,60,0.2)`,
-          }}
-        />
-        <svg width="156" height="156" viewBox="0 0 156 156" style={{ position: "relative", transform: "rotate(-90deg)" }}>
-          <circle cx="78" cy="78" r={R} fill="none" stroke="rgba(20,30,60,0.10)" strokeWidth="9" />
-          <circle
-            cx="78" cy="78" r={R} fill="none" stroke={col} strokeWidth="9" strokeLinecap="round"
-            strokeDasharray={CIRC} strokeDashoffset={offset}
-            style={{ transition: "stroke-dashoffset 0.7s var(--ease-glass), stroke 0.5s ease", filter: `drop-shadow(0 2px 6px ${col}66)` }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span
-            key={score}
-            className="font-bold leading-none tabular-nums"
-            style={{ fontSize: `${scoreFontSize}px`, color: "var(--ink)", letterSpacing: "-0.04em", transition: "font-size 0.3s var(--ease-glass)", animation: "sleepLabFadeSlide 0.4s var(--ease-glass)" }}
-          >
-            {score}
-          </span>
-          <span className="text-[11px] font-semibold uppercase tracking-widest mt-0.5" style={{ color: col, transition: "color 0.5s ease" }}>
-            Score
-          </span>
-        </div>
+    <div ref={ref} className={`sleep-hero-scene ${motionActive ? "is-motion-active" : ""}`} style={sceneStyle}>
+      <div className="sleep-hero-night" />
+      <div className="sleep-hero-window"><i /><b /><span /><span /><span /></div>
+      <div className="sleep-hero-stars"><i /><i /><i /><i /><i /></div>
+      <div className="sleep-hero-shelf"><i /><i /><i /></div>
+      <div className="sleep-hero-bed"><i className="sleep-hero-pillow" /><b className="sleep-hero-blanket" /><span /></div>
+      <div className="sleep-hero-student">
+        <span className="sleep-hero-torso" />
+        <span className="sleep-hero-neck" />
+        <span className="sleep-hero-face"><i /><b /><em /></span>
+        <span className="sleep-hero-arm" />
       </div>
-      <p className="text-xs uppercase tracking-widest mt-4 font-semibold" style={{ color: "var(--ink-soft)" }}>
-        {Number.isInteger(sleepHours) ? sleepHours : sleepHours.toFixed(1)}h tonight
-      </p>
+      <div className="sleep-hero-clock"><strong>7:00</strong><span>AM</span></div>
+      <div className="sleep-hero-debt" style={{ color: col }}>
+        <span>FRIDAY DEBT</span><strong>{debtHours < .05 ? "0h" : `−${fmtHrs(debtHours)}h`}</strong>
+      </div>
+      <div className="sleep-hero-score" aria-label={`Sleep score ${score} out of 100`}>
+        <div><strong key={score}>{score}</strong><span>SCORE</span></div>
+      </div>
+      <div className="sleep-hero-caption">
+        <i style={{ background: col }} />
+        <span>{Number.isInteger(sleepHours) ? sleepHours : sleepHours.toFixed(1)} hours tonight</span>
+      </div>
+      <div className="sleep-hero-z"><i>z</i><i>z</i><i>z</i></div>
+      <div className="sleep-hero-floor" />
+      <div className="sleep-hero-vignette" />
     </div>
   );
 }
@@ -1239,7 +1235,7 @@ export default function SleepLab() {
 
             {/* Sleep score */}
             <div className="mb-9">
-              <SleepScore score={sleepScore} sleepHours={effectiveSleepH} />
+              <SleepScore score={sleepScore} sleepHours={effectiveSleepH} debtHours={fridayDebt} />
               <p className="text-center text-sm mt-4 mx-auto" style={{ color: "var(--ink-soft)", maxWidth: "22rem" }}>
                 Based on your schedule, weekday consistency, and weekend recovery
               </p>

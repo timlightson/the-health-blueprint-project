@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { GAMES } from "./core";
 import { COVERS } from "./covers";
+import { useMotionPresence } from "@/hooks/use-motion-presence";
 
 export default function GamesSection() {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const { ref, motionActive } = useMotionPresence<HTMLDivElement>();
   // Scroll here when arriving back from a game page (/labs/sleep#games).
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -18,7 +21,7 @@ export default function GamesSection() {
   }, []);
 
   return (
-    <div id="games" style={{ scrollMarginTop: "12px" }}>
+    <div ref={ref} id="games" style={{ scrollMarginTop: "12px" }}>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {GAMES.map((g, index) => {
           const Cover = COVERS[g.id];
@@ -26,6 +29,11 @@ export default function GamesSection() {
             <Link
               key={g.id}
               href={g.route}
+              onMouseEnter={() => setActiveId(g.id)}
+              onMouseLeave={() => setActiveId(null)}
+              onFocus={() => setActiveId(g.id)}
+              onBlur={() => setActiveId(null)}
+              onPointerDown={() => setActiveId(g.id)}
               className="game-card group relative block overflow-hidden"
               aria-label={`Open ${g.title}: ${g.tagline}`}
               style={{
@@ -36,7 +44,7 @@ export default function GamesSection() {
               }}
             >
               <div className="game-card-art absolute inset-0">
-                <Cover />
+                <Cover active={activeId === g.id} motionActive={motionActive} />
               </div>
 
               <div className="game-card-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</div>
