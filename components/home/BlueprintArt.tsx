@@ -2,6 +2,7 @@
 
 import { useId, type CSSProperties, type ReactNode } from "react";
 import type { LabId } from "@/components/labs/labs-meta";
+import LayeredBlueprintScene, { isLayeredBlueprint } from "@/components/home/LayeredBlueprintScene";
 
 type Props = {
   id: LabId;
@@ -287,7 +288,7 @@ const SCENES: Record<LabId, (props: SceneProps) => ReactNode> = {
   vision: VisionScene,
 };
 
-export default function BlueprintArt({ id, hovered = false, reduced = false, featured = false }: Props) {
+function LegacyBlueprintArt({ id, hovered = false, reduced = false, featured = false }: Props) {
   const rawId = useId();
   const uid = `bp-${id}-${rawId.replace(/:/g, "")}`;
   const theme = THEMES[id];
@@ -347,4 +348,9 @@ export default function BlueprintArt({ id, hovered = false, reduced = false, fea
       </g>
     </svg>
   );
+}
+
+export default function BlueprintArt(props: Props) {
+  if (isLayeredBlueprint(props.id)) return <LayeredBlueprintScene {...props} id={props.id} />;
+  return <LegacyBlueprintArt {...props} />;
 }

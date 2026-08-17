@@ -192,6 +192,8 @@ function LabCard({
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setHovered(true)}
       onBlur={() => setHovered(false)}
+      onPointerDown={() => setHovered(true)}
+      onPointerCancel={() => setHovered(false)}
       className="blueprint-card group relative flex flex-col"
       style={{
         opacity: mounted ? 1 : 0,
