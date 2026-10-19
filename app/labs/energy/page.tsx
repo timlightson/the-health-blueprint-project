@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import { ChevronRight, ChevronDown, ArrowUp } from "lucide-react";
+import { ChevronRight, ChevronDown } from "lucide-react";
 import BuildYourDay, {
   curveFor,
   START_H,
@@ -14,7 +14,7 @@ import BuildYourDay, {
   type Placed,
 } from "@/components/labs/BuildYourDay";
 import LiquidGlass from "@/components/labs/LiquidGlass";
-import LabHeroSignal from "@/components/labs/LabHeroSignal";
+
 import BodyClock from "@/components/labs/BodyClock";
 import SportsGrid from "@/components/labs/SportsGrid";
 import EnergyGlowChart from "@/components/labs/EnergyGlowChart";
@@ -137,7 +137,7 @@ function HeroStat({
 }) {
   return (
     <div
-      className="text-center lg-hover"
+      className="energy-stat"
       style={{
         padding: "18px 8px 15px",
         borderRadius: "20px",
@@ -169,11 +169,11 @@ function ScienceSection() {
 
   return (
     <div className="border-t" style={{ borderColor: "var(--hairline)" }}>
-      <button onClick={() => setOpen(v => !v)} className="flex items-center gap-2 py-4 w-full text-left" style={{ color: "var(--ink)" }}>
+      <button aria-expanded={open} onClick={() => setOpen(v => !v)} className="flex items-center gap-2 py-4 w-full text-left" style={{ color: "var(--ink)" }}>
         {open ? <ChevronDown className="w-4 h-4 flex-shrink-0" /> : <ChevronRight className="w-4 h-4 flex-shrink-0" />}
         <span className="text-sm font-semibold uppercase tracking-wider">The Science</span>
       </button>
-      <div style={{ maxHeight: open ? "2600px" : "0px", opacity: open ? 1 : 0, overflow: "hidden", transition: "max-height 0.5s ease, opacity 0.4s ease" }}>
+      <div hidden={!open} style={{ maxHeight: open ? "2600px" : "0px", opacity: open ? 1 : 0, overflow: "hidden", transition: "max-height 0.5s ease, opacity 0.4s ease" }}>
         <div className="flex gap-1 mb-5 p-1 rounded-full lg-segment">
           {TABS.map((t, i) => (
             <button
@@ -259,13 +259,13 @@ function ZoneSection({
   padTop?: number;
   padBottom?: number;
 }) {
-  const defaultTop = first ? 40 : 88;
+  const defaultTop = first ? 24 : 72;
   const defaultBottom = last ? 56 : 88;
   return (
     <section
       ref={sectionRef}
       style={{
-        background: alt ? "linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0.12))" : "transparent",
+        background: alt ? "var(--canvas-alt)" : "transparent",
         paddingTop: `${padTop ?? defaultTop}px`,
         paddingBottom: `${padBottom ?? defaultBottom}px`,
         position: "relative",
@@ -281,7 +281,7 @@ function ZoneSection({
 
 function ZoneHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <div className="mb-12 text-center max-w-2xl mx-auto">
+    <div className="lab-zone-heading">
       <h2 className="font-bold" style={{ fontSize: "clamp(1.75rem, 4vw, 2.35rem)", color: "var(--ink)", lineHeight: 1.08, letterSpacing: "-0.03em" }}>
         {title}
       </h2>
@@ -292,61 +292,18 @@ function ZoneHeader({ title, subtitle }: { title: string; subtitle: string }) {
   );
 }
 
-function StickyBar({ visible, avgPct, crashes, onBackToTop }: { visible: boolean; avgPct: number; crashes: number; onBackToTop: () => void }) {
-  const col = curveColor(avgPct);
-  return (
-    <div
-      className="lg-bar"
-      style={{
-        position: "sticky", top: 0, zIndex: 30, height: "46px",
-        transform: visible ? "translateY(0)" : "translateY(-100%)",
-        opacity: visible ? 1 : 0,
-        transition: "transform 0.5s var(--spring), opacity 0.3s ease",
-        pointerEvents: visible ? "auto" : "none",
-      }}
-    >
-      <div className="max-w-3xl mx-auto px-6 h-full flex items-center justify-between">
-        <div className="flex items-center gap-3 text-xs">
-          <span style={{ color: "var(--ink-soft)" }}>
-            Avg energy <strong className="tabular-nums" style={{ color: col }}>{avgPct}%</strong>
-          </span>
-          <span style={{ color: "rgba(11,26,43,0.2)" }}>·</span>
-          <span style={{ color: "var(--ink-soft)" }}>
-            <strong className="tabular-nums" style={{ color: crashes > 0 ? "#DC2626" : "#0D9488" }}>{crashes}</strong> {crashes === 1 ? "crash" : "crashes"}
-          </span>
-        </div>
-        <button onClick={onBackToTop} className="flex items-center gap-1 text-xs font-medium lg-pill rounded-full px-3 py-1.5" style={{ color: "var(--ink-soft)" }} aria-label="Back to top">
-          <ArrowUp className="w-3.5 h-3.5" />
-          <span>Top</span>
-        </button>
-      </div>
-    </div>
-  );
-}
-
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function EnergyLab() {
   const [placed, setPlaced] = useState<Placed[]>(INITIAL_PLACED);
   const [mounted, setMounted] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   const mainRef = useRef<HTMLElement>(null);
   const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => { setMounted(true); }, []);
 
-  useEffect(() => {
-    const root = mainRef.current;
-    const target = heroRef.current;
-    if (!root || !target) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => setScrolled(!entry.isIntersecting),
-      { root, threshold: 0, rootMargin: "0px 0px -80% 0px" },
-    );
-    obs.observe(target);
-    return () => obs.disconnect();
-  }, [mounted]);
+
 
   const SLEEP_H = 8;
   const targetCurve = useMemo(() => curveFor(placed, SLEEP_H), [placed]);
@@ -366,7 +323,6 @@ export default function EnergyLab() {
       ? `One energy crash today. Your lowest point lands around ${fmtTime(readouts.minT)}, so keep the hard stuff away from it.`
       : `${readouts.crashes} energy crashes today. The deepest hits around ${fmtTime(readouts.minT)}. Spacing out the draining blocks would smooth the ride.`;
 
-  const handleBackToTop = () => mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
 
   if (!mounted) return null;
 
@@ -381,23 +337,22 @@ export default function EnergyLab() {
       <div className="flex flex-1 min-h-0" style={{ position: "relative", zIndex: 10 }}>
         <main id="main-content" tabIndex={-1} ref={mainRef} className="flex-1 overflow-y-auto">
 
-          <StickyBar visible={scrolled} avgPct={avgPct} crashes={readouts.crashes} onBackToTop={handleBackToTop} />
 
           {/* ZONE 1 — DIAGNOSTIC HERO */}
-          <ZoneSection first sectionRef={heroRef} padBottom={56}>
-            <div className="mb-10 text-center max-w-2xl mx-auto hb-reveal">
-              <p className="hb-kicker" style={{ color: "#C9760F" }}>Energy Blueprint · 02</p>
+          <ZoneSection first wide sectionRef={heroRef} padBottom={56}>
+            <div className="lab-opening">
+
               <h1 className="font-bold mt-4" style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.25rem)", color: "var(--ink)", lineHeight: 1.02, letterSpacing: "-0.035em" }}>
-                Your energy across the day
+                Your day, in energy.
               </h1>
               <p className="mt-4 mx-auto" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "32rem" }}>
-                Build your real day below and watch the curve respond. You will see where you peak, where you crash, and the moment your tank runs lowest.
+                Move an activity. Follow the curve. See how your choices change this model of a day.
               </p>
-              <LabHeroSignal lab="energy" accent="#C9760F" />
+
             </div>
 
             {/* Headline readouts */}
-            <div className="grid grid-cols-3 gap-3 mb-7 max-w-xl mx-auto">
+            <div className="energy-summary">
               <HeroStat animKey={peakPct} value={`${peakPct}`} unit="%" label="Peak energy" caption={peakWindow} color={curveColor(peakPct)} />
               <HeroStat animKey={readouts.crashes} value={`${readouts.crashes}`} label="Energy crashes" caption="across the day" color={readouts.crashes > 0 ? "#DC2626" : "#0D9488"} />
               <HeroStat animKey={`${readouts.minT}`} value={low.num} unit={low.ap} label="Lowest dip" caption={`${pct(readouts.lowVal)}% in the tank`} color={curveColor(pct(readouts.lowVal))} />
@@ -417,15 +372,11 @@ export default function EnergyLab() {
             >
               <p className="text-base" style={{ color: "var(--ink)", lineHeight: 1.5 }}>{diagnostic}</p>
             </div>
-          </ZoneSection>
-
-          {/* ZONE 2 — BUILD YOUR DAY (alt bg) */}
-          <ZoneSection alt wide>
-            <ZoneHeader
-              title="Build your day"
-              subtitle="Drag what you actually do onto the timeline. Every choice reshapes the curve up top."
-            />
-            <BuildYourDay sleepHours={SLEEP_H} placed={placed} setPlaced={setPlaced} />
+            <div className="energy-planner">
+              <h2>Build your day.</h2>
+              <p>Choose a preset or add an activity. The curve above responds to every change.</p>
+              <BuildYourDay sleepHours={SLEEP_H} placed={placed} setPlaced={setPlaced} />
+            </div>
           </ZoneSection>
 
           {/* ZONE 3 — YOUR THREE ENERGY ENGINES, the centerpiece (wide) */}

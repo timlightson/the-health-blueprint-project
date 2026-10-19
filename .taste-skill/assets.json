@@ -1,0 +1,110 @@
+[
+  {
+    "id": "sleep",
+    "path": "public/images/labs/sleep.webp",
+    "kind": "AI-generated conceptual editorial artwork",
+    "concept": "Frosted sea-glass wave on deep navy",
+    "generator": "OpenAI image generation tool",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "role": "Decorative cover, not a scientific diagram or measured output"
+  },
+  {
+    "id": "energy",
+    "path": "public/images/labs/energy.webp",
+    "kind": "AI-generated conceptual editorial artwork",
+    "concept": "Amber resin and champagne aluminum crest",
+    "generator": "OpenAI image generation tool",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "role": "Decorative cover, not a scientific diagram or measured output"
+  },
+  {
+    "id": "stress",
+    "path": "public/images/labs/stress.webp",
+    "kind": "AI-generated conceptual editorial artwork",
+    "concept": "Coral silicone tension knot",
+    "generator": "OpenAI image generation tool",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "role": "Decorative cover, not a scientific diagram or measured output"
+  },
+  {
+    "id": "hydration",
+    "path": "public/images/labs/hydration.webp",
+    "kind": "AI-generated conceptual editorial artwork",
+    "concept": "Suspended clear sheet of water",
+    "generator": "OpenAI image generation tool",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "role": "Decorative cover, not a scientific diagram or measured output"
+  },
+  {
+    "id": "sound",
+    "path": "public/images/labs/sound.webp",
+    "kind": "AI-generated conceptual editorial artwork",
+    "concept": "Dark silver pleated waveform",
+    "generator": "OpenAI image generation tool",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "role": "Decorative cover, not a scientific diagram or measured output"
+  },
+  {
+    "id": "focus",
+    "path": "public/images/labs/focus.webp",
+    "kind": "AI-generated conceptual editorial artwork",
+    "concept": "Crystal lens focusing teal filaments",
+    "generator": "OpenAI image generation tool",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "role": "Decorative cover, not a scientific diagram or measured output"
+  },
+  {
+    "id": "breath",
+    "path": "public/images/labs/breath.webp",
+    "kind": "AI-generated conceptual editorial artwork",
+    "concept": "Suspended translucent silk",
+    "generator": "OpenAI image generation tool",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "role": "Decorative cover, not a scientific diagram or measured output"
+  },
+  {
+    "id": "caffeine",
+    "path": "public/images/labs/caffeine.webp",
+    "kind": "AI-generated conceptual editorial artwork",
+    "concept": "Amber vessel with espresso swirl",
+    "generator": "OpenAI image generation tool",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "role": "Decorative cover, not a scientific diagram or measured output"
+  },
+  {
+    "id": "vision",
+    "path": "public/images/labs/vision.webp",
+    "kind": "AI-generated conceptual editorial artwork",
+    "concept": "Clear curved prism on sage",
+    "generator": "OpenAI image generation tool",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "role": "Decorative cover, not a scientific diagram or measured output"
+  }
+]

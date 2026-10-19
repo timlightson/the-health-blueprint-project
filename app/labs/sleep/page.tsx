@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
-import { ChevronDown, ChevronRight, ChevronLeft, ArrowUp } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import GamesSection from "@/components/labs/games/GamesSection";
 import PhoneBeforeBed from "@/components/labs/PhoneBeforeBed";
 import WeekdaySleepStatus from "@/components/labs/WeekdaySleepStatus";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
 import { playSound } from "@/lib/sleep-sound";
-import { useMotionPresence } from "@/hooks/use-motion-presence";
+import BlueprintArt from "@/components/home/BlueprintArt";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -176,11 +177,13 @@ function Keyframes() {
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 
 function useCountUp(target: number) {
+  const reduced = useReducedMotion();
   const [val, setVal] = useState(target);
   const rafRef = useRef<number | null>(null);
   const fromRef = useRef(target);
 
   useEffect(() => {
+    if (reduced) { setVal(target); fromRef.current = target; return; }
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     const from = fromRef.current;
     let start: number | null = null;
@@ -196,7 +199,7 @@ function useCountUp(target: number) {
     };
     rafRef.current = requestAnimationFrame(run);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [target]);
+  }, [target, reduced]);
 
   return val;
 }
@@ -206,11 +209,12 @@ function useCountUp(target: number) {
 // ─── Ambient particle field ───────────────────────────────────────────────────
 
 function ParticleField() {
+  const reduced = useReducedMotion();
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = ref.current;
-    if (!canvas) return;
+    if (!canvas || reduced) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -274,7 +278,7 @@ function ParticleField() {
       cancelAnimationFrame(raf);
       ro.disconnect();
     };
-  }, []);
+  }, [reduced]);
 
   return (
     <canvas
@@ -288,49 +292,14 @@ function ParticleField() {
 // ─── Sleep Score (Zone 1 hero) ────────────────────────────────────────────────
 
 function SleepScore({ score, sleepHours, debtHours }: { score: number; sleepHours: number; debtHours: number }) {
-  const col = score >= 80 ? "#0D9488" : score >= 60 ? "#F59E0B" : "#DC2626";
-  const fatigue = Math.max(0, Math.min(1, 1 - score / 100));
-  const { ref, motionActive } = useMotionPresence<HTMLDivElement>();
-  const sceneStyle = {
-    "--sleep-hero-fatigue": fatigue,
-    "--sleep-hero-score": `${score * 3.6}deg`,
-    "--sleep-hero-accent": col,
-    "--sleep-hero-face-y": `${fatigue * 8}px`,
-    "--sleep-hero-lean": `${fatigue * 8 - 2}deg`,
-    "--sleep-hero-eye": `${Math.max(2, 5 - fatigue * 3)}px`,
-    "--sleep-hero-dim": Math.max(0.08, fatigue * 0.55),
-    "--sleep-hero-z-opacity": Math.max(0.15, 1 - fatigue * 0.75),
-  } as React.CSSProperties;
-
-  return (
-    <div ref={ref} className={`sleep-hero-scene ${motionActive ? "is-motion-active" : ""}`} style={sceneStyle}>
-      <div className="sleep-hero-night" />
-      <div className="sleep-hero-window"><i /><b /><span /><span /><span /></div>
-      <div className="sleep-hero-stars"><i /><i /><i /><i /><i /></div>
-      <div className="sleep-hero-shelf"><i /><i /><i /></div>
-      <div className="sleep-hero-bed"><i className="sleep-hero-pillow" /><b className="sleep-hero-blanket" /><span /></div>
-      <div className="sleep-hero-student">
-        <span className="sleep-hero-torso" />
-        <span className="sleep-hero-neck" />
-        <span className="sleep-hero-face"><i /><b /><em /></span>
-        <span className="sleep-hero-arm" />
-      </div>
-      <div className="sleep-hero-clock"><strong>7:00</strong><span>AM</span></div>
-      <div className="sleep-hero-debt" style={{ color: col }}>
-        <span>FRIDAY DEBT</span><strong>{debtHours < .05 ? "0h" : `−${fmtHrs(debtHours)}h`}</strong>
-      </div>
-      <div className="sleep-hero-score" aria-label={`Sleep score ${score} out of 100`}>
-        <div><strong key={score}>{score}</strong><span>SCORE</span></div>
-      </div>
-      <div className="sleep-hero-caption">
-        <i style={{ background: col }} />
-        <span>{Number.isInteger(sleepHours) ? sleepHours : sleepHours.toFixed(1)} hours tonight</span>
-      </div>
-      <div className="sleep-hero-z"><i>z</i><i>z</i><i>z</i></div>
-      <div className="sleep-hero-floor" />
-      <div className="sleep-hero-vignette" />
+  return <div className="sleep-result">
+    <div className="sleep-result-art"><BlueprintArt id="sleep" featured /></div>
+    <div className="sleep-result-data" aria-live="polite">
+      <div><span>Modeled sleep score</span><strong>{score}<small> / 100</small></strong></div>
+      <div><span>Friday sleep debt</span><strong>{fmtHrs(debtHours)}<small> h</small></strong></div>
+      <p>{Number.isInteger(sleepHours) ? sleepHours : sleepHours.toFixed(1)} hours a night in this model.</p>
     </div>
-  );
+  </div>;
 }
 
 // ─── Brain Stats Inline (Zone 1) ──────────────────────────────────────────────
@@ -419,14 +388,14 @@ function ZoneSection({
   padBottom?: number;
   wide?: boolean;
 }) {
-  const defaultTop = first ? 40 : 88;
+  const defaultTop = first ? 24 : 72;
   const defaultBottom = last ? 40 : 88;
   return (
     <section
       ref={sectionRef}
       style={{
         background: alt
-          ? "linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0.12))"
+          ? "var(--canvas-alt)"
           : "transparent",
         paddingTop: `${padTop ?? defaultTop}px`,
         paddingBottom: `${padBottom ?? defaultBottom}px`,
@@ -444,7 +413,7 @@ function ZoneSection({
 
 function ZoneHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <div className="mb-12 text-center max-w-2xl mx-auto">
+    <div className="lab-zone-heading">
       <h2
         className="font-bold"
         style={{ fontSize: "clamp(1.75rem, 4vw, 2.35rem)", color: "var(--ink)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
@@ -459,50 +428,6 @@ function ZoneHeader({ title, subtitle }: { title: string; subtitle: string }) {
 }
 
 // ─── Sticky scroll bar ────────────────────────────────────────────────────────
-
-function StickyBar({
-  visible, sleepHours, score, onBackToTop,
-}: {
-  visible: boolean; sleepHours: number; score: number; onBackToTop: () => void;
-}) {
-  const col = score >= 80 ? "#0D9488" : score >= 60 ? "#F59E0B" : "#DC2626";
-  return (
-    <div
-      className="lg-bar"
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 30,
-        height: "46px",
-        transform: visible ? "translateY(0)" : "translateY(-100%)",
-        opacity: visible ? 1 : 0,
-        transition: "transform 0.5s var(--spring), opacity 0.3s ease",
-        pointerEvents: visible ? "auto" : "none",
-      }}
-    >
-      <div className="max-w-3xl mx-auto px-6 h-full flex items-center justify-between">
-        <div className="flex items-center gap-3 text-xs">
-          <span style={{ color: "var(--ink-soft)" }}>
-            <strong className="tabular-nums" style={{ color: "var(--ink)" }}>{Number.isInteger(sleepHours) ? sleepHours : sleepHours.toFixed(1)}h</strong> sleep
-          </span>
-          <span style={{ color: "rgba(11,26,43,0.2)" }}>·</span>
-          <span style={{ color: "var(--ink-soft)" }}>
-            Score <strong className="tabular-nums" style={{ color: col, transition: "color 0.4s ease" }}>{score}</strong>
-          </span>
-        </div>
-        <button
-          onClick={onBackToTop}
-          className="flex items-center gap-1 text-xs font-medium lg-pill rounded-full px-3 py-1.5"
-          style={{ color: "var(--ink-soft)" }}
-          aria-label="Back to top"
-        >
-          <ArrowUp className="w-3.5 h-3.5" />
-          <span>Top</span>
-        </button>
-      </div>
-    </div>
-  );
-}
 
 // ─── Mood Carousel (Zone 4) ───────────────────────────────────────────────────
 
@@ -550,7 +475,7 @@ function MoodCarousel({ sleepHours }: { sleepHours: number }) {
           <p className="text-sm font-semibold text-center mb-3" style={{ color: "var(--ink)" }}>
             {s.title}
           </p>
-          <div className="flex items-stretch gap-2">
+          <div className="mood-carousel-layout">
             <button
               onClick={() => step(-1)}
               aria-label="Previous scenario"
@@ -565,7 +490,7 @@ function MoodCarousel({ sleepHours }: { sleepHours: number }) {
                 key={index}
                 style={{ animation: `${enterFrom === "right" ? "slpCardInRight" : "slpCardInLeft"} 0.3s ease`, height: "100%" }}
               >
-                <div className="grid grid-cols-2 gap-2 h-full" style={{ minHeight: "172px", alignItems: "stretch" }}>
+                <div className="mood-comparison grid grid-cols-2 gap-2 h-full" style={{ minHeight: "172px", alignItems: "stretch" }}>
                   {/* Rested */}
                   <div className="rounded p-3" style={{ backgroundColor: "#0D948810", border: "1px solid #0D948830" }}>
                     <p className="text-xs font-semibold mb-1.5" style={{ color: "#0D9488" }}>
@@ -611,27 +536,12 @@ function MoodCarousel({ sleepHours }: { sleepHours: number }) {
             </button>
           </div>
 
-          {/* Dots */}
-          <div className="flex items-center justify-center gap-1.5 mt-3">
-            {SCENARIOS.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i, i >= index ? "right" : "left")}
-                aria-label={`Go to scenario ${i + 1}`}
-                className="flex items-center justify-center"
-                style={{ height: "16px", padding: "0 2px" }}
-              >
-                <span style={{
-                  display: "block",
-                  width: i === index ? "18px" : "6px",
-                  height: "6px",
-                  borderRadius: "9999px",
-                  backgroundColor: i === index ? "#001A33" : "#D1D5DB",
-                  transition: "width 0.2s ease, background-color 0.2s ease",
-                }} />
-              </button>
-            ))}
-          </div>
+          <label className="mood-picker">
+            <span>Choose a situation</span>
+            <select value={index} onChange={e => goTo(Number(e.target.value), Number(e.target.value) >= index ? "right" : "left")}>
+              {SCENARIOS.map((scenario, i) => <option key={scenario.title} value={i}>{scenario.title}</option>)}
+            </select>
+          </label>
           <p className="text-xs text-center mt-1.5" style={{ color: "var(--ink-faint)" }}>
             {index + 1} of {SCENARIOS.length} · swipe or use the arrows
           </p>
@@ -862,7 +772,7 @@ function WeekendSection({
 
       <div className="weekend-trail">
         <div className="weekend-trail-scroll">
-          <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ minWidth: "400px", minHeight: "220px", display: "block" }} role="img" aria-label={`Sleep debt rises to ${fmtHrs(fridayDebt)} hours Friday and ends at ${fmtHrs(mondayDebt)} hours after the weekend`}>
+          <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ minHeight: "220px", display: "block" }} role="img" aria-label={`Sleep debt rises to ${fmtHrs(fridayDebt)} hours Friday and ends at ${fmtHrs(mondayDebt)} hours after the weekend`}>
             <defs>
               <linearGradient id="weekend-debt-fill" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#F06363" stopOpacity=".4" /><stop offset="1" stopColor="#F06363" stopOpacity=".04" /></linearGradient>
               <linearGradient id="weekend-recovery-fill" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#2DD4BF" stopOpacity=".42" /><stop offset="1" stopColor="#2DD4BF" stopOpacity=".04" /></linearGradient>
@@ -910,7 +820,7 @@ function ScienceSection() {
   return (
     <div className="border-t" style={{ borderColor: "#E5E0D8" }}>
       <button
-        onClick={() => setOpen(v => !v)}
+        aria-expanded={open} onClick={() => setOpen(v => !v)}
         className="flex items-center gap-2 py-4 w-full text-left"
         style={{ color: "var(--ink)" }}
       >
@@ -918,7 +828,7 @@ function ScienceSection() {
         <span className="text-sm font-semibold uppercase tracking-wider">The Science</span>
       </button>
 
-      <div className="overflow-hidden" style={{ maxHeight: open ? "2400px" : "0px", opacity: open ? 1 : 0, transition: "max-height 0.5s ease, opacity 0.4s ease" }}>
+      <div hidden={!open} className="overflow-hidden" style={{ maxHeight: open ? "2400px" : "0px", opacity: open ? 1 : 0, transition: "max-height 0.5s ease, opacity 0.4s ease" }}>
         <div className="flex gap-1 mb-5 p-1 rounded-full lg-segment">
           {TABS.map((t, i) => (
             <button key={t} onClick={() => setTab(i)} className={`flex-1 py-2 text-xs font-semibold rounded-full ${tab === i ? "lg-segment-active" : ""}`}
@@ -993,117 +903,18 @@ function ScienceSection() {
 
 // ─── Schedule Controls ────────────────────────────────────────────────────────
 
-function ScheduleControls({
-  bedtime, setBedtime, wake, setWake,
-  perDayMode, perDayHours, setPerDayHours, onReset,
-}: {
-  bedtime: string; setBedtime: (v: string) => void;
-  wake: string; setWake: (v: string) => void;
-  perDayMode: boolean;
-  perDayHours: number[]; setPerDayHours: (v: number[]) => void;
-  onReset: () => void;
+function ScheduleControls({ bedtime, setBedtime, wake, setWake, perDayMode, perDayHours, setPerDayHours, onReset }: {
+  bedtime: string; setBedtime: (v: string) => void; wake: string; setWake: (v: string) => void;
+  perDayMode: boolean; perDayHours: number[]; setPerDayHours: (v: number[]) => void; onReset: () => void;
 }) {
-  const hrs = calcHours(bedtime, wake);
-  const fillCol = hrs >= 8 ? "#0D9488" : hrs >= 6 ? "#D97706" : "#DC2626";
-  const bedH = parseTimeH(bedtime);
-  const showLateWarning = bedH <= 4 && bedH >= 0 && parseTimeH(wake) <= 7;
-
-  return (
-    <div className="space-y-5">
-      {!perDayMode ? (
-        <>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "var(--ink-soft)" }}>Your Schedule</p>
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs mb-1.5 block" style={{ color: "var(--ink-soft)" }}>Bedtime</label>
-                <input type="time" value={bedtime} onChange={e => setBedtime(e.target.value)}
-                  className="w-full px-3 py-2.5 text-sm font-medium lg-well"
-                  style={{ borderRadius: "12px", border: "1px solid rgba(255,255,255,0.5)", color: "var(--ink)" }} />
-              </div>
-              <div>
-                <label className="text-xs mb-1.5 block" style={{ color: "var(--ink-soft)" }}>Wake up</label>
-                <input type="time" value={wake} onChange={e => setWake(e.target.value)}
-                  className="w-full px-3 py-2.5 text-sm font-medium lg-well"
-                  style={{ borderRadius: "12px", border: "1px solid rgba(255,255,255,0.5)", color: "var(--ink)" }} />
-              </div>
-            </div>
-            {showLateWarning && (
-              <p className="text-xs mt-2" style={{ color: "#D97706" }}>Your body wants to be asleep through this entire window.</p>
-            )}
-          </div>
-          <div
-            className="text-center py-4"
-            style={{
-              borderRadius: "18px",
-              background: `linear-gradient(165deg, ${fillCol}1A, rgba(255,255,255,0.4))`,
-              border: `1px solid ${fillCol}30`,
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8)",
-              transition: "background 0.4s ease, border-color 0.4s ease",
-            }}
-          >
-            <div key={hrs} className="font-bold tabular-nums" style={{ fontSize: "52px", lineHeight: 1, color: "var(--ink)", letterSpacing: "-0.03em", animation: "sleepLabFadeSlide 0.3s var(--ease-glass)" }}>
-              {hrs}
-            </div>
-            <p className="text-xs mt-1.5 uppercase tracking-wider font-semibold" style={{ color: fillCol, transition: "color 0.4s ease" }}>hours of sleep</p>
-          </div>
-        </>
-      ) : (
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "var(--ink-soft)" }}>Sleep each night</p>
-          <div className="space-y-3">
-            {DAYS.map((day, i) => {
-              const h = perDayHours[i];
-              const col = h >= 8 ? "#0D9488" : h >= 6 ? "#D97706" : "#DC2626";
-              const pct = ((h - 4) / 8) * 100;
-              return (
-                <div key={day}>
-                  <div className="flex justify-between text-xs mb-1.5" style={{ color: "var(--ink-soft)" }}>
-                    <span className="font-medium">{day}</span>
-                    <span className="font-bold tabular-nums" style={{ color: col }}>{h}h</span>
-                  </div>
-                  <div className="relative flex items-center" style={{ height: "32px" }}>
-                    <div className="w-full rounded-full relative lg-well" style={{ height: "8px" }}>
-                      <div className="absolute h-full rounded-full" style={{ left: `${((8 - 4) / 8) * 100}%`, width: `${((10 - 8) / 8) * 100}%`, backgroundColor: "rgba(13,148,136,0.18)" }} />
-                      <div className="absolute h-full rounded-full" style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${col}, ${col}cc)`, boxShadow: `0 0 10px ${col}88, inset 0 1px 0 rgba(255,255,255,0.5)`, transition: "width 0.2s var(--ease-glass), background 0.3s ease" }} />
-                      <div className="lg-knob absolute" style={{ left: `${pct}%`, top: "50%", width: 20, height: 20, borderRadius: "50%", transform: "translate(-50%, -50%)", transition: "left 0.2s var(--ease-glass)" }} />
-                    </div>
-                    <input type="range" min={4} max={12} step={0.5} value={h}
-                      onChange={e => {
-                        const next = [...perDayHours];
-                        next[i] = Number(e.target.value);
-                        setPerDayHours(next);
-                        playSound("tick");
-                      }}
-                      className="absolute inset-0 w-full opacity-0 cursor-pointer" style={{ height: "32px" }} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      <button onClick={onReset} className="w-full py-3 text-sm font-semibold lg-press"
-        style={{ borderRadius: "14px", background: "linear-gradient(165deg, rgba(13,148,136,0.22), rgba(255,255,255,0.4))", color: "#0B6F65", border: "1px solid rgba(13,148,136,0.32)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7), 0 6px 16px -8px rgba(13,148,136,0.4)" }}>
-        {perDayMode ? "Reset all to 9 hrs" : "Reset to 10 PM / 7 AM"}
-      </button>
-
-      <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--ink-soft)" }}>What the colors mean</p>
-        {[
-          { col: "#0D9488", label: "Full energy" },
-          { col: "#D97706", label: "Moderate debt" },
-          { col: "#DC2626", label: "High debt, impaired" },
-        ].map(({ col, label }) => (
-          <div key={col} className="flex items-center gap-2 text-xs" style={{ color: "var(--ink-soft)" }}>
-            <div className="rounded-full flex-shrink-0" style={{ width: "12px", height: "12px", background: col, boxShadow: `0 0 6px ${col}88` }} />
-            <span>{label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return <div className="sleep-schedule-controls">
+    {!perDayMode ? <div className="sleep-time-fields">
+      <label>Bedtime<input type="time" value={bedtime} onChange={e=>{if(e.target.value) setBedtime(e.target.value);}} /></label>
+      <label>Wake up<input type="time" value={wake} onChange={e=>{if(e.target.value) setWake(e.target.value);}} /></label>
+    </div> : <div className="sleep-day-fields">{DAYS.map((day,i)=><label key={day}><span>{day}<strong>{perDayHours[i]} h</strong></span><input type="range" min={4} max={12} step={0.5} value={perDayHours[i]} onChange={e=>{const next=[...perDayHours];next[i]=Number(e.target.value);setPerDayHours(next);}} aria-valuetext={`${perDayHours[i]} hours of sleep`} /></label>)}</div>}
+    <button onClick={onReset} className="schedule-reset">{perDayMode ? "Reset all to 9 hours" : "Reset schedule"}</button>
+    <p>Change your schedule to see the model respond. The results illustrate a pattern, not a personal assessment.</p>
+  </div>;
 }
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
@@ -1113,28 +924,23 @@ export default function SleepLab() {
   const [wake, setWake]         = useState("07:00");
   const [perDayMode, setPerDayMode] = useState(false);
   const [perDayHours, setPerDayHours] = useState<number[]>([9, 9, 9, 9, 9]);
-  const [panelOpen, setPanelOpen]     = useState(true);
   const [mounted, setMounted]         = useState(false);
   const [satH, setSatH]               = useState(10);
   const [sunH, setSunH]               = useState(9);
-  const [scrolled, setScrolled]       = useState(false);
 
   const mainRef = useRef<HTMLElement>(null);
   const heroRef = useRef<HTMLElement>(null);
 
-  useEffect(() => { setMounted(true); }, []);
-
   useEffect(() => {
-    const root = mainRef.current;
-    const target = heroRef.current;
-    if (!root || !target) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => setScrolled(!entry.isIntersecting),
-      { root, threshold: 0, rootMargin: "0px 0px -80% 0px" },
-    );
-    obs.observe(target);
-    return () => obs.disconnect();
-  }, [mounted]);
+    const params = new URLSearchParams(window.location.search);
+    const validTime = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
+    const bed = params.get("bedtime"); const rise = params.get("wake");
+    if (bed && validTime.test(bed)) setBedtime(bed);
+    if (rise && validTime.test(rise)) setWake(rise);
+    setMounted(true);
+  }, []);
+
+
 
   const baseSleepH = calcHours(bedtime, wake);
 
@@ -1191,9 +997,7 @@ export default function SleepLab() {
     setPerDayMode(on);
   };
 
-  const handleBackToTop = () => {
-    mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-  };
+
 
   if (!mounted) return null;
 
@@ -1214,49 +1018,38 @@ export default function SleepLab() {
       <div className="flex flex-1 min-h-0" style={{ position: "relative", zIndex: 10 }}>
         <main id="main-content" tabIndex={-1} ref={mainRef} className="flex-1 overflow-y-auto">
 
-          <StickyBar visible={scrolled} sleepHours={effectiveSleepH} score={sleepScore} onBackToTop={handleBackToTop} />
 
           {/* ZONE 1 — DIAGNOSTIC HERO */}
-          <ZoneSection first sectionRef={heroRef} particles padBottom={48}>
+          <ZoneSection first wide sectionRef={heroRef} padBottom={48}>
 
             {/* Page title */}
-            <div className="mb-10 text-center max-w-2xl mx-auto hb-reveal">
-              <p className="hb-kicker" style={{ color: "#0D9488" }}>Sleep Blueprint · 01</p>
+            <div className="lab-opening">
+
               <h1
                 className="font-bold mt-4"
                 style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.25rem)", color: "var(--ink)", lineHeight: 1.02, letterSpacing: "-0.035em" }}
               >
-                Sleep debt across your week
+                Your week of sleep
               </h1>
               <p className="mt-4 mx-auto" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "32rem" }}>
-                Put in your real schedule. Watch what builds up by Friday, and what starts to break down.
+                Set your schedule. See how the nights add up by Friday.
               </p>
             </div>
 
-            {/* Sleep score */}
-            <div className="mb-9">
+            <div className="sleep-workbench" data-ui>
+              <div className="sleep-workbench-controls">
+                <h2>Set your week.</h2>
+                <div className="sleep-mode" role="group" aria-label="Schedule mode">
+                  {["Same every night", "Different per day"].map((label,i)=><button key={label} aria-pressed={perDayMode === (i===1)} onClick={()=>handlePerDayToggle(i===1)}>{label}</button>)}
+                </div>
+                <ScheduleControls bedtime={bedtime} setBedtime={setBedtime} wake={wake} setWake={setWake} perDayMode={perDayMode} perDayHours={perDayHours} setPerDayHours={setPerDayHours} onReset={handleReset} />
+              </div>
               <SleepScore score={sleepScore} sleepHours={effectiveSleepH} debtHours={fridayDebt} />
-              <p className="text-center text-sm mt-4 mx-auto" style={{ color: "var(--ink-soft)", maxWidth: "22rem" }}>
-                Based on your schedule, weekday consistency, and weekend recovery
-              </p>
             </div>
-
-            {/* Per-day toggle */}
-            <div className="flex items-center justify-center gap-1 mb-8 p-1 rounded-full w-fit mx-auto lg-segment">
-              {(["Same every night", "Different per day"] as const).map((label, i) => {
-                const active = i === 0 ? !perDayMode : perDayMode;
-                return (
-                  <button key={label} onClick={() => handlePerDayToggle(i === 1)}
-                    className={`px-4 py-2 rounded-full text-xs font-semibold ${active ? "lg-segment-active" : ""}`}
-                    style={{ color: active ? "var(--ink)" : "var(--ink-soft)", transition: "color 0.3s ease, background 0.4s var(--spring), box-shadow 0.4s ease" }}>
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
+            <p className="sleep-model-note">Score based on your schedule, weekday consistency, and weekend recovery.</p>
 
             {/* BAC callout (conditional) */}
-            <div className="mb-6 overflow-hidden"
+            <div hidden={!showCallout} className="mb-6 overflow-hidden"
               style={{ borderRadius: "20px", maxHeight: showCallout ? "260px" : "0px", opacity: showCallout ? 1 : 0, transition: "max-height 0.5s var(--ease-glass), opacity 0.4s ease" }}>
               <div className="lg-tint-rose" style={{ padding: "20px 24px", border: "1px solid rgba(244,63,94,0.32)", borderRadius: "20px", backdropFilter: "var(--glass-blur)", WebkitBackdropFilter: "var(--glass-blur)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), 0 12px 30px -16px rgba(220,38,38,0.4)" }}>
                 <p className="text-sm leading-relaxed" style={{ color: "var(--ink)" }}>
@@ -1303,20 +1096,6 @@ export default function SleepLab() {
               <CompareSection sleepHours={effectiveSleepH} />
             </div>
           </ZoneSection>
-
-          {/* Mobile schedule controls — sits between Zone 1 and Zone 2 */}
-          <div className="lg:hidden" style={{ backgroundColor: "transparent", paddingBottom: "32px" }}>
-            <div className="max-w-3xl mx-auto px-6">
-              <LiquidGlass radius={24} bezel={22} scale={48} style={{ padding: "24px" }}>
-                <ScheduleControls
-                  bedtime={bedtime} setBedtime={setBedtime}
-                  wake={wake} setWake={setWake}
-                  perDayMode={perDayMode} perDayHours={perDayHours} setPerDayHours={setPerDayHours}
-                  onReset={handleReset}
-                />
-              </LiquidGlass>
-            </div>
-          </div>
 
           {/* ZONE 2 — TEST YOURSELF (alt bg) */}
           <ZoneSection alt>
@@ -1365,44 +1144,7 @@ export default function SleepLab() {
           <LabFooter />
         </main>
 
-        {/* Right panel — desktop · floating refracting glass sheet */}
-        <LiquidGlass
-          as="aside"
-          radius={26}
-          bezel={24}
-          scale={50}
-          className="hidden lg:flex flex-col flex-shrink-0 overflow-hidden"
-          style={{
-            width: panelOpen ? "300px" : "52px",
-            margin: "16px 16px 16px 0",
-            maxHeight: "calc(100vh - 94px)",
-            position: "sticky",
-            top: "16px",
-            alignSelf: "flex-start",
-            transition: "width 0.5s var(--spring)",
-          }}
-        >
-          <button
-            onClick={() => setPanelOpen(v => !v)}
-            className="flex items-center justify-center flex-shrink-0"
-            style={{ height: "50px", minWidth: "52px", borderBottom: "1px solid rgba(255,255,255,0.4)" }}
-            aria-label={panelOpen ? "Collapse controls" : "Expand controls"}
-          >
-            {panelOpen
-              ? <ChevronRight className="w-4 h-4" style={{ color: "var(--ink-soft)" }} />
-              : <ChevronLeft  className="w-4 h-4" style={{ color: "var(--ink-soft)" }} />}
-          </button>
-          {panelOpen && (
-            <div className="flex-1 overflow-y-auto p-6">
-              <ScheduleControls
-                bedtime={bedtime} setBedtime={setBedtime}
-                wake={wake} setWake={setWake}
-                perDayMode={perDayMode} perDayHours={perDayHours} setPerDayHours={setPerDayHours}
-                onReset={handleReset}
-              />
-            </div>
-          )}
-        </LiquidGlass>
+
       </div>
     </div>
   );

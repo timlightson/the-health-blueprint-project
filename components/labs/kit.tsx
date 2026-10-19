@@ -3,7 +3,7 @@
 import { useState, type CSSProperties, type ReactNode } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { LabHeader, HeaderBadge, LabFooter } from "@/components/labs/LabChrome";
-import LabHeroSignal from "@/components/labs/LabHeroSignal";
+import BlueprintArt from "@/components/home/BlueprintArt";
 import type { LabId } from "@/components/labs/labs-meta";
 
 // ─── Shared lab kit ───────────────────────────────────────────────────────────
@@ -25,7 +25,7 @@ export function LabShell({
       <div className="lab-aurora" aria-hidden="true" />
       <LabHeader lab={lab} badge={badge ? <HeaderBadge color={badge.color}>{badge.text}</HeaderBadge> : undefined} />
       <main id="main-content" tabIndex={-1} className="flex-1 overflow-y-auto" style={{ position: "relative", zIndex: 10 }}>
-        <div className="max-w-3xl mx-auto px-6 py-12 sm:py-16">{children}</div>
+        <div className="lab-shell-content">{children}</div>
       </main>
       <LabFooter />
     </div>
@@ -33,19 +33,8 @@ export function LabShell({
 }
 
 /** Centered kicker / title / subtitle block used at the top of every lab. */
-export function LabHero({ lab, kicker, title, subtitle, accent }: { lab?: LabId; kicker: string; title: string; subtitle: string; accent: string }) {
-  return (
-    <div className="text-center max-w-2xl mx-auto hb-reveal mb-11">
-      <p className="hb-kicker" style={{ color: accent }}>{kicker}</p>
-      <h1 className="font-bold mt-4" style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.25rem)", color: "var(--ink)", lineHeight: 1.02, letterSpacing: "-0.035em" }}>
-        {title}
-      </h1>
-      <p className="mt-4 mx-auto" style={{ fontSize: "1.0625rem", color: "var(--ink-soft)", lineHeight: 1.5, maxWidth: "34rem" }}>
-        {subtitle}
-      </p>
-      {lab ? <LabHeroSignal lab={lab} accent={accent} /> : <div className="hb-tick-rule mt-7 mx-auto" style={{ maxWidth: "220px" }} aria-hidden="true" />}
-    </div>
-  );
+export function LabHero({ lab, title, subtitle }: { lab?: LabId; kicker: string; title: string; subtitle: string; accent: string }) {
+  return <div className="lab-hero-editorial"><div><h1>{title}</h1><p>{subtitle}</p></div>{lab && <div className="lab-hero-art"><BlueprintArt id={lab} /></div>}</div>;
 }
 
 /** Glass segmented control for small option sets. */
@@ -70,7 +59,7 @@ export function Segmented<T extends string>({
             onClick={() => onChange(o.value)}
             aria-pressed={active}
             className={`rounded-full text-xs font-semibold px-4 ${active ? "lg-segment-active" : ""}`}
-            style={{ minHeight: "38px", color: active ? "var(--ink)" : "var(--ink-soft)" }}
+            style={{ minHeight: "44px", color: active ? "var(--ink)" : "var(--ink-soft)" }}
           >
             {o.label}
           </button>
@@ -105,7 +94,7 @@ export function Chips<T extends string>({
             aria-pressed={active}
             className="text-xs font-semibold rounded-full lg-pill"
             style={{
-              minHeight: "36px",
+              minHeight: "44px",
               padding: "0 14px",
               color: active ? "#fff" : "var(--ink-soft)",
               background: active ? accent : undefined,
@@ -155,7 +144,7 @@ export function SciencePanel({
         {open ? <ChevronDown className="w-4 h-4 flex-shrink-0" /> : <ChevronRight className="w-4 h-4 flex-shrink-0" />}
         <span className="text-sm font-semibold uppercase tracking-wider">The Science</span>
       </button>
-      <div style={{ maxHeight: open ? "1600px" : "0px", opacity: open ? 1 : 0, overflow: "hidden", transition: "max-height 0.5s ease, opacity 0.4s ease" }}>
+      <div hidden={!open} style={{ maxHeight: open ? "1600px" : "0px", opacity: open ? 1 : 0, overflow: "hidden", transition: "max-height 0.5s ease, opacity 0.4s ease" }}>
         <div className="pb-8">
           {intro && (
             <p className="text-sm mb-4" style={{ color: "var(--ink-soft)", lineHeight: 1.7 }}>{intro}</p>

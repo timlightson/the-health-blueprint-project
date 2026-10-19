@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from 'next'
 import { Inter, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SITE_NAME, SITE_URL } from '@/lib/site'
+import { CoverMotionProvider } from '@/components/home/CoverMotion'
 import './globals.css'
+import './editorial.css'
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,7 +46,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#F5F7FB',
+  themeColor: '#f7f8fa',
   width: 'device-width',
   initialScale: 1,
 }
@@ -58,7 +60,7 @@ export default function RootLayout({
     <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} ${geistMono.variable} bg-background`}>
       <body className="font-sans antialiased">
         <a href="#main-content" className="skip-link">Skip to main content</a>
-        {children}
+        <CoverMotionProvider>{children}</CoverMotionProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

@@ -4,7 +4,8 @@ import { useState, useMemo, useEffect, useRef, type CSSProperties } from "react"
 import { Sun } from "lucide-react";
 import { playSound } from "@/lib/sleep-sound";
 import LiquidGlass from "@/components/labs/LiquidGlass";
-import { useMotionPresence } from "@/hooks/use-motion-presence";
+import BlueprintArt from "@/components/home/BlueprintArt";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 // ─── Phone Before Bed — illustrated night scene + overlapping signals ────────
 
@@ -71,10 +72,12 @@ function fmtDelayOrLost(delayMin: number): string {
 }
 
 function useEasedArray(target: number[], ms = 400): number[] {
+  const reduced = useReducedMotion();
   const [disp, setDisp] = useState(target);
   const fromRef = useRef(target);
   const rafRef = useRef<number | null>(null);
   useEffect(() => {
+    if (reduced) { fromRef.current=target;setDisp(target);return; }
     const from = fromRef.current;
     if (from.length !== target.length) {
       fromRef.current = target;
@@ -96,7 +99,7 @@ function useEasedArray(target: number[], ms = 400): number[] {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [target, ms]);
+  }, [target, ms, reduced]);
   return disp;
 }
 
@@ -111,7 +114,6 @@ export default function PhoneBeforeBed() {
   const [phoneMin, setPhoneMin] = useState(45);
   const [brightness, setBrightness] = useState<Brightness>("medium");
   const [targetTime, setTargetTime] = useState("23:00"); // 11:00 PM
-  const { ref: sceneRef, motionActive } = useMotionPresence<HTMLDivElement>();
 
   const delayMin = computeDelay(phoneMin, brightness);
   const suppression = Math.min(0.5, delayMin / 200);
@@ -167,8 +169,6 @@ export default function PhoneBeforeBed() {
 
   const br = BR[brightness];
   const phonePct = phoneMin / 120;
-  const glowBoost = brightness === "low" ? 0 : brightness === "medium" ? 20 : 40;
-  const glowSize = 90 + phonePct * 230 + glowBoost;
 
   const HOURS = [20, 21, 22, 23, 24, 25, 26];
 
@@ -190,7 +190,7 @@ export default function PhoneBeforeBed() {
         <div className="phb-heading">
           <div>
             <p className="phb-kicker">Late-night light</p>
-            <h2>Phone Before Bed</h2>
+            <h2>Phone before bed</h2>
             <p>See how screen timing shifts your estimated sleep signal.</p>
           </div>
           <label className="phb-time">
@@ -198,72 +198,16 @@ export default function PhoneBeforeBed() {
             <input
               type="time"
               value={targetTime}
-              onChange={(e) => setTargetTime(e.target.value)}
+              onChange={(e) => { if (e.target.value) setTargetTime(e.target.value); }}
               aria-label="Target sleep time"
             />
           </label>
         </div>
 
         <div className="phb-scene">
-          <div
-            ref={sceneRef}
-            className={`phb-stage phb-room-diorama is-${brightness} ${motionActive ? "is-motion-active" : ""}`}
-            style={{
-              "--phone-glow": br.glow,
-              "--phone-accent": br.accent,
-              "--phone-screen": br.screen,
-              "--phone-pct": phonePct,
-              "--phone-delay": delayMin / 100,
-              "--glow-size": `${glowSize}px`,
-              "--phone-wall-opacity": .2 + phonePct * .9,
-              "--phone-cone-opacity": .12 + phonePct * .68,
-              "--phone-person-angle": `${-5 - phonePct * 5}deg`,
-              "--phone-eye-glow": `${phonePct * 7}px`,
-              "--phone-shell-glow": `${10 + phonePct * 26}px`,
-              "--phone-shell-angle": `${2 - phonePct * 3}deg`,
-              "--phone-orbit-opacity": .2 + phonePct * .8,
-              "--phone-orbit-radius": `${22 + phonePct * 24}px`,
-              "--phone-orbit-duration": `${5 - phonePct * 2}s`,
-            } as CSSProperties}
-            role="img"
-            aria-label={`${phoneMin} minutes of phone use at ${brightness} brightness. Estimated sleep shifts to ${fmtTime12(actualH)}.`}
-          >
-            <div className="phb-room-wall" />
-            <div className="phb-room-window"><i /><b /><span /><span /></div>
-            <div className="phb-room-poster"><i /><i /><i /></div>
-            <div className="phb-room-clock">
-              <span>{fmtTime12(actualH).replace(" ", "")}</span>
-              <small>estimated sleep</small>
-            </div>
-            <div className="phb-light-cone cone-left" />
-            <div className="phb-light-cone cone-right" />
-            <div className="phb-aura" />
-            <div className="phb-bed">
-              <span className="phb-pillow" />
-              <span className="phb-blanket" />
-              <span className="phb-bedframe" />
-            </div>
-            <div className="phb-person">
-              <span className="phb-person-body" />
-              <span className="phb-person-head"><i /><b /><em /></span>
-              <span className="phb-person-arm" />
-            </div>
-            <div className="phb-phone-shell">
-              <div className="phb-phone-screen">
-                <div className="phb-phone-readout"><strong>{phoneMin}</strong><span>MIN</span></div>
-                {[0, 1, 2].map((i) => (
-                  <div key={i} className={`phb-message message-${i + 1}`} style={{ opacity: Math.min(1, .2 + phonePct + i * .08) }}>
-                    <i /><span><b /><b /></span>
-                  </div>
-                ))}
-                <div className="phb-phone-home" />
-              </div>
-            </div>
-            <div className="phb-nightstand"><span /><i /></div>
-            <div className="phb-melatonin-orbit">
-              {[0, 1, 2, 3, 4].map((i) => <i key={i} style={{ "--orbit-angle": `${i * 72}deg`, "--orbit-delay": `${i * -.34}s` } as CSSProperties} />)}
-            </div>
-            <div className="phb-room-floor" />
+          <div className="phone-light-study">
+            <div className="phone-light-art"><BlueprintArt id="focus" /></div>
+            <div className="phone-light-result" aria-live="polite"><span>Estimated sleep</span><strong>{fmtTime12(actualH)}</strong><p>{phoneMin} minutes at {brightness} brightness</p></div>
           </div>
 
           <div className="phb-brightness" role="group" aria-label="Screen brightness">

@@ -193,7 +193,7 @@ function PressureChamber() {
         {phase === "intro" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#F87171" }}>The Pressure Chamber · 5 rounds</p>
-            <h3 className="text-3xl font-bold mt-2 text-white" style={{ letterSpacing: "-0.02em" }}>Find your breaking point</h3>
+            <h3 className="text-3xl font-bold mt-2 text-white" style={{ letterSpacing: "-0.02em" }}>Try the pressure chamber.</h3>
             <p className="text-sm mt-3 mb-6" style={{ color: "#94A3B8", maxWidth: 370, lineHeight: 1.55 }}>
               Quick math, and the clock keeps shrinking. A little pressure will sharpen you. Then it won't. After the worst round you get 15 seconds to breathe, and you'll see what that buys back.
             </p>
@@ -435,7 +435,7 @@ export default function StressLab() {
       <LabHero
         lab="stress"
         kicker="Stress Blueprint · 03"
-        title="Find your breaking point"
+        title="Pressure changes your focus."
         subtitle="A little pressure sharpens you. Too much takes your brain offline, and a real break brings it back. Feel the whole curve happen to you in five rounds."
         accent={ACCENT}
       />
