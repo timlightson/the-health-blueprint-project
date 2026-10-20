@@ -66,12 +66,15 @@ export default function EnergyGlowChart({
           Relative energy from 6 AM to midnight. Peak near {time(peakT)}, lowest
           near {time(minT)}. Change activities below to update the curve.
         </desc>
+        <defs><linearGradient id={`${uid}-fill`} x2="0" y2="1"><stop stopColor="#7ba99b" stopOpacity=".35"/><stop offset="1" stopColor="#7ba99b" stopOpacity=".025"/></linearGradient></defs>
+        {[.25,.5,.75].map(v=><line key={v} x1={left} x2={width-right} y1={top+plotH*v} y2={top+plotH*v} stroke="#cbd9d2" strokeDasharray="3 5"/>)}
+        {ticks.map(t=><line key={t} x1={x(t)} x2={x(t)} y1={top} y2={height-bottom} stroke="#dce6df"/>)}
         <text x={left} y={20} fill="#526c72" fontSize="13">
           Relative energy
         </text>
         <path
           d={`${path} L${x(endH)},${height - bottom} L${left},${height - bottom} Z`}
-          fill="#d8e9e4"
+          fill={`url(#${uid}-fill)`}
         />
         <path
           d={path}
@@ -88,6 +91,7 @@ export default function EnergyGlowChart({
           const tt = Number(t);
           return (
             <g key={label}>
+              <line x1={x(tt)} x2={x(tt)} y1={y(curve[index(tt)])+8} y2={height-bottom} stroke="#55877a" strokeDasharray="3 4" opacity=".55"/>
               <circle
                 cx={x(tt)}
                 cy={y(curve[index(tt)])}

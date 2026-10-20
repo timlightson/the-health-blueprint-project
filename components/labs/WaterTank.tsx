@@ -97,8 +97,8 @@ export default function WaterTank({
 
     if (!reduced) {
       // bubbles
-      if (Math.random() < 0.14 && s.shown > 0.08) {
-        s.bubbles.push({ x: 12 + Math.random() * (width - 24), y: height - 6, r: 1 + Math.random() * 2.6, v: 0.35 + Math.random() * 0.7, wob: Math.random() * 6 });
+      if (Math.random() < 0.04 && s.shown > 0.08) {
+        s.bubbles.push({ x: 12 + Math.random() * (width - 24), y: height - 6, r: 0.6 + Math.random() * 1.2, v: 0.35 + Math.random() * 0.7, wob: Math.random() * 6 });
       }
       ctx.fillStyle = "rgba(255,255,255,0.5)";
       s.bubbles = s.bubbles.filter((b) => {
@@ -160,6 +160,7 @@ export default function WaterTank({
 
   return (
     <div
+      className="water-vessel"
       onPointerDown={down}
       onKeyDown={key}
       tabIndex={interactive ? 0 : -1}
@@ -181,8 +182,8 @@ export default function WaterTank({
       }}
     >
       <canvas ref={canvasRef} style={{ width, height, display: "block" }} aria-hidden="true" />
-      {/* cap */}
-      <div aria-hidden style={{ position: "absolute", top: -2, left: "50%", transform: "translateX(-50%)", width: 46, height: 12, borderRadius: "0 0 10px 10px", background: "linear-gradient(180deg, rgba(148,163,184,0.65), rgba(203,213,225,0.4))" }} />
+      <div className="water-vessel-rim" aria-hidden="true" />
+      <div className="water-graduations" aria-hidden="true">{Array.from({length:7},(_,i)=><i key={i}/>)}</div>
     </div>
   );
 }

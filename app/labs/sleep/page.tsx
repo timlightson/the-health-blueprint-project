@@ -716,9 +716,9 @@ function WeekendSection({
   const padL = 64, padR = 18, padT = 26;
   const plotW = W - padL - padR;
   const plotH = H - padT - 30;
-  const maxAxis = Math.max(20, Math.ceil(Math.max(...target7) / 5) * 5);
+  const maxAxis = Math.max(5, Math.ceil(Math.max(...target7) / 5) * 5);
   const ticks: number[] = [];
-  for (let v = 0; v <= maxAxis; v += 5) ticks.push(v);
+  for (let v = 0; v <= maxAxis; v += maxAxis <= 5 ? 1 : 5) ticks.push(v);
 
   const xFor = (i: number) => padL + (i / 6) * plotW;
   const yFor = (d: number) => padT + plotH * (1 - Math.min(1, Math.max(0, d) / maxAxis));
@@ -726,13 +726,14 @@ function WeekendSection({
 
   const RED = "#DC2626", TEAL = "#0D9488", GRAY = "#9CA3AF";
   const segColor = (i: number) => {
+    if (target7[i] < .05 && target7[i + 1] < .05) return TEAL;
     if (i <= 3) return RED;
     const a = target7[i], b = target7[i + 1];
     if (b < a - 0.01) return TEAL;
     if (b > a + 0.01) return RED;
     return GRAY;
   };
-  const pointColor = (i: number) => (i === 0 ? RED : segColor(i - 1));
+  const pointColor = (i: number) => target7[i] < .05 ? TEAL : (i === 0 ? RED : segColor(i - 1));
   const dayLabels = ["M", "T", "W", "T", "F", "Sa", "Su"];
 
   let insight: string;
@@ -780,7 +781,7 @@ function WeekendSection({
             </defs>
             <rect x={xFor(4.5)} y="0" width={W - xFor(4.5)} height={H} fill="#0D9488" fillOpacity=".08" />
             <text x={xFor(5.25)} y="15" fontSize="8" fill="#63D5CA" textAnchor="middle" fontWeight="700" letterSpacing="1.1">WEEKEND RECOVERY</text>
-            {[ [93,18], [171,12], [452,28], [535,18], [572,46] ].map(([x,y], i) => <circle key={i} cx={x} cy={y} r={i % 2 ? 1 : 1.6} fill="#D8EDFF" fillOpacity={.35 + i * .1} />)}
+
             <text x="17" y={padT + plotH / 2} fontSize="9" fill="#8FAAC0" textAnchor="middle" transform={`rotate(-90, 17, ${padT + plotH / 2})`}>DEBT · HOURS</text>
             {ticks.map((tk) => {
               const y = yFor(tk);
@@ -789,10 +790,10 @@ function WeekendSection({
             <text x={padL + plotW} y={y0 - 6} fontSize="8" fill="#8FAAC0" textAnchor="end">NO DEBT</text>
             <line x1={xFor(4.5)} y1={padT} x2={xFor(4.5)} y2={y0} stroke="#70DACE" strokeOpacity=".42" strokeDasharray="3 4" />
             {[0, 1, 2, 3, 4, 5].map((i) => <polygon key={i} points={`${xFor(i)},${yFor(eased[i])} ${xFor(i + 1)},${yFor(eased[i + 1])} ${xFor(i + 1)},${y0} ${xFor(i)},${y0}`} fill={i >= 4 && segColor(i) === TEAL ? "url(#weekend-recovery-fill)" : "url(#weekend-debt-fill)"} />)}
-            {[0, 1, 2, 3, 4, 5].map((i) => <line key={i} x1={xFor(i)} y1={yFor(eased[i])} x2={xFor(i + 1)} y2={yFor(eased[i + 1])} stroke={segColor(i)} strokeWidth="3.4" strokeLinecap="round" filter="url(#weekend-glow)" />)}
+            {[0, 1, 2, 3, 4, 5].map((i) => <line key={i} x1={xFor(i)} y1={yFor(eased[i])} x2={xFor(i + 1)} y2={yFor(eased[i + 1])} stroke={segColor(i)} strokeWidth="3.4" strokeLinecap="round" />)}
             {eased.map((d, i) => {
               const col = pointColor(i);
-              return <g key={i}><circle cx={xFor(i)} cy={yFor(d)} r="8" fill={col} fillOpacity=".16" /><circle cx={xFor(i)} cy={yFor(d)} r="4.5" fill={col} stroke="#EAF5FC" strokeWidth="1.2" /><text x={xFor(i)} y={Math.max(24, yFor(d) - 12)} fontSize="10" fontWeight="700" fill={i >= 5 ? "#63D5CA" : "#F68B88"} textAnchor="middle">{d < .05 ? "0h" : `−${fmtHrs(d)}h`}</text></g>;
+              return <g key={i}><circle cx={xFor(i)} cy={yFor(d)} r="8" fill={col} fillOpacity=".16" /><circle cx={xFor(i)} cy={yFor(d)} r="4.5" fill={col} stroke="#EAF5FC" strokeWidth="1.2" /><text x={xFor(i)} y={Math.max(24, yFor(d) - 12)} fontSize="10" fontWeight="700" fill={d < .05 ? "#8dcabc" : i >= 5 ? "#63D5CA" : "#F68B88"} textAnchor="middle">{d < .05 ? "0h" : `−${fmtHrs(d)}h`}</text></g>;
             })}
             {dayLabels.map((lb, i) => <g key={i}><rect x={xFor(i) - 14} y={padT + plotH + 7} width="28" height="18" rx="9" fill={i >= 5 ? "#0D9488" : "#FFFFFF"} fillOpacity={i >= 5 ? ".3" : ".08"} /><text x={xFor(i)} y={padT + plotH + 19} fontSize="9" fill={i >= 5 ? "#74E0D6" : "#A6BDD0"} textAnchor="middle" fontWeight="700">{lb}</text></g>)}
           </svg>
@@ -800,7 +801,7 @@ function WeekendSection({
       </div>
 
       <div className="weekend-summary">
-        <div><i style={{ background: "#DC2626" }} /><span>Friday debt</span><strong style={{ color: "#DC2626" }}>{fmtHrs(fridayDebt)} {hrAbbr(fridayDebt)}</strong></div>
+        <div><i style={{ background: fridayDebt > 0 ? "#DC2626" : TEAL }} /><span>Friday debt</span><strong style={{ color: fridayDebt > 0 ? "#DC2626" : TEAL }}>{fmtHrs(fridayDebt)} {hrAbbr(fridayDebt)}</strong></div>
         <div><i style={{ background: "#0D9488" }} /><span>Weekend recovery</span><strong style={{ color: "#0D9488" }}>{fmtHrs(weekendRecovery)} {hrAbbr(weekendRecovery)}</strong></div>
         <div><i style={{ background: mondayCol }} /><span>Monday debt</span><strong style={{ color: mondayCol }}>{fmtHrs(mondayDebt)} {hrAbbr(mondayDebt)}</strong></div>
       </div>

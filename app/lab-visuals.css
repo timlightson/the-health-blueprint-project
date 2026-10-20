@@ -1,0 +1,88 @@
+/* Interactive studies: quiet stages, tactile subjects, readable instrumentation. */
+.breath-stage { background: radial-gradient(ellipse at 50% 34%,#285454,#142e35 70%); min-height:510px; padding:60px 20px 28px; border:0; box-shadow:none; }
+.breath-stage::before { display:none; }
+.breath-stage-label { color:#bedbd2; font-size:11px; letter-spacing:.12em; top:24px; left:26px; }
+.breath-sculpture { position:relative; width:min(360px,100%); aspect-ratio:1; }
+.breath-bloom { display:block; width:100%; height:100%; }
+.breath-instruction { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#f1fff7; pointer-events:none; }
+.breath-instruction span { font-size:15px; font-weight:600; }
+.breath-instruction strong { font-size:32px; line-height:1.05; font-variant-numeric:tabular-nums; }
+.breath-phase-track { margin-top:0; height:3px; }
+.breath-phase-track i.active { box-shadow:none; background:#bcebd9; }
+.breath-stage-button { color:#153b37; background:#e5f4e9; border:0; box-shadow:none; min-height:48px; }
+.breath-stage-button:hover { background:#fff; }
+.vision-stage { min-height:350px; background:#142d31; border:0; box-shadow:none; }
+.vision-stage::before { display:none; }
+.vision-eye-diagram { width:min(500px,70%); left:57%; top:45%; }
+.vision-stage-readout { top:26px; left:26px; }
+.vision-stage-readout span { font:500 10px/1.5 var(--font-mono),monospace; letter-spacing:.08em; max-width:110px; }
+.vision-stage-readout strong { margin-top:12px; font-size:44px; }
+.vision-stage-readout em { max-width:120px; font-size:12px; }
+.vision-board { bottom:20px; right:24px; padding:13px 22px; min-width:220px; background:#e9efe4; color:#173a34; border:0; box-shadow:none; backdrop-filter:none; }
+.vision-board span { font-size:9px; color:#527268; }
+.vision-board strong { color:#183c34; }
+.vision-blind-field { background:#162e32; border:0; box-shadow:none; }
+.vision-blind-field::before,.vision-blind-dot::after { display:none; }
+.vision-blind-dot { box-shadow:none!important; outline:9px solid transparent; min-width:44px; min-height:44px; border:9px solid #162e32; }
+.receptor-panel { margin:20px 8px 10px; border-radius:14px; background:#14282d; overflow:hidden; border:1px solid #8ca49a30; }
+.receptor-panel-head,.receptor-panel-caption { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px 20px; padding:16px 20px; color:#e0eadd; font-size:12px; }
+.receptor-panel-head span:last-child { color:#9aafa8; }
+.receptor-study { width:100%; display:block; }
+.receptor-panel-caption { border-top:1px solid #8ca49a20; color:#bacac2; font-size:11px; }
+.receptor-panel-caption i { display:inline-block; width:8px;height:8px;border-radius:3px;background:#d7b978;margin-right:6px; }
+.is-motion-active .receptor-free { animation:receptorDrift 5s ease-in-out infinite; animation-delay:var(--drift-delay); }
+@keyframes receptorDrift { 50% { transform:translateY(-9px); } }
+.caffeine-stage { background:#18292e; border:0; box-shadow:none; padding:22px 12px 14px; }
+.caffeine-stage-head > div:first-child span {font-size:10px;color:#c7d7ce;letter-spacing:.06em;}
+.caffeine-stage-head > div:last-child span {font-size:10px;}
+.caffeine-stage-hint {font-size:9px;letter-spacing:.03em;line-height:1.5;margin-top:4px;}
+.caffeine-bedtime-control label {font-size:9px;}
+.focus-playfield { background:#17292f; border:0; box-shadow:none; }
+.focus-playfield::before,.focus-playfield::after { display:none; }
+.focus-field-grid { background-image:radial-gradient(#abc2ba20 .8px,transparent .8px); background-size:22px 22px; opacity:.6; }
+.focus-field-beam { display:none; }
+.focus-field-mode { font-size:10px;letter-spacing:.1em;color:#b6cec4; }
+.focus-ready-target { width:58px;height:58px; background:#c5e8d5; border:7px solid #6e9d8d; box-shadow:0 0 0 1px #a7cdbd40; }
+.focus-ready-target::before,.focus-ready-target::after { display:none; }
+.focus-ready-target i { background:#214b40; width:13px;height:13px; }
+.focus-progress { position:absolute;top:20px;right:20px;display:flex;gap:5px; }
+.focus-progress i { width:7px;height:7px;border-radius:2px;background:#45605f; }
+.focus-progress i.is-complete {background:#b6ddc9;}
+.focus-wait {position:absolute;left:0;right:0;top:48%;text-align:center;font:500 12px/1.5 var(--font-mono),monospace;color:#9db7ae;pointer-events:none;}
+.activity-glyph { display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:#e8edea;color:#315d52;box-shadow:inset 0 1px #ffffffc0,0 3px 8px #163a3010; }
+.activity-glyph svg {width:25px;height:25px;}
+.activity-glyph.tone-night {background:#e9e6ef;color:#62567b;}
+.activity-glyph.tone-fuel {background:#f4e9d8;color:#926b30;}
+.activity-glyph.tone-move {background:#deece6;color:#376e58;}
+.activity-glyph.is-compact {width:22px;height:22px;border-radius:6px;box-shadow:none;}
+.activity-glyph.is-compact svg {width:16px;height:16px;}
+.sound-level-row {position:relative;overflow:hidden;min-height:68px!important;padding:10px 14px!important;}
+.sound-level-row .activity-glyph {width:38px;height:38px;flex-shrink:0;}
+.sound-level-meter {display:flex;gap:3px;align-items:end;height:20px;flex-shrink:0;margin-right:10px;}
+.sound-level-meter i {width:4px;border-radius:2px;background:#839a9330;}
+.sound-level-meter i.is-filled {background:currentColor;}
+.water-vessel {border-radius:18px 18px 28px 28px!important;background:linear-gradient(90deg,#a8c6cb30,#eef8f630 35%,#6d9eaa25)!important;border:1px solid #b5d1d3aa!important;box-shadow:inset 4px 0 7px #ffffff60,inset -5px 0 9px #0a3c4f20,0 12px 20px -15px #173b4e!important;}
+.water-vessel::after {content:"";position:absolute;inset:5px 7px;border-left:2px solid #ffffff60;border-right:1px solid #ffffff35;border-radius:12px 12px 23px 23px;pointer-events:none;}
+.water-vessel-rim {position:absolute;left:0;right:0;top:0;height:10px;border-radius:50%;border:1px solid #d9eeecb0;background:#e7f7f530;pointer-events:none;}
+.water-graduations {position:absolute;right:12px;top:16%;bottom:13%;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none;}
+.water-graduations i {width:12px;border-top:1px solid #f1fffc99;}
+.water-graduations i:nth-child(odd) {width:19px;}
+.weekend-trail,.phb-tide { background:#142b35!important;box-shadow:none!important;border:1px solid #c0d9d320; }
+.weekend-trail::before,.weekend-trail::after {display:none;}
+.phb-tide-head strong {font-size:15px;}
+.phb-tide-head>div>span {font-size:9px;}
+.phb-legend {font-size:11px;}
+.energy-chart {background:#eef3f0;}
+@media(max-width:600px) {
+  .breath-stage {min-height:470px;padding-top:52px;}
+  .breath-sculpture {width:min(310px,100%);}
+  .vision-stage {min-height:410px;}
+  .vision-eye-diagram {width:96%;left:50%;top:48%;}
+  .vision-stage-readout {position:relative;top:0;left:0;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:0 16px;}
+  .vision-stage-readout strong {grid-column:1;grid-row:1/3;margin:0;}
+  .vision-stage-readout span,.vision-stage-readout em {grid-column:2;max-width:none;}
+  .vision-board {left:20px;right:20px;bottom:20px;min-width:0;}
+  .receptor-panel-head,.receptor-panel-caption {padding:12px;font-size:11px;}
+  .sound-level-meter {display:none;}
+}
+@media(prefers-reduced-motion:reduce) {.receptor-free {animation:none!important;}.breath-bloom g {transition:none!important;}}

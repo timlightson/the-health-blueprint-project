@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Volume2, VolumeX, Headphones, Play } from "lucide-react";
+import ActivityGlyph from "@/components/labs/ActivityGlyph";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabShell, LabHero, StatTile, SciencePanel } from "@/components/labs/kit";
 import { playTone, beep, fmtHz, type Tone } from "@/components/labs/audio";
@@ -165,21 +166,22 @@ export default function SoundLab() {
         <p className="text-sm font-semibold mb-1" style={{ color: "var(--ink)" }}>How long is safe?</p>
         <p className="text-xs mb-4" style={{ color: "var(--ink-faint)" }}>Tap a sound. Damage is volume times time, so louder shrinks your window fast.</p>
         <div className="space-y-2">
-          {LEVELS.map((l) => {
+          {LEVELS.map((l, index) => {
             const active = l.db === selDb;
             return (
               <button
                 key={l.db}
                 onClick={() => setSelDb(l.db)}
                 aria-pressed={active}
-                className="w-full flex items-center gap-3 rounded-xl text-left lg-pill"
+                className="sound-level-row w-full flex items-center gap-3 rounded-xl text-left lg-pill"
                 style={{ minHeight: 52, padding: "0 14px", background: active ? `${ACCENT}14` : undefined, borderColor: active ? `${ACCENT}55` : undefined }}
               >
-                <span className="text-lg">{l.emoji}</span>
+                <ActivityGlyph kind={["talk","traffic","earbuds","concert","siren"][index]} />
                 <span className="flex-1">
                   <span className="block text-sm font-semibold" style={{ color: "var(--ink)" }}>{l.label}</span>
                   <span className="block text-xs" style={{ color: "var(--ink-faint)" }}>{l.db} dB</span>
                 </span>
+                <span className="sound-level-meter" aria-hidden="true" style={{color:active ? ACCENT : "#7e9890"}}>{Array.from({length:10},(_,i)=><i key={i} className={i < (l.db-50)/7 ? "is-filled" : ""} style={{height:6+i*1.5}}/>)}</span>
                 {active && <span className="text-sm font-bold tabular-nums" style={{ color: zone.color }}>{fmtTime(safe)}</span>}
               </button>
             );

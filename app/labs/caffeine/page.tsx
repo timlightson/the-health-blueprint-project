@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, type CSSProperties } from "react";
+import { useState, useRef } from "react";
+import { ReceptorStudy } from "@/components/labs/SceneArt";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabShell, LabHero, StatTile, SciencePanel, clamp } from "@/components/labs/kit";
 import { useMotionPresence } from "@/hooks/use-motion-presence";
@@ -51,54 +52,11 @@ let seq = 0;
 function AdenosineScene({ atBed, totalMg, bedH }: { atBed: number; totalMg: number; bedH: number }) {
   const { ref, motionActive } = useMotionPresence<HTMLDivElement>();
   const load = clamp(atBed / 120, 0, 1);
-  const particles = Math.max(1, Math.min(9, Math.ceil(atBed / 18)));
-  const visualLoad = atBed < 25 ? "LOW" : atBed < 75 ? "MID" : "HIGH";
-  const style = {
-    "--caf-load": load,
-    "--caf-glow-opacity": Math.max(.12, load * .8),
-    "--caf-eye-height": `${2 + load * 4}px`,
-    "--caf-head-y": `${5 - load * 6}px`,
-    "--caf-scene-accent": atBed < 25 ? "#6EE7B7" : atBed < 75 ? "#FBBF24" : "#FB7185",
-  } as CSSProperties;
-
-  return (
-    <div
-      ref={ref}
-      className={`caf-scene ${motionActive ? "is-motion-active" : ""}`}
-      style={style}
-      role="img"
-      aria-label={`${atBed} milligrams of caffeine remain in the model at ${fmtHour(bedH)}. The illustration shows caffeine occupying adenosine receptors.`}
-    >
-      <div className="caf-scene-grid" />
-      <div className="caf-room">
-        <div className="caf-window"><i /><b /><span /></div>
-        <div className="caf-poster"><span>LIGHTS OUT</span><i /></div>
-        <div className="caf-desk"><span /><b /></div>
-        <div className="caf-laptop"><i /><span>12:14</span></div>
-        <div className="caf-cup"><i /><b /><span /></div>
-        <div className="caf-student">
-          <span className="caf-student-body" />
-          <span className="caf-student-head"><i /><b /><em /></span>
-          <span className="caf-student-arm" />
-        </div>
-        <div className="caf-room-glow" />
-      </div>
-      <div className="caf-divider"><span>MODELED AT BEDTIME</span></div>
-      <div className="caf-receptor-field">
-        <div className="caf-receptor-readout"><span>ILLUSTRATIVE VIEW</span><strong>{visualLoad}</strong></div>
-        <div className="caf-receptors">
-          {Array.from({ length: 6 }, (_, i) => <i key={i} className={i < Math.ceil(load * 6) ? "is-blocked" : ""}><b /></i>)}
-        </div>
-        <div className="caf-particles">
-          {Array.from({ length: particles }, (_, i) => (
-            <i key={i} style={{ "--caf-particle-x": `${9 + ((i * 31) % 83)}%`, "--caf-particle-y": `${24 + ((i * 23) % 63)}%`, "--caf-particle-delay": `${i * -.31}s` } as CSSProperties}>C</i>
-          ))}
-        </div>
-        <div className="caf-field-caption"><i />{atBed} mg modeled remainder <span>of {totalMg} mg added</span></div>
-      </div>
-      <div className="caf-scene-vignette" />
-    </div>
-  );
+  return <div ref={ref} className={`receptor-panel ${motionActive ? "is-motion-active" : ""}`}>
+    <div className="receptor-panel-head"><span>Adenosine receptors</span><span>Conceptual view · {fmtHour(bedH)}</span></div>
+    <ReceptorStudy load={load} hasCaffeine={totalMg > 0} />
+    <div className="receptor-panel-caption"><span><i /> Caffeine can occupy the binding site</span><span>{atBed} mg remaining / {totalMg} mg added</span></div>
+  </div>;
 }
 
 export default function CaffeineLab() {
@@ -184,7 +142,7 @@ export default function CaffeineLab() {
             {[.25,.5,.75].map((n)=><line key={n} x1={PADL} y1={PADT+(VH-PADT-PADB)*n} x2={VW-PADR} y2={PADT+(VH-PADT-PADB)*n} stroke="rgba(255,255,255,.07)" />)}
             <line x1={PADL} y1={yFor(0)} x2={VW - PADR} y2={yFor(0)} stroke="rgba(255,255,255,.2)" strokeWidth="1" />
             <path d={area} fill="url(#caf-fill)" />
-            <path d={path} fill="none" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" filter="url(#caf-glow)" />
+            <path d={path} fill="none" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" />
             {/* placed drink markers */}
             {placed.map((d) => (
               <g key={d.id} style={{ cursor: "pointer" }} onPointerDown={(e) => { e.stopPropagation(); removeDrink(d.id); }}>

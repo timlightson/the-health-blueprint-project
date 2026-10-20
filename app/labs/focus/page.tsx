@@ -99,6 +99,8 @@ export default function FocusLab() {
           <div className="focus-field-grid" aria-hidden="true" />
           <div className="focus-field-beam" aria-hidden="true" />
           <div className="focus-field-mode" aria-hidden="true"><i />{round === 2 ? "DISTRACTION FIELD" : "CLEAR FIELD"}</div>
+          <div className="focus-progress" aria-hidden="true">{Array.from({length:TRIALS},(_,i)=><i key={i} className={i < trialRef.current ? "is-complete" : ""}/>)}</div>
+          {phase === "run" && !target && <div className="focus-wait">Watch for the next target</div>}
           {phase === "intro" && (
             <div className="focus-field-content absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
               <div className="focus-ready-target" aria-hidden="true"><i /></div>

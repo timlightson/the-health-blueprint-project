@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useCoverMotion } from "./CoverMotion";
-import { animateCover } from "./animated-cover";
+
 import type { LabId } from "@/components/labs/labs-meta";
 
 /** Conceptual editorial artwork. Scientific values belong to the live models. */
@@ -20,7 +20,6 @@ export default function BlueprintArt({
 }) {
   const root = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const [source, setSource] = useState<HTMLImageElement | null>(null);
   const { paused, reduced: prefersReducedMotion, register } = useCoverMotion();
   const still = reduced || prefersReducedMotion || paused;
 
@@ -47,7 +46,7 @@ export default function BlueprintArt({
       aria-hidden="true"
     >
       <Image
-        src={`/images/labs/${id}.webp`}
+        src={`/images/labs/cgi/${id}${["stress", "sound", "breath"].includes(id) ? "-v2" : ""}.webp`}
         alt=""
         fill
         sizes={
@@ -56,32 +55,42 @@ export default function BlueprintArt({
             : "(max-width: 767px) 100vw, 50vw"
         }
         priority={featured}
+        loading={featured ? "eager" : "lazy"}
         className="lab-art-image"
-        onLoad={(event) => setSource(event.currentTarget)}
       />
-      {visible && !still && source && <MovingArtwork id={id} source={source} />}
+      {visible && <MovingArtwork id={id} paused={still} />}
     </div>
   );
 }
 
-function MovingArtwork({
-  id,
-  source,
-}: {
-  id: LabId;
-  source: HTMLImageElement;
-}) {
+function MovingArtwork({ id, paused }: { id: LabId; paused: boolean }) {
   const layer = useRef<HTMLDivElement>(null);
+  const pausedRef = useRef(paused);
+  const controller =
+    useRef<ReturnType<typeof import("./cgi-cover").createCGICover>>(null);
   useEffect(() => {
-    if (!layer.current) return;
-    // Each effect owns a fresh canvas, including React Strict Mode remounts.
+    pausedRef.current = paused;
+    controller.current?.setPaused(paused);
+  }, [paused]);
+  useEffect(() => {
+    let cancelled = false;
     const canvas = document.createElement("canvas");
-    layer.current.appendChild(canvas);
-    const stop = animateCover(canvas, source, id);
+    layer.current?.appendChild(canvas);
+    // Load the 3D engine only when a cover enters the viewport.
+    import("./cgi-cover")
+      .then(({ createCGICover }) => {
+        if (!cancelled)
+          controller.current = createCGICover(canvas, id, pausedRef.current);
+      })
+      .catch(() => {
+        canvas.remove();
+      });
     return () => {
-      stop?.();
+      cancelled = true;
+      controller.current?.dispose();
+      controller.current = null;
       canvas.remove();
     };
-  }, [id, source]);
+  }, [id]);
   return <div ref={layer} className="lab-art-motion" aria-hidden="true" />;
 }

@@ -1,110 +1,119 @@
 [
   {
     "id": "sleep",
-    "path": "public/images/labs/sleep.webp",
-    "kind": "AI-generated conceptual editorial artwork",
-    "concept": "Frosted sea-glass wave on deep navy",
-    "generator": "OpenAI image generation tool",
+    "path": "public/images/labs/cgi/sleep.webp",
+    "kind": "Still frame of original procedural 3D scene",
+    "concept": "Moon above a pillow",
+    "generator": "Three.js scene rendered in the browser",
+    "source": "components/home/cgi-cover.ts",
     "dimensions": [
-      1536,
-      1024
+      1200,
+      800
     ],
-    "role": "Decorative cover, not a scientific diagram or measured output"
+    "role": "Decorative loading and WebGL-failure fallback, not a scientific diagram or measured output"
   },
   {
     "id": "energy",
-    "path": "public/images/labs/energy.webp",
-    "kind": "AI-generated conceptual editorial artwork",
-    "concept": "Amber resin and champagne aluminum crest",
-    "generator": "OpenAI image generation tool",
+    "path": "public/images/labs/cgi/energy.webp",
+    "kind": "Still frame of original procedural 3D scene",
+    "concept": "Floating battery",
+    "generator": "Three.js scene rendered in the browser",
+    "source": "components/home/cgi-cover.ts",
     "dimensions": [
-      1536,
-      1024
+      1200,
+      800
     ],
-    "role": "Decorative cover, not a scientific diagram or measured output"
+    "role": "Decorative loading and WebGL-failure fallback, not a scientific diagram or measured output"
   },
   {
     "id": "stress",
-    "path": "public/images/labs/stress.webp",
-    "kind": "AI-generated conceptual editorial artwork",
-    "concept": "Coral silicone tension knot",
-    "generator": "OpenAI image generation tool",
+    "path": "public/images/labs/cgi/stress-v2.webp",
+    "kind": "Still frame of original procedural 3D scene",
+    "concept": "Continuous soft knot that compresses and releases",
+    "generator": "Three.js scene rendered in the browser",
+    "source": "components/home/cgi-cover.ts",
     "dimensions": [
-      1536,
-      1024
+      1200,
+      800
     ],
-    "role": "Decorative cover, not a scientific diagram or measured output"
+    "role": "Decorative loading and WebGL-failure fallback, not a scientific diagram or measured output"
   },
   {
     "id": "hydration",
-    "path": "public/images/labs/hydration.webp",
-    "kind": "AI-generated conceptual editorial artwork",
-    "concept": "Suspended clear sheet of water",
-    "generator": "OpenAI image generation tool",
+    "path": "public/images/labs/cgi/hydration.webp",
+    "kind": "Still frame of original procedural 3D scene",
+    "concept": "Water bottle and droplet",
+    "generator": "Three.js scene rendered in the browser",
+    "source": "components/home/cgi-cover.ts",
     "dimensions": [
-      1536,
-      1024
+      1200,
+      800
     ],
-    "role": "Decorative cover, not a scientific diagram or measured output"
+    "role": "Decorative loading and WebGL-failure fallback, not a scientific diagram or measured output"
   },
   {
     "id": "sound",
-    "path": "public/images/labs/sound.webp",
-    "kind": "AI-generated conceptual editorial artwork",
-    "concept": "Dark silver pleated waveform",
-    "generator": "OpenAI image generation tool",
+    "path": "public/images/labs/cgi/sound-v2.webp",
+    "kind": "Still frame of original procedural 3D scene",
+    "concept": "Oval headphones with padded headband and inward-facing cushions",
+    "generator": "Three.js scene rendered in the browser",
+    "source": "components/home/cgi-cover.ts",
     "dimensions": [
-      1536,
-      1024
+      1200,
+      800
     ],
-    "role": "Decorative cover, not a scientific diagram or measured output"
+    "role": "Decorative loading and WebGL-failure fallback, not a scientific diagram or measured output"
   },
   {
     "id": "focus",
-    "path": "public/images/labs/focus.webp",
-    "kind": "AI-generated conceptual editorial artwork",
-    "concept": "Crystal lens focusing teal filaments",
-    "generator": "OpenAI image generation tool",
+    "path": "public/images/labs/cgi/focus.webp",
+    "kind": "Still frame of original procedural 3D scene",
+    "concept": "Focus timer",
+    "generator": "Three.js scene rendered in the browser",
+    "source": "components/home/cgi-cover.ts",
     "dimensions": [
-      1536,
-      1024
+      1200,
+      800
     ],
-    "role": "Decorative cover, not a scientific diagram or measured output"
+    "role": "Decorative loading and WebGL-failure fallback, not a scientific diagram or measured output"
   },
   {
     "id": "breath",
-    "path": "public/images/labs/breath.webp",
-    "kind": "AI-generated conceptual editorial artwork",
-    "concept": "Suspended translucent silk",
-    "generator": "OpenAI image generation tool",
+    "path": "public/images/labs/cgi/breath-v2.webp",
+    "kind": "Still frame of original procedural 3D scene",
+    "concept": "Sculpted lung silhouettes with connected branching airways and coordinated expansion",
+    "generator": "Three.js scene rendered in the browser",
+    "source": "components/home/cgi-cover.ts",
     "dimensions": [
-      1536,
-      1024
+      1200,
+      800
     ],
-    "role": "Decorative cover, not a scientific diagram or measured output"
+    "role": "Decorative loading and WebGL-failure fallback, not a scientific diagram or measured output"
   },
   {
     "id": "caffeine",
-    "path": "public/images/labs/caffeine.webp",
-    "kind": "AI-generated conceptual editorial artwork",
-    "concept": "Amber vessel with espresso swirl",
-    "generator": "OpenAI image generation tool",
+    "path": "public/images/labs/cgi/caffeine.webp",
+    "kind": "Still frame of original procedural 3D scene",
+    "concept": "Steaming ceramic mug",
+    "generator": "Three.js scene rendered in the browser",
+    "source": "components/home/cgi-cover.ts",
     "dimensions": [
-      1536,
-      1024
+      1200,
+      800
     ],
-    "role": "Decorative cover, not a scientific diagram or measured output"
+    "role": "Decorative loading and WebGL-failure fallback, not a scientific diagram or measured output"
   },
   {
     "id": "vision",
-    "path": "public/images/labs/vision.webp",
-    "kind": "AI-generated conceptual editorial artwork",
-    "concept": "Clear curved prism on sage",
-    "generator": "OpenAI image generation tool",
+    "path": "public/images/labs/cgi/vision.webp",
+    "kind": "Still frame of original procedural 3D scene",
+    "concept": "Mint glasses",
+    "generator": "Three.js scene rendered in the browser",
+    "source": "components/home/cgi-cover.ts",
     "dimensions": [
-      1536,
-      1024
+      1200,
+      800
     ],
-    "role": "Decorative cover, not a scientific diagram or measured output"
+    "role": "Decorative loading and WebGL-failure fallback, not a scientific diagram or measured output"
   }
 ]

@@ -127,15 +127,15 @@ export default function PhoneBeforeBed() {
   );
   const userEased = useEasedArray(userTarget, 400);
 
-  // Chart geometry — rivers now overlap at a single center line.
+  // A shared baseline makes the two modeled signal curves directly comparable.
   const VW = 600;
   const VH = 180;
   const padL = 18;
   const padR = 18;
   const plotW = VW - padL - padR;
   const xFor = (t: number) => padL + ((t - T_START) / SPAN) * plotW;
-  const riverCY = 88;
-  const maxBand = 58;
+  const riverCY = 148;
+  const maxBand = 112;
 
   // Severity colors — lab tokens
   const sevCol = delayMin < 20 ? "#0D9488" : delayMin <= 60 ? "#D97706" : "#DC2626";
@@ -143,11 +143,10 @@ export default function PhoneBeforeBed() {
 
   const riverPoints = (vals: number[]) => {
     const tops = vals.map((v, i) => `${xFor(XS[i]).toFixed(1)},${(riverCY - v * maxBand).toFixed(1)}`);
-    const bots = vals
-      .map((v, i) => `${xFor(XS[i]).toFixed(1)},${(riverCY + v * maxBand).toFixed(1)}`)
-      .reverse();
-    return [...tops, ...bots].join(" ");
+    return [...tops, `${xFor(T_END)},${riverCY}`, `${xFor(T_START)},${riverCY}`].join(" ");
   };
+  const signalLine = (vals: number[]) => vals.map((v,i)=>`${xFor(XS[i]).toFixed(1)},${(riverCY-v*maxBand).toFixed(1)}`).join(" ");
+
   const normalRiver = riverPoints(NORMAL_VALS);
   const userRiver = riverPoints(userEased);
 
@@ -251,16 +250,19 @@ export default function PhoneBeforeBed() {
             <div className="phb-legend"><span className="normal">Normal</span><span className="estimate" style={{ "--legend-color": sevCol } as CSSProperties}>Estimated</span></div>
           </div>
           <div className="phb-tide-scroll">
-            <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ minWidth: 380, display: "block" }}>
+            <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ minWidth: 380, display: "block" }} role="img" aria-label="Relative melatonin signal, comparing the normal and estimated curves from 8 PM to 2 AM">
               <defs>
                 <linearGradient id="phb-normal-river" x1="0" y1="0" x2="1" y2="0"><stop stopColor="#8AA9C4" stopOpacity=".08" /><stop offset="1" stopColor="#BFD7E9" stopOpacity=".32" /></linearGradient>
-                <linearGradient id="phb-user-river" x1="0" y1="0" x2="1" y2="0"><stop stopColor={sevCol} stopOpacity=".18" /><stop offset="1" stopColor={sevCol} stopOpacity=".82" /></linearGradient>
+                <linearGradient id="phb-user-river" x1="0" y1="0" x2="1" y2="0"><stop stopColor={sevCol} stopOpacity=".18" /><stop offset="1" stopColor={sevCol} stopOpacity=".25" /></linearGradient>
                 <filter id="phb-river-glow"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
               </defs>
               {HOURS.map((h) => <line key={h} x1={xFor(h)} y1={12} x2={xFor(h)} y2={VH - 25} stroke="#BFD7E9" strokeOpacity=".11" />)}
               <line x1={padL} y1={riverCY} x2={VW - padR} y2={riverCY} stroke="#BFD7E9" strokeOpacity=".13" />
-              <polygon points={normalRiver} fill="url(#phb-normal-river)" stroke="#A9C4D8" strokeOpacity=".65" strokeWidth="1.2" strokeDasharray="5 5" />
-              <polygon points={userRiver} fill="url(#phb-user-river)" stroke={sevCol} strokeWidth="1.8" filter="url(#phb-river-glow)" className="phb-river" />
+              <polygon points={normalRiver} fill="url(#phb-normal-river)" />
+              <polyline points={signalLine(NORMAL_VALS)} fill="none" stroke="#A9C4D8" strokeWidth="1.5" strokeDasharray="5 5" />
+              <polygon points={userRiver} fill="url(#phb-user-river)" />
+              <polyline points={signalLine(userEased)} fill="none" stroke={sevCol} strokeWidth="2.2" className="phb-river" />
+              <text x="18" y="24" fill="#a9c0c9" fontSize="9">Relative signal</text>
               {targetH >= T_START && targetH <= T_END && <g><line x1={tx} y1={12} x2={tx} y2={VH - 25} stroke="#E9F4FC" strokeOpacity=".55" strokeDasharray="3 4" /><text x={tx} y="14" fontSize="9" fill="#E9F4FC" textAnchor="middle" fontWeight="700">TARGET</text></g>}
               {delayMin >= 5 && actualH <= T_END && <g><line x1={ax} y1={12} x2={ax} y2={VH - 25} stroke={sevCol} strokeDasharray="3 4" /><text x={ax} y={labelsClose ? 25 : 14} fontSize="9" fill={sevCol} textAnchor="middle" fontWeight="700">EST.</text></g>}
               {HOURS.map((h) => <text key={h} x={xFor(h)} y={VH - 7} fontSize="10" fill="#91ABC1" textAnchor="middle">{h === 24 ? "12 AM" : h === 25 ? "1 AM" : h === 26 ? "2 AM" : `${h - 12} PM`}</text>)}

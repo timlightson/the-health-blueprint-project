@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Sun, Monitor } from "lucide-react";
+import { IrisStudy } from "@/components/labs/SceneArt";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabShell, LabHero, StatTile, SciencePanel, clamp } from "@/components/labs/kit";
 
@@ -76,14 +77,7 @@ export default function VisionLab() {
       {/* Balance bar */}
       <LiquidGlass radius={26} bezel={26} scale={52} style={{ padding: "14px", overflow: "hidden" }}>
         <div className="vision-stage">
-          <svg className="vision-eye-diagram" viewBox="0 0 420 220" aria-hidden="true">
-            <path d="M28 111c48-72 109-92 171-92 86 0 150 51 193 92-43 41-107 92-193 92-62 0-123-20-171-92Z" fill="none" stroke="rgba(110,231,183,.17)" strokeWidth="2" />
-            <circle cx="202" cy="111" r="70" fill="rgba(5,150,105,.09)" stroke="rgba(110,231,183,.22)" strokeWidth="2" />
-            <circle cx="202" cy="111" r="34" fill="rgba(6,78,59,.42)" stroke="rgba(167,243,208,.35)" strokeWidth="3" />
-            <circle cx="202" cy="111" r="11" fill="#6EE7B7" />
-            <path d="M0 111h420M202 0v220" stroke="rgba(255,255,255,.055)" strokeDasharray="4 7" />
-            <path d="M223 102c49-20 92-20 158 8M223 120c49 20 92 20 158-8" fill="none" stroke="rgba(110,231,183,.18)" />
-          </svg>
+          <IrisStudy />
           <div className="vision-stage-readout">
             <span>ILLUSTRATIVE RISK INDEX</span>
             <strong style={{ color: zone.color }}>{risk}</strong>

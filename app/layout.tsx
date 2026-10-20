@@ -5,6 +5,7 @@ import { SITE_NAME, SITE_URL } from '@/lib/site'
 import { CoverMotionProvider } from '@/components/home/CoverMotion'
 import './globals.css'
 import './editorial.css'
+import './lab-visuals.css'
 
 const inter = Inter({
   subsets: ["latin"],

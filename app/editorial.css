@@ -216,7 +216,6 @@ button:disabled {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lab-art-motion,
   .cover-motion-control {
     display: none;
   }

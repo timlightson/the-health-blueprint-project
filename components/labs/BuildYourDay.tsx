@@ -1,5 +1,6 @@
 "use client";
 
+import ActivityGlyph from "./ActivityGlyph";
 import { useState, useRef, useMemo, useEffect, type Dispatch, type SetStateAction } from "react";
 import { playSound } from "@/lib/sleep-sound";
 import LiquidGlass from "@/components/labs/LiquidGlass";
@@ -790,7 +791,6 @@ export default function BuildYourDay({
             {/* placed activity badges */}
             {badges.map(({ p, cx, row }) => {
               const cy = rowY(row);
-              const act = ACT[p.type];
               const sel = selectedId === p.id;
               return (
                 <g
@@ -819,15 +819,7 @@ export default function BuildYourDay({
                     strokeWidth={sel ? "2" : "1"}
                     style={{ pointerEvents: "none" }}
                   />
-                  <text
-                    x={cx}
-                    y={cy + 5}
-                    textAnchor="middle"
-                    fontSize="14"
-                    style={{ pointerEvents: "none" }}
-                  >
-                    {act.emoji}
-                  </text>
+                  <foreignObject x={cx-11} y={cy-11} width="22" height="22" style={{pointerEvents:"none"}}><ActivityGlyph kind={p.type} compact /></foreignObject>
                   {sel && (
                     <g
                       onPointerDown={(e) => {
@@ -941,7 +933,7 @@ export default function BuildYourDay({
                   transition: "transform 0.2s var(--spring), box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease",
                 }}
               >
-                <span style={{ fontSize: "34px", lineHeight: 1, filter: "drop-shadow(0 3px 5px rgba(20,30,60,0.22))" }}>{a.emoji}</span>
+                <ActivityGlyph kind={a.key} />
                 <span
                   className="text-center"
                   style={{ fontSize: "10px", color: "var(--ink-soft)", lineHeight: 1.15, padding: "0 2px" }}
@@ -1004,7 +996,7 @@ export default function BuildYourDay({
             fontSize: "26px",
           }}
         >
-          {ACT[ghost.type].emoji}
+          <ActivityGlyph kind={ghost.type} />
         </div>
       )}
     </div>

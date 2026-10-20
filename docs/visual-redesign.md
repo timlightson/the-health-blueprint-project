@@ -51,3 +51,35 @@ Each lab now has a distinct continuous flow field: traveling glass waves (Sleep)
 The renderer uses native WebGL without a new dependency. It caps rendering at 30fps and bounds canvas resolution, creates contexts only for visible artwork, releases them offscreen, and suspends rendering in hidden tabs. The original Next Image remains underneath as the loading and WebGL-failure fallback. Reduced-motion preferences show still artwork. A 44px pause/play control stops all cover animations, with the setting retained during client-side navigation.
 
 Browser verification: all nine shader modes rendered; desktop pause/resume removed and restored the canvases; offscreen covers released their renderers; the Caffeine cover fit at 390px with a 44px control. Separate Energy screenshots showed visible pixel changes within the artwork. TypeScript, ESLint and production build passed. Reduced-motion and context-loss behavior were reviewed in code, rather than emulated in the browser.
+
+## Stylized CGI revision, October 19, 2026
+
+Following the request for recognizable, less photorealistic animated objects, the covers now use modeled Three.js scenes in `components/home/cgi-cover.ts`. The intervening abstract-print concepts were discarded and were never installed in the site.
+
+The nine scenes feature a moon above a pillow, a battery, a compressing stress ball inside a cord, a water bottle, headphones, a focus timer, stylized expanding lungs, a steaming mug, and glasses. Rounded geometry, pastel materials, and studio lighting provide a consistent CGI style. These are conceptual illustrations rather than measured outputs or anatomical models.
+
+The renderer loads only when a cover is visible, limits drawing to 30fps, caps resolution, pauses in hidden tabs, and releases offscreen renderers. Pause and reduced motion now retain a frozen 3D scene instead of switching to the old artwork. Matching 1200 × 800 still frames captured from each 3D scene now provide the loading/WebGL-failure fallback. The earlier realistic images are retained as unused source assets.
+
+Checks completed: TypeScript, ESLint, production build, and a geometry projection check of all nine scenes at three aspect ratios and five animation times. All model vertices fit within the view. After restarting the stopped local server, browser review covered all nine rendered scenes, the desktop Learn page, and Learn at 390px. The phone layout had no horizontal overflow. Pause/play switched correctly while retaining the 3D scene. Matching stills were captured from the browser, and the glasses lenses were reshaped to fit their frames. Reduced-motion and context-loss behavior were reviewed in code rather than emulated in the browser.
+
+### Stress and Sound refinement
+
+Replaced the intersecting stress-ball assembly with one continuous silicone knot that compresses and releases. Rebuilt the headphones with oval shells, inward-facing cushions, recessed grilles, metal hinges, and a broad padded headband. Both retain slow 3D motion and use matching versioned stills. Browser frame comparisons confirmed motion in both scenes.
+
+### Breath refinement
+
+Replaced the two stretched spheres with custom rounded lung silhouettes, tapered apices, broad bases, and an asymmetric inner contour. Connected the airway tree and made the complete assembly expand together. This remains a conceptual illustration, not an anatomical reference. Updated its matching still. Browser frame comparison confirmed motion.
+
+## Interactive lab artwork refinement, October 20, 2026
+
+Reworked the basic in-lab illustrations while retaining the existing simulation inputs, calculations, and citations:
+
+- Breath uses a layered petal sculpture whose expansion follows the selected breathing phase. Its countdown remains readable, and reduced motion freezes the decorative expansion.
+- Vision uses a shaded iris with deterministic fiber detail, an inset clarity card, and a larger blind-spot drag target. The iris is a static conceptual illustration, not a prediction of anatomy.
+- Caffeine replaces the cartoon room with a conceptual membrane and receptor study. Removing all drinks removes the caffeine molecules too.
+- Hydration uses a glass vessel with a rim, reflections, graduation marks, and quieter particle motion.
+- Energy and Sound share a consistent icon family. Energy gains restrained chart guides; Sound gains a decorative level meter.
+- Sleep's melatonin comparison uses two curves sharing a baseline. Weekend debt uses a more useful minimum scale and neutral positive coloring for zero debt.
+- Focus removes decorative radar rings and adds trial progress and an explicit waiting state without changing reaction timing.
+
+Validation: TypeScript, ESLint, and production build passed. Live browser checks covered the changed scenes, breathing start/stop, Vision keyboard adjustment, caffeine bedtime/removal, hydration keyboard adjustment and game start, Energy presets, Sound selection, and Sleep phone-time/brightness/weekend controls. Narrow-layout checks at the browser's effective 480px width found no page-level horizontal overflow across the changed labs. Reduced-motion behavior was reviewed in code. Rounded iris coordinates eliminate cross-engine floating-point hydration differences. Proof images are saved in the task's visualization folder.

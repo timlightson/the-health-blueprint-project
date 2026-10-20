@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect, type CSSProperties } from "react";
+import { BreathBloom } from "@/components/labs/SceneArt";
 import LiquidGlass from "@/components/labs/LiquidGlass";
 import { LabShell, LabHero, StatTile, SciencePanel } from "@/components/labs/kit";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -90,28 +91,11 @@ export default function BreathLab() {
         {/* Guided breath chamber */}
         <div className="breath-stage flex flex-col items-center justify-center">
           <div className="breath-stage-label"><i />{running ? pattern.name.toUpperCase() : "READY TO BREATHE"}</div>
-          <svg className="breath-lungs" viewBox="0 0 300 230" aria-hidden="true">
-            <path d="M146 54v76c-12 36-41 58-75 58-31 0-51-21-46-51 8-48 48-80 93-80h13" fill="rgba(6,182,212,.13)" stroke="rgba(165,243,252,.38)" strokeWidth="2" />
-            <path d="M154 54v76c12 36 41 58 75 58 31 0 51-21 46-51-8-48-48-80-93-80h-13" fill="rgba(6,182,212,.13)" stroke="rgba(165,243,252,.38)" strokeWidth="2" />
-            <path d="M150 20v111M150 91l-34 36M150 91l34 36" fill="none" stroke="rgba(224,251,255,.54)" strokeWidth="7" strokeLinecap="round" />
-            {[0,1,2].map((i)=><circle key={i} className="breath-stage-ring" cx="150" cy="122" r={46+i*26} fill="none" stroke="rgba(103,232,249,.16)" strokeWidth="2" style={{animationDelay:`${i*.4}s`}} />)}
-          </svg>
-          <div className="breath-orb-wrap">
-            <div
-              className="breath-orb"
-              style={{
-                transform: `scale(${reduced ? 0.82 : scale})`,
-                transition: reduced ? "none" : `transform ${running ? pattern.phases[phaseIdx].s : 0.6}s cubic-bezier(0.45,0,0.25,1)`,
-              }}
-            >
-              <div className="text-center">
-                <div className="text-lg font-bold" style={{ color: "#CFFAFE" }}>{phaseLabel}</div>
-                {running && <div className="text-3xl font-bold tabular-nums" style={{ color: "#fff" }}>{secLeft}</div>}
-              </div>
-            </div>
+          <div className="breath-sculpture">
+            <BreathBloom scale={scale} duration={running ? pattern.phases[phaseIdx].s : .6} reduced={reduced} />
+            <div className="breath-instruction" aria-live="off"><span>{phaseLabel}</span><strong>{running ? secLeft : ""}</strong></div>
           </div>
-
-          <div className="breath-phase-track" aria-label={`${phaseLabel}, ${secLeft} seconds remaining`}>
+          <div className="breath-phase-track" aria-label={running ? `${phaseLabel}, ${secLeft} seconds remaining` : "Ready to begin"}>
             {pattern.phases.map((ph, i) => <i key={`${ph.l}-${i}`} className={running && i === phaseIdx ? "active" : ""} style={{ "--phase-duration": `${ph.s}s` } as CSSProperties} />)}
           </div>
 
